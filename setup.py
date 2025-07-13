@@ -14,7 +14,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="MEDfl",
-    version="2.0.4.dev0",
+    version="2.0.4.dev1",
     author="MEDomics consortium",
     author_email="medomics.info@gmail.com",
     description="Python Open-source package for simulating federated learning and differential privacy",

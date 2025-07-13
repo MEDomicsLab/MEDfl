@@ -10,6 +10,7 @@ from flwr.server.client_proxy import ClientProxy
 from flwr.common import GetPropertiesIns
 import asyncio
 
+
 class FederatedServer:
     """
     Wrapper for launching a Flower federated-learning server,
