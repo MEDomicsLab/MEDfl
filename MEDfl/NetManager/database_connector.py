@@ -1,5 +1,5 @@
 import os
-import subprocess
+import subprocess , sys
 from sqlalchemy import create_engine
 from configparser import ConfigParser
 
@@ -34,7 +34,9 @@ class DatabaseManager:
         create_db_script_path = os.path.join(current_directory, '..', 'scripts', 'create_db.py')
 
         # Execute the create_db.py script
-        subprocess.run(['python3', create_db_script_path, path_to_csv], check=True)
+        print(sys.executable)
+        result = subprocess.run([sys.executable, create_db_script_path, path_to_csv],
+         capture_output=True, text=True)
 
         return
 

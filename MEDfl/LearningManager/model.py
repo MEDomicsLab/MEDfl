@@ -214,10 +214,11 @@ class Model:
             torch.nn.Module: Loaded PyTorch model.
         """
         # Ensure models are loaded onto the CPU when CUDA is not available
+        torch_kwargs = {"weights_only": False}
         if torch.cuda.is_available():
-            loaded_model = torch.load(model_path)
+            loaded_model = torch.load(model_path , **torch_kwargs)
         else:
-            loaded_model = torch.load(model_path, map_location=torch.device('cpu'))
+            loaded_model = torch.load(model_path, map_location=torch.device('cpu') , **torch_kwargs)
         return loaded_model
 
 

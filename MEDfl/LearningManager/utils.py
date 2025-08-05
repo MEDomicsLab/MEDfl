@@ -113,7 +113,7 @@ def custom_classification_report(y_true, y_pred_prob):
 
     auc = roc_auc_score(y_true, y_pred_prob)  # Calculate AUC
 
-    tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+    tn, fp, fn, tp = confusion_matrix(y_true, y_pred , labels=[0, 1]).ravel()
 
     # Accuracy
     denominator_acc = tp + tn + fp + fn

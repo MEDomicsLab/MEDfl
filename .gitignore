@@ -3,3 +3,5 @@ MEDfl.egg-info/
 fl-env/
 dist/
 build/
+notebooks/
+docs/

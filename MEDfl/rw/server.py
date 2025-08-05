@@ -3,10 +3,10 @@ from flwr.server.strategy import FedAvg
 from flwr.server.server import ServerConfig
 from typing import Optional, Any
 from MEDfl.rw.strategy import Strategy
-from MEDfl.rw.verbose_server import VerboseServer
 import asyncio
 from flwr.server.client_manager import ClientManager
 from flwr.server.client_proxy import ClientProxy
+from flwr.common import GetPropertiesIns
 from flwr.common import GetPropertiesIns
 
 
@@ -58,6 +58,7 @@ class FederatedServer:
 
         self.certificates = certificates
         self.connected_clients = []  # Track connected client IDs
+
 
     def start(self) -> None:
         """
