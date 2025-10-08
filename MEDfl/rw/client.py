@@ -94,7 +94,7 @@ class FlowerClient(fl.client.NumPyClient):
         # Load once; keep the DataFrame so we can rebuild splits from config later
         self.df = pd.read_csv(data_path)
 
-        # Defaults at startup (can be overridden dynamically from config)
+        # Defaults at startup (can be overridden dynamically from config)'
         default_target = self.df.columns[-1]
         default_test_size = 0.20
 
