@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.NetManager package &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/dark_mode_css/general.css" type="text/css" />
+      <link rel="stylesheet" href="_static/dark_mode_css/dark.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/dark_mode_js/default_light.js"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/MEDomics.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#model-choice">Model choice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MEDfl.NetManager package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/MEDfl.NetManager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="medfl-netmanager-package">
+<h1>MEDfl.NetManager package<a class="headerlink" href="#medfl-netmanager-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-MEDfl.NetManager.dataset">
+<span id="medfl-netmanager-dataset-module"></span><h2>MEDfl.NetManager.dataset module<a class="headerlink" href="#module-MEDfl.NetManager.dataset" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.dataset.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a DataSet object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the dataset.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – The file path of the dataset CSV file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet.delete_dataset">
+<span class="sig-name descname"><span class="pre">delete_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet.delete_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet.delete_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Delete the dataset from the database.</p>
+<p>Notes:
+- Assumes the dataset name is unique in the ‘DataSets’ table.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet.list_alldatasets">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_alldatasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet.list_alldatasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet.list_alldatasets" title="Permalink to this definition"></a></dt>
+<dd><p>List all dataset names from the ‘DataSets’ table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A DataFrame containing the names of all datasets in the ‘DataSets’ table.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet.update_data">
+<span class="sig-name descname"><span class="pre">update_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet.update_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet.update_data" title="Permalink to this definition"></a></dt>
+<dd><p>Update the data in the dataset.</p>
+<p>Not implemented yet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet.upload_dataset">
+<span class="sig-name descname"><span class="pre">upload_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">NodeId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet.upload_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet.upload_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Upload the dataset to the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>NodeId</strong> (<em>int</em>) – The NodeId associated with the dataset.</p>
+</dd>
+</dl>
+<p>Notes:
+- Assumes the file at self.path is a valid CSV file.
+- The dataset is uploaded to the ‘DataSets’ table in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.dataset.DataSet.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/dataset.html#DataSet.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.dataset.DataSet.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate name and path attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – If name or path is not a string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.NetManager.flsetup">
+<span id="medfl-netmanager-flsetup-module"></span><h2>MEDfl.NetManager.flsetup module<a class="headerlink" href="#module-MEDfl.NetManager.flsetup" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.flsetup.</span></span><span class="sig-name descname"><span class="pre">FLsetup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.NetManager.network.Network" title="MEDfl.NetManager.network.Network"><span class="pre">Network</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.NetManager.network.Network" title="MEDfl.NetManager.network.Network"><span class="pre">Network</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a Federated Learning (FL) setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the FL setup.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – A description of the FL setup.</p></li>
+<li><p><strong>network</strong> (<a class="reference internal" href="#MEDfl.NetManager.network.Network" title="MEDfl.NetManager.network.Network"><em>Network</em></a>) – An instance of the Network class representing the network architecture.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create an FL setup.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.create_dataloader_from_node">
+<span class="sig-name descname"><span class="pre">create_dataloader_from_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.NetManager.node.Node" title="MEDfl.NetManager.node.Node"><span class="pre">Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_encode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dataset</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.create_dataloader_from_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.create_dataloader_from_node" title="Permalink to this definition"></a></dt>
+<dd><p>Create DataLoader from a Node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<a class="reference internal" href="#MEDfl.NetManager.node.Node" title="MEDfl.NetManager.node.Node"><em>Node</em></a>) – The node from which to create DataLoader.</p></li>
+<li><p><strong>train_batch_size</strong> (<em>int</em>) – The batch size for training data.</p></li>
+<li><p><strong>test_batch_size</strong> (<em>int</em>) – The batch size for test data.</p></li>
+<li><p><strong>split_frac</strong> (<em>float</em>) – The fraction of data to be used for training.</p></li>
+<li><p><strong>dataset</strong> (<em>Dataset</em>) – The dataset to use. If None, the method will read the dataset from the node.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The DataLoader instances for training and testing.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.create_federated_dataset">
+<span class="sig-name descname"><span class="pre">create_federated_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_encode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="MEDfl.LearningManager.federated_dataset.FederatedDataset"><span class="pre">FederatedDataset</span></a></span></span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.create_federated_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.create_federated_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Create a federated dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<em>string</em>) – the output feature of the dataset</p></li>
+<li><p><strong>val_frac</strong> (<em>float</em>) – The fraction of data to be used for validation.</p></li>
+<li><p><strong>test_frac</strong> (<em>float</em>) – The fraction of data to be used for testing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The FederatedDataset instance containing train, validation, and test data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="MEDfl.LearningManager.federated_dataset.FederatedDataset">FederatedDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.create_nodes_from_master_dataset">
+<span class="sig-name descname"><span class="pre">create_nodes_from_master_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.create_nodes_from_master_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.create_nodes_from_master_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Create nodes from the master dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params_dict</strong> (<em>dict</em>) – A dictionary containing parameters for node creation.
+- column_name (str): The name of the column in the MasterDataset used to create nodes.
+- train_nodes (list): A list of node names that will be used for training.
+- test_nodes (list): A list of node names that will be used for testing.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of Node instances created from the master dataset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.delete" title="Permalink to this definition"></a></dt>
+<dd><p>Delete the FL setup.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.get_flDataSet">
+<span class="sig-name descname"><span class="pre">get_flDataSet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.get_flDataSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.get_flDataSet" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve the federated dataset associated with the FL setup using the FL setup’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame containing the federated dataset information.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.list_allsetups">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_allsetups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.list_allsetups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.list_allsetups" title="Permalink to this definition"></a></dt>
+<dd><p>List all the FL setups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A DataFrame containing information about all the FL setups.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.read_setup">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FLsetupId</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.read_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.read_setup" title="Permalink to this definition"></a></dt>
+<dd><p>Read the FL setup by FLsetupId.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>FLsetupId</strong> (<em>int</em>) – The id of the FL setup to read.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the FLsetup class with the specified FLsetupId.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.NetManager.flsetup.FLsetup" title="MEDfl.NetManager.flsetup.FLsetup">FLsetup</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.flsetup.FLsetup.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/flsetup.html#FLsetup.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.flsetup.FLsetup.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate name, description, and network.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.NetManager.net_helper">
+<span id="medfl-netmanager-net-helper-module"></span><h2>MEDfl.NetManager.net_helper module<a class="headerlink" href="#module-MEDfl.NetManager.net_helper" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.get_feddataset_id_from_name">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">get_feddataset_id_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#get_feddataset_id_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.get_feddataset_id_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Federated dataset Id from the FedDatasets table based on the federated dataset name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Federated dataset name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>FedId or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.get_flpipeline_from_name">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">get_flpipeline_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#get_flpipeline_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.get_flpipeline_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the FLpipeline Id from the FLpipeline table based on the FL pipeline name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – FL pipeline name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>FLpipelineId or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.get_flsetupid_from_name">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">get_flsetupid_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#get_flsetupid_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.get_flsetupid_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the FLsetupId from the FLsetup table based on the FL setup name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – FL setup name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>FLsetupId or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.get_netid_from_name">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">get_netid_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#get_netid_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.get_netid_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the Network Id from the Networks table based on the NetName.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Network name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>NetId or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.get_nodeid_from_name">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">get_nodeid_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#get_nodeid_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.get_nodeid_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the NodeId from the Nodes table based on the NodeName.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Node name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>NodeId or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.is_str">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">is_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#is_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.is_str" title="Permalink to this definition"></a></dt>
+<dd><p>Check if a column in a DataFrame is of type ‘object’ and convert the value accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_df</strong> (<em>pandas.DataFrame</em>) – DataFrame containing the data.</p></li>
+<li><p><strong>row</strong> (<em>pandas.Series</em>) – Data row.</p></li>
+<li><p><strong>x</strong> (<em>str</em>) – Column name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Processed value based on the column type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str or float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.master_table_exists">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">master_table_exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#master_table_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.master_table_exists" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the MasterDataset table exists in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if the table exists, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.process_data_after_reading">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">process_data_after_reading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_encode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#process_data_after_reading"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.process_data_after_reading" title="Permalink to this definition"></a></dt>
+<dd><p>Process data after reading from the database, including encoding, dropping columns, and creating a PyTorch TensorDataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – Input data.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – Output column name.</p></li>
+<li><p><strong>fill_strategy</strong> (<em>str</em><em>, </em><em>optional</em>) – Imputation strategy for missing values. Default is “mean”.</p></li>
+<li><p><strong>fit_encode</strong> (<em>list</em><em>, </em><em>optional</em>) – List of columns to be label-encoded. Default is an empty list.</p></li>
+<li><p><strong>to_drop</strong> (<em>list</em><em>, </em><em>optional</em>) – List of columns to be dropped from the DataFrame. Default is an empty list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Processed data as a PyTorch TensorDataset.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.utils.data.TensorDataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.NetManager.net_helper.process_eicu">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.net_helper.</span></span><span class="sig-name descname"><span class="pre">process_eicu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/net_helper.html#process_eicu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.net_helper.process_eicu" title="Permalink to this definition"></a></dt>
+<dd><p>Process eICU data by filling missing values with mean and replacing NaNs with ‘Unknown’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_df</strong> (<em>pandas.DataFrame</em>) – Input data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Processed data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.NetManager.net_manager_queries">
+<span id="medfl-netmanager-net-manager-queries-module"></span><h2>MEDfl.NetManager.net_manager_queries module<a class="headerlink" href="#module-MEDfl.NetManager.net_manager_queries" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-MEDfl.NetManager.network">
+<span id="medfl-netmanager-network-module"></span><h2>MEDfl.NetManager.network module<a class="headerlink" href="#module-MEDfl.NetManager.network" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.network.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class representing a network.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#MEDfl.NetManager.network.Network.name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.mtable_exists">
+<span class="sig-name descname"><span class="pre">mtable_exists</span></span><a class="headerlink" href="#MEDfl.NetManager.network.Network.mtable_exists" title="Permalink to this definition"></a></dt>
+<dd><p>An integer flag indicating whether the MasterDataset table exists (1) or not (0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a Network instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.NetManager.node.Node" title="MEDfl.NetManager.node.Node"><span class="pre">Node</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.add_node" title="Permalink to this definition"></a></dt>
+<dd><p>Add a node to the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="#MEDfl.NetManager.node.Node" title="MEDfl.NetManager.node.Node"><em>Node</em></a>) – The node to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.create_master_dataset">
+<span class="sig-name descname"><span class="pre">create_master_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_csv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/local/USHERBROOKE/saho6810/MEDfl/code/MEDfl/notebooks/data/masterDataSet/miniDiabete.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.create_master_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.create_master_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Create the MasterDataset table and insert dataset values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path_to_csv</strong> – Path to the CSV file containing the dataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.create_network">
+<span class="sig-name descname"><span class="pre">create_network</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.create_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.create_network" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new network in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.delete_network">
+<span class="sig-name descname"><span class="pre">delete_network</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.delete_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.delete_network" title="Permalink to this definition"></a></dt>
+<dd><p>Delete the network from the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.get_netid_from_name">
+<span class="sig-name descname"><span class="pre">get_netid_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.get_netid_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.get_netid_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get network ID from network name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.list_allnetworks">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_allnetworks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.list_allnetworks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.list_allnetworks" title="Permalink to this definition"></a></dt>
+<dd><p>List all networks in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A DataFrame containing information about all networks in the database.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.list_allnodes">
+<span class="sig-name descname"><span class="pre">list_allnodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.list_allnodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.list_allnodes" title="Permalink to this definition"></a></dt>
+<dd><p>List all nodes in the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A DataFrame containing information about all nodes in the network.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.update_network">
+<span class="sig-name descname"><span class="pre">update_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FLsetupId</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.update_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.update_network" title="Permalink to this definition"></a></dt>
+<dd><p>Update the network’s FLsetupId in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>FLsetupId</strong> (<em>int</em>) – The FLsetupId to update.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.use_network">
+<span class="sig-name descname"><span class="pre">use_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.use_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.use_network" title="Permalink to this definition"></a></dt>
+<dd><p>Use a network in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>network_name</strong> (<em>str</em>) – The name of the network to use.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of the Network class if the network exists, else None.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.NetManager.network.Network" title="MEDfl.NetManager.network.Network">Network</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.network.Network.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/network.html#Network.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.network.Network.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate name</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.NetManager.node">
+<span id="medfl-netmanager-node-module"></span><h2>MEDfl.NetManager.node module<a class="headerlink" href="#module-MEDfl.NetManager.node" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.NetManager.node.</span></span><span class="sig-name descname"><span class="pre">Node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class representing a node in the network.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#MEDfl.NetManager.node.Node.name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.train">
+<span class="sig-name descname"><span class="pre">train</span></span><a class="headerlink" href="#MEDfl.NetManager.node.Node.train" title="Permalink to this definition"></a></dt>
+<dd><p>An integer flag representing whether the node is used for training (1) or testing (0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.test_fraction">
+<span class="sig-name descname"><span class="pre">test_fraction</span></span><a class="headerlink" href="#MEDfl.NetManager.node.Node.test_fraction" title="Permalink to this definition"></a></dt>
+<dd><p>The fraction of data used for testing when train=1. Default is 0.2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a Node instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the node.</p></li>
+<li><p><strong>train</strong> (<em>int</em>) – An integer flag representing whether the node is used for training (1) or testing (0).</p></li>
+<li><p><strong>test_fraction</strong> (<em>float</em><em>, </em><em>optional</em>) – The fraction of data used for testing when train=1. Default is 0.2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.assign_dataset">
+<span class="sig-name descname"><span class="pre">assign_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.assign_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.assign_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Assigning existing dataSet to node
+:param dataset_name: The name of the dataset to assign.
+:type dataset_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.check_dataset_compatibility">
+<span class="sig-name descname"><span class="pre">check_dataset_compatibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.check_dataset_compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.check_dataset_compatibility" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the dataset is compatible with the master dataset.
+:param data_df: The dataset to check.
+:type data_df: DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.create_node">
+<span class="sig-name descname"><span class="pre">create_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">NetId</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.create_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.create_node" title="Permalink to this definition"></a></dt>
+<dd><p>Create a node in the database.
+:param NetId: The ID of the network to which the node belongs.
+:type NetId: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.delete_node">
+<span class="sig-name descname"><span class="pre">delete_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.delete_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.delete_node" title="Permalink to this definition"></a></dt>
+<dd><p>Delete the node from the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.get_dataset">
+<span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.get_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.get_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Get the dataset for the node based on the given column name.
+:param column_name: The column name to filter the dataset. Default is None.
+:type column_name: str, optional</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The dataset associated with the node.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.list_alldatasets">
+<span class="sig-name descname"><span class="pre">list_alldatasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.list_alldatasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.list_alldatasets" title="Permalink to this definition"></a></dt>
+<dd><p>List all datasets associated with the node.
+:returns: A DataFrame containing information about all datasets associated with the node.
+:rtype: DataFrame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.list_allnodes">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_allnodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.list_allnodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.list_allnodes" title="Permalink to this definition"></a></dt>
+<dd><p>List all nodes in the database.
+:returns: A DataFrame containing information about all nodes in the database.
+:rtype: DataFrame</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.unassign_dataset">
+<span class="sig-name descname"><span class="pre">unassign_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.unassign_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.unassign_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>unssigning existing dataSet to node
+:param dataset_name: The name of the dataset to assign.
+:type dataset_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.update_node">
+<span class="sig-name descname"><span class="pre">update_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.update_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.update_node" title="Permalink to this definition"></a></dt>
+<dd><p>Update the node information (not implemented).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.upload_dataset">
+<span class="sig-name descname"><span class="pre">upload_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_csv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/home/local/USHERBROOKE/saho6810/MEDfl/code/MEDfl/notebooks/data/masterDataSet/Mimic_train.csv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.upload_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.upload_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>Upload the dataset to the database for the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_name</strong> (<em>str</em>) – The name of the dataset.</p></li>
+<li><p><strong>path_to_csv</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the CSV file containing the dataset. Default is the path in params.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.NetManager.node.Node.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/NetManager/node.html#Node.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.NetManager.node.Node.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate name, train, test_fraction</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.NetManager">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-MEDfl.NetManager" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

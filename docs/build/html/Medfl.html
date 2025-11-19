@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl package &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/dark_mode_css/general.css" type="text/css" />
+      <link rel="stylesheet" href="_static/dark_mode_css/dark.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/dark_mode_js/default_light.js"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/MEDomics.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#model-choice">Model choice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MEDfl package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Medfl.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="medfl-package">
+<h1>MEDfl package<a class="headerlink" href="#medfl-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="MEDfl.LearningManager.html">MEDfl.LearningManager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.client">MEDfl.LearningManager.client module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient"><code class="docutils literal notranslate"><span class="pre">FlowerClient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.cid"><code class="docutils literal notranslate"><span class="pre">FlowerClient.cid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.local_model"><code class="docutils literal notranslate"><span class="pre">FlowerClient.local_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.trainloader"><code class="docutils literal notranslate"><span class="pre">FlowerClient.trainloader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.valloader"><code class="docutils literal notranslate"><span class="pre">FlowerClient.valloader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.diff_priv"><code class="docutils literal notranslate"><span class="pre">FlowerClient.diff_priv</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.__init__"><code class="docutils literal notranslate"><span class="pre">FlowerClient.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.evaluate"><code class="docutils literal notranslate"><span class="pre">FlowerClient.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.fit"><code class="docutils literal notranslate"><span class="pre">FlowerClient.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.get_parameters"><code class="docutils literal notranslate"><span class="pre">FlowerClient.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.client.FlowerClient.validate"><code class="docutils literal notranslate"><span class="pre">FlowerClient.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.dynamicModal">MEDfl.LearningManager.dynamicModal module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel"><code class="docutils literal notranslate"><span class="pre">DynamicModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_binary_classifier"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_binary_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_convolutional_neural_network"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_convolutional_neural_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_linear_regressor"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_linear_regressor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_logistic_regressor"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_logistic_regressor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_lstm_network"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_lstm_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_model"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_multiclass_classifier"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_multiclass_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.dynamicModal.DynamicModel.create_recurrent_neural_network"><code class="docutils literal notranslate"><span class="pre">DynamicModel.create_recurrent_neural_network()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.federated_dataset">MEDfl.LearningManager.federated_dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.federated_dataset.FederatedDataset"><code class="docutils literal notranslate"><span class="pre">FederatedDataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.federated_dataset.FederatedDataset.__init__"><code class="docutils literal notranslate"><span class="pre">FederatedDataset.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.federated_dataset.FederatedDataset.create"><code class="docutils literal notranslate"><span class="pre">FederatedDataset.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.federated_dataset.FederatedDataset.update"><code class="docutils literal notranslate"><span class="pre">FederatedDataset.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.flpipeline">MEDfl.LearningManager.flpipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline"><code class="docutils literal notranslate"><span class="pre">FLpipeline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.name"><code class="docutils literal notranslate"><span class="pre">FLpipeline.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.description"><code class="docutils literal notranslate"><span class="pre">FLpipeline.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.server"><code class="docutils literal notranslate"><span class="pre">FLpipeline.server</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.auto_test"><code class="docutils literal notranslate"><span class="pre">FLpipeline.auto_test()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.create"><code class="docutils literal notranslate"><span class="pre">FLpipeline.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.delete"><code class="docutils literal notranslate"><span class="pre">FLpipeline.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.test_by_node"><code class="docutils literal notranslate"><span class="pre">FLpipeline.test_by_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.validate"><code class="docutils literal notranslate"><span class="pre">FLpipeline.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.create_query"><code class="docutils literal notranslate"><span class="pre">create_query()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.model">MEDfl.LearningManager.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.model"><code class="docutils literal notranslate"><span class="pre">Model.model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.optimizer"><code class="docutils literal notranslate"><span class="pre">Model.optimizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.criterion"><code class="docutils literal notranslate"><span class="pre">Model.criterion</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.__init__"><code class="docutils literal notranslate"><span class="pre">Model.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.evaluate"><code class="docutils literal notranslate"><span class="pre">Model.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.get_parameters"><code class="docutils literal notranslate"><span class="pre">Model.get_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.load_model"><code class="docutils literal notranslate"><span class="pre">Model.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.save_model"><code class="docutils literal notranslate"><span class="pre">Model.save_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.set_parameters"><code class="docutils literal notranslate"><span class="pre">Model.set_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.train"><code class="docutils literal notranslate"><span class="pre">Model.train()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.model.Model.validate"><code class="docutils literal notranslate"><span class="pre">Model.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.plot">MEDfl.LearningManager.plot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.results_dict"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.results_dict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.parameters"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.metrics"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.metrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.iterations"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.iterations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.__init__"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_accuracy_loss"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.plot_accuracy_loss()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_classification_report"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.plot_classification_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_confusion_Matrix_by_node"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.plot_confusion_Matrix_by_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_global_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter.plot_global_confusion_matrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.plot.results_dict"><code class="docutils literal notranslate"><span class="pre">results_dict</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.server">MEDfl.LearningManager.server module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer"><code class="docutils literal notranslate"><span class="pre">FlowerServer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.global_model"><code class="docutils literal notranslate"><span class="pre">FlowerServer.global_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.strategy"><code class="docutils literal notranslate"><span class="pre">FlowerServer.strategy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.num_rounds"><code class="docutils literal notranslate"><span class="pre">FlowerServer.num_rounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.num_clients"><code class="docutils literal notranslate"><span class="pre">FlowerServer.num_clients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.fed_dataset"><code class="docutils literal notranslate"><span class="pre">FlowerServer.fed_dataset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.diff_priv"><code class="docutils literal notranslate"><span class="pre">FlowerServer.diff_priv</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.accuracies"><code class="docutils literal notranslate"><span class="pre">FlowerServer.accuracies</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.losses"><code class="docutils literal notranslate"><span class="pre">FlowerServer.losses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.flower_clients"><code class="docutils literal notranslate"><span class="pre">FlowerServer.flower_clients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.__init__"><code class="docutils literal notranslate"><span class="pre">FlowerServer.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.client_fn"><code class="docutils literal notranslate"><span class="pre">FlowerServer.client_fn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.evaluate"><code class="docutils literal notranslate"><span class="pre">FlowerServer.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.run"><code class="docutils literal notranslate"><span class="pre">FlowerServer.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.server.FlowerServer.validate"><code class="docutils literal notranslate"><span class="pre">FlowerServer.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.strategy">MEDfl.LearningManager.strategy module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.name"><code class="docutils literal notranslate"><span class="pre">Strategy.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.fraction_fit"><code class="docutils literal notranslate"><span class="pre">Strategy.fraction_fit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.fraction_evaluate"><code class="docutils literal notranslate"><span class="pre">Strategy.fraction_evaluate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.min_fit_clients"><code class="docutils literal notranslate"><span class="pre">Strategy.min_fit_clients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.min_evaluate_clients"><code class="docutils literal notranslate"><span class="pre">Strategy.min_evaluate_clients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.min_available_clients"><code class="docutils literal notranslate"><span class="pre">Strategy.min_available_clients</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.initial_parameters"><code class="docutils literal notranslate"><span class="pre">Strategy.initial_parameters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.__init__"><code class="docutils literal notranslate"><span class="pre">Strategy.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.create_strategy"><code class="docutils literal notranslate"><span class="pre">Strategy.create_strategy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.get_strategy_by_name"><code class="docutils literal notranslate"><span class="pre">Strategy.get_strategy_by_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.optuna_fed_optimization"><code class="docutils literal notranslate"><span class="pre">Strategy.optuna_fed_optimization()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager.utils">MEDfl.LearningManager.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.create_MEDfl_db"><code class="docutils literal notranslate"><span class="pre">create_MEDfl_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.custom_classification_report"><code class="docutils literal notranslate"><span class="pre">custom_classification_report()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.empty_db"><code class="docutils literal notranslate"><span class="pre">empty_db()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_node_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">get_node_confusion_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_pipeline_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">get_pipeline_confusion_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_pipeline_from_name"><code class="docutils literal notranslate"><span class="pre">get_pipeline_from_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_pipeline_result"><code class="docutils literal notranslate"><span class="pre">get_pipeline_result()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.load_db_config"><code class="docutils literal notranslate"><span class="pre">load_db_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.load_db_config_dep"><code class="docutils literal notranslate"><span class="pre">load_db_config_dep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.set_db_config"><code class="docutils literal notranslate"><span class="pre">set_db_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.set_db_config_dep"><code class="docutils literal notranslate"><span class="pre">set_db_config_dep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.utils.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html#module-MEDfl.LearningManager">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="MEDfl.NetManager.html">MEDfl.NetManager package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager.dataset">MEDfl.NetManager.dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet"><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet.__init__"><code class="docutils literal notranslate"><span class="pre">DataSet.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet.delete_dataset"><code class="docutils literal notranslate"><span class="pre">DataSet.delete_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet.list_alldatasets"><code class="docutils literal notranslate"><span class="pre">DataSet.list_alldatasets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet.update_data"><code class="docutils literal notranslate"><span class="pre">DataSet.update_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet.upload_dataset"><code class="docutils literal notranslate"><span class="pre">DataSet.upload_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.dataset.DataSet.validate"><code class="docutils literal notranslate"><span class="pre">DataSet.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager.flsetup">MEDfl.NetManager.flsetup module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup"><code class="docutils literal notranslate"><span class="pre">FLsetup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.__init__"><code class="docutils literal notranslate"><span class="pre">FLsetup.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.create"><code class="docutils literal notranslate"><span class="pre">FLsetup.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.create_dataloader_from_node"><code class="docutils literal notranslate"><span class="pre">FLsetup.create_dataloader_from_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.create_federated_dataset"><code class="docutils literal notranslate"><span class="pre">FLsetup.create_federated_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.create_nodes_from_master_dataset"><code class="docutils literal notranslate"><span class="pre">FLsetup.create_nodes_from_master_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.delete"><code class="docutils literal notranslate"><span class="pre">FLsetup.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.get_flDataSet"><code class="docutils literal notranslate"><span class="pre">FLsetup.get_flDataSet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.list_allsetups"><code class="docutils literal notranslate"><span class="pre">FLsetup.list_allsetups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.read_setup"><code class="docutils literal notranslate"><span class="pre">FLsetup.read_setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.flsetup.FLsetup.validate"><code class="docutils literal notranslate"><span class="pre">FLsetup.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager.net_helper">MEDfl.NetManager.net_helper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_feddataset_id_from_name"><code class="docutils literal notranslate"><span class="pre">get_feddataset_id_from_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_flpipeline_from_name"><code class="docutils literal notranslate"><span class="pre">get_flpipeline_from_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_flsetupid_from_name"><code class="docutils literal notranslate"><span class="pre">get_flsetupid_from_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_netid_from_name"><code class="docutils literal notranslate"><span class="pre">get_netid_from_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_nodeid_from_name"><code class="docutils literal notranslate"><span class="pre">get_nodeid_from_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.is_str"><code class="docutils literal notranslate"><span class="pre">is_str()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.master_table_exists"><code class="docutils literal notranslate"><span class="pre">master_table_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.process_data_after_reading"><code class="docutils literal notranslate"><span class="pre">process_data_after_reading()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.net_helper.process_eicu"><code class="docutils literal notranslate"><span class="pre">process_eicu()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager.net_manager_queries">MEDfl.NetManager.net_manager_queries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager.network">MEDfl.NetManager.network module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.name"><code class="docutils literal notranslate"><span class="pre">Network.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.mtable_exists"><code class="docutils literal notranslate"><span class="pre">Network.mtable_exists</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.__init__"><code class="docutils literal notranslate"><span class="pre">Network.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.add_node"><code class="docutils literal notranslate"><span class="pre">Network.add_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.create_master_dataset"><code class="docutils literal notranslate"><span class="pre">Network.create_master_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.create_network"><code class="docutils literal notranslate"><span class="pre">Network.create_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.delete_network"><code class="docutils literal notranslate"><span class="pre">Network.delete_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.get_netid_from_name"><code class="docutils literal notranslate"><span class="pre">Network.get_netid_from_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.list_allnetworks"><code class="docutils literal notranslate"><span class="pre">Network.list_allnetworks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.list_allnodes"><code class="docutils literal notranslate"><span class="pre">Network.list_allnodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.update_network"><code class="docutils literal notranslate"><span class="pre">Network.update_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.use_network"><code class="docutils literal notranslate"><span class="pre">Network.use_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.network.Network.validate"><code class="docutils literal notranslate"><span class="pre">Network.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager.node">MEDfl.NetManager.node module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.name"><code class="docutils literal notranslate"><span class="pre">Node.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.train"><code class="docutils literal notranslate"><span class="pre">Node.train</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.test_fraction"><code class="docutils literal notranslate"><span class="pre">Node.test_fraction</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.__init__"><code class="docutils literal notranslate"><span class="pre">Node.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.assign_dataset"><code class="docutils literal notranslate"><span class="pre">Node.assign_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.check_dataset_compatibility"><code class="docutils literal notranslate"><span class="pre">Node.check_dataset_compatibility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.create_node"><code class="docutils literal notranslate"><span class="pre">Node.create_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.delete_node"><code class="docutils literal notranslate"><span class="pre">Node.delete_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.get_dataset"><code class="docutils literal notranslate"><span class="pre">Node.get_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.list_alldatasets"><code class="docutils literal notranslate"><span class="pre">Node.list_alldatasets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.list_allnodes"><code class="docutils literal notranslate"><span class="pre">Node.list_allnodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.unassign_dataset"><code class="docutils literal notranslate"><span class="pre">Node.unassign_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.update_node"><code class="docutils literal notranslate"><span class="pre">Node.update_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.upload_dataset"><code class="docutils literal notranslate"><span class="pre">Node.upload_dataset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="MEDfl.NetManager.html#MEDfl.NetManager.node.Node.validate"><code class="docutils literal notranslate"><span class="pre">Node.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html#module-MEDfl.NetManager">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-MEDfl">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-MEDfl" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

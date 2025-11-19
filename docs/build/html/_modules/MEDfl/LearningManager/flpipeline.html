@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.LearningManager.flpipeline &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/dark_mode_css/general.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/dark_mode_css/dark.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/dark_mode_js/default_light.js"></script>
+        <script src="../../../_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/MEDomics.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_file.html">Configuration File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#model-choice">Model choice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">MEDfl.LearningManager.flpipeline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for MEDfl.LearningManager.flpipeline</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="c1"># File: create_query.py</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">import</span> <span class="nn">torch</span> 
+
+<span class="kn">from</span> <span class="nn">MEDfl.LearningManager.server</span> <span class="kn">import</span> <span class="n">FlowerServer</span>
+<span class="kn">from</span> <span class="nn">MEDfl.LearningManager.utils</span> <span class="kn">import</span> <span class="n">params</span><span class="p">,</span> <span class="n">test</span>
+<span class="kn">from</span> <span class="nn">MEDfl.NetManager.net_helper</span> <span class="kn">import</span> <span class="n">get_flpipeline_from_name</span>
+<span class="kn">from</span> <span class="nn">MEDfl.NetManager.net_manager_queries</span> <span class="kn">import</span> <span class="p">(</span><span class="n">CREATE_FLPIPELINE_QUERY</span><span class="p">,</span>
+                                                  <span class="n">DELETE_FLPIPELINE_QUERY</span> <span class="p">,</span> <span class="n">CREATE_TEST_RESULTS_QUERY</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">MEDfl.NetManager.database_connector</span> <span class="kn">import</span> <span class="n">DatabaseManager</span>
+
+<div class="viewcode-block" id="create_query"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.create_query">[docs]</a><span class="k">def</span> <span class="nf">create_query</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">creation_date</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;INSERT INTO FLpipeline(name, description, creation_date, results) &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;VALUES (&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">creation_date</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&#39;)&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">query</span></div>
+
+
+
+<div class="viewcode-block" id="FLpipeline"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline">[docs]</a><span class="k">class</span> <span class="nc">FLpipeline</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    FLpipeline class for managing Federated Learning pipelines.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): The name of the FLpipeline.</span>
+<span class="sd">        description (str): A description of the FLpipeline.</span>
+<span class="sd">        server (FlowerServer): The FlowerServer object associated with the FLpipeline.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        __init__(self, name: str, description: str, server: FlowerServer) -&gt; None:</span>
+<span class="sd">            Initialize FLpipeline with the specified name, description, and server.</span>
+<span class="sd">  </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">server</span><span class="p">:</span> <span class="n">FlowerServer</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+        <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+        <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FLpipeline.validate"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate the name, description, and server attributes.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the name is not a string, the description is not a string,</span>
+<span class="sd">                      or the server is not a FlowerServer object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;name argument must be a string&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;description argument must be a string&quot;</span><span class="p">)</span></div>
+
+        <span class="c1"># if not isinstance(self.server, FlowerServer):</span>
+        <span class="c1">#     raise TypeError(&quot;server argument must be a FlowerServer&quot;)</span>
+
+<div class="viewcode-block" id="FLpipeline.create"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new FLpipeline entry in the database with the given result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            result (str): The result string to store in the database.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">creation_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">CREATE_FLPIPELINE_QUERY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">creation_date</span><span class="o">=</span><span class="n">creation_date</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">get_flpipeline_from_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">fed_dataset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">FLpipeId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">FedId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">fed_dataset</span><span class="o">.</span><span class="n">id</span>
+            <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="FLpipeline.delete"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete the FLpipeline entry from the database based on its name.</span>
+
+<span class="sd">        Note: This is a placeholder method and needs to be implemented based on your specific database setup.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Placeholder code for deleting the FLpipeline entry from the database based on the name.</span>
+        <span class="c1"># You need to implement the actual deletion based on your database setup.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">DELETE_FLPIPELINE_QUERY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="FLpipeline.test_by_node"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.test_by_node">[docs]</a>    <span class="k">def</span> <span class="nf">test_by_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">test_frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the FLpipeline by node with the specified test_frac.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            node_name (str): The name of the node to test.</span>
+<span class="sd">            test_frac (float, optional): The fraction of the test data to use. Default is 1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary containing the node name and the classification report.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">fed_dataset</span><span class="o">.</span><span class="n">test_nodes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">global_model</span><span class="p">,</span> <span class="n">test_loader</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">global_model</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">fed_dataset</span><span class="o">.</span><span class="n">testloaders</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Move model to GPU if available</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="n">global_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        
+        <span class="c1"># Prepare test data</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="n">test_loader</span><span class="o">.</span><span class="n">dataset</span>
+        <span class="n">num_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">test_frac</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_data</span><span class="p">))</span>
+        <span class="n">test_data</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">test_data</span><span class="p">[:</span><span class="n">num_samples</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">test_data</span><span class="p">[:</span><span class="n">num_samples</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+        
+        <span class="c1"># Create DataLoader for test data</span>
+        <span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;test_batch_size&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Perform testing</span>
+        <span class="n">classification_report</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">global_model</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">test_loader</span><span class="o">=</span><span class="n">test_loader</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;node_name&quot;</span><span class="p">:</span> <span class="n">node_name</span><span class="p">,</span>
+            <span class="s2">&quot;classification_report&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">classification_report</span><span class="p">),</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="FLpipeline.auto_test"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.flpipeline.FLpipeline.auto_test">[docs]</a>    <span class="k">def</span> <span class="nf">auto_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Automatically test the FLpipeline on all nodes with the specified test_frac.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            test_frac (float, optional): The fraction of the test data to use. Default is 1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[dict]: A list of dictionaries containing the node names and the classification reports.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_by_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">test_frac</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">fed_dataset</span><span class="o">.</span><span class="n">test_nodes</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">result</span><span class="p">))</span>
+
+        <span class="c1"># stockage des resultats des tests</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+           <span class="n">node_name</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;node_name&#39;</span><span class="p">]</span>
+           <span class="n">classification_report_str</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;classification_report&#39;</span><span class="p">]</span>
+
+           <span class="c1"># Convert the &#39;classification_report&#39; string to a dictionary</span>
+           <span class="n">classification_report_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">classification_report_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">))</span>
+           <span class="k">try</span><span class="p">:</span>
+               <span class="c1"># Insert record into the &#39;testResults&#39; table</span>
+               <span class="n">query</span> <span class="o">=</span> <span class="n">CREATE_TEST_RESULTS_QUERY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                      <span class="n">pipelineId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                      <span class="n">nodeName</span> <span class="o">=</span> <span class="n">node_name</span> <span class="p">,</span> 
+                      <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;confusion matrix&#39;</span><span class="p">]),</span> 
+                      <span class="n">accuracy</span> <span class="o">=</span><span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;Accuracy&#39;</span><span class="p">]</span> <span class="p">,</span> 
+                      <span class="n">sensivity</span> <span class="o">=</span> <span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;Sensitivity/Recall&#39;</span><span class="p">]</span> <span class="p">,</span>
+                      <span class="n">ppv</span> <span class="o">=</span> <span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;PPV/Precision&#39;</span><span class="p">]</span> <span class="p">,</span>
+                      <span class="n">npv</span><span class="o">=</span> <span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;NPV&#39;</span><span class="p">]</span> <span class="p">,</span>
+                      <span class="n">f1score</span><span class="o">=</span> <span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;F1-score&#39;</span><span class="p">]</span> <span class="p">,</span>
+                      <span class="n">fpr</span><span class="o">=</span> <span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;False positive rate&#39;</span><span class="p">]</span> <span class="p">,</span>
+                      <span class="n">tpr</span><span class="o">=</span> <span class="n">classification_report_dict</span><span class="p">[</span><span class="s1">&#39;True positive rate&#39;</span><span class="p">]</span> 
+                <span class="p">)</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
+           <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># This block will catch any other exceptions</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+               
+           
+
+        <span class="k">return</span> <span class="n">result</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

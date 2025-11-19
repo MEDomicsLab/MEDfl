@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.NetManager.net_helper &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/dark_mode_css/general.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/dark_mode_css/dark.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/dark_mode_js/default_light.js"></script>
+        <script src="../../../_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/MEDomics.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_file.html">Configuration File</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#model-choice">Model choice</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">MEDfl.NetManager.net_helper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for MEDfl.NetManager.net_helper</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">MEDfl.NetManager.database_connector</span> <span class="kn">import</span> <span class="n">DatabaseManager</span>
+
+
+<div class="viewcode-block" id="is_str"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.is_str">[docs]</a><span class="k">def</span> <span class="nf">is_str</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a column in a DataFrame is of type &#39;object&#39; and convert the value accordingly.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_df (pandas.DataFrame): DataFrame containing the data.</span>
+<span class="sd">        row (pandas.Series): Data row.</span>
+<span class="sd">        x (str): Column name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str or float: Processed value based on the column type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">data_df</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="process_eicu"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.process_eicu">[docs]</a><span class="k">def</span> <span class="nf">process_eicu</span><span class="p">(</span><span class="n">data_df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process eICU data by filling missing values with mean and replacing NaNs with &#39;Unknown&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_df (pandas.DataFrame): Input data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: Processed data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Identify numeric and non-numeric columns</span>
+    <span class="n">numeric_columns</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">non_numeric_columns</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="c1"># Fill NaN in numeric columns with mean</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+        <span class="n">data_df</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+    <span class="c1"># Fill NaN in non-numeric columns with &#39;Unknown&#39;</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">non_numeric_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">non_numeric_columns</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+        <span class="s1">&#39;Unknown&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">data_df</span></div>
+
+
+<span class="c1"># remove indiserd columns after reading from the DB</span>
+<div class="viewcode-block" id="process_data_after_reading"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.process_data_after_reading">[docs]</a><span class="k">def</span> <span class="nf">process_data_after_reading</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">fill_strategy</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>  <span class="n">fit_encode</span><span class="o">=</span><span class="p">[],</span> <span class="n">to_drop</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process data after reading from the database, including encoding, dropping columns, and creating a PyTorch TensorDataset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (pandas.DataFrame): Input data.</span>
+<span class="sd">        output (str): Output column name.</span>
+<span class="sd">        fill_strategy (str, optional): Imputation strategy for missing values. Default is &quot;mean&quot;.</span>
+<span class="sd">        fit_encode (list, optional): List of columns to be label-encoded. Default is an empty list.</span>
+<span class="sd">        to_drop (list, optional): List of columns to be dropped from the DataFrame. Default is an empty list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torch.utils.data.TensorDataset: Processed data as a PyTorch TensorDataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check if there is a DataSet assigned to the node</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="s2">&quot;Node doesn&#39;t Have dataSet&quot;</span>
+
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="c1"># En Code some columns</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">fit_encode</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c1"># The output of the DATA</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">output</span><span class="p">]</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="c1"># remove indisered columns when reading the dataframe from the DB</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">to_drop</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="c1"># Get the DATAset Features</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="n">output</span><span class="p">]</span>
+
+    <span class="c1"># Impute missing values using the mean strategy</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">imputer</span> <span class="o">=</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="n">fill_strategy</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">[</span><span class="n">features</span><span class="p">]</span> <span class="o">=</span> <span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">features</span><span class="p">])</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">()</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="get_nodeid_from_name"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_nodeid_from_name">[docs]</a><span class="k">def</span> <span class="nf">get_nodeid_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the NodeId from the Nodes table based on the NodeName.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Node name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int or None: NodeId or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+    <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">my_eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+    <span class="n">result_proxy</span> <span class="o">=</span> <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT NodeId FROM Nodes WHERE NodeName = &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="n">NodeId</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_proxy</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">NodeId</span></div>
+
+
+<div class="viewcode-block" id="get_netid_from_name"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_netid_from_name">[docs]</a><span class="k">def</span> <span class="nf">get_netid_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the Network Id from the Networks table based on the NetName.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Network name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int or None: NetId or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+    <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">my_eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result_proxy</span> <span class="o">=</span> <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT NetId FROM Networks WHERE NetName = &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">NetId</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_proxy</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">NetId</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">NetId</span></div>
+
+
+<div class="viewcode-block" id="get_flsetupid_from_name"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_flsetupid_from_name">[docs]</a><span class="k">def</span> <span class="nf">get_flsetupid_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the FLsetupId from the FLsetup table based on the FL setup name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): FL setup name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int or None: FLsetupId or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+    <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">my_eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        
+         <span class="n">result_proxy</span> <span class="o">=</span> <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT FLsetupId FROM FLsetup WHERE name = &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+         <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_proxy</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+   
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">id</span></div>
+
+
+<div class="viewcode-block" id="get_flpipeline_from_name"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_flpipeline_from_name">[docs]</a><span class="k">def</span> <span class="nf">get_flpipeline_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the FLpipeline Id from the FLpipeline table based on the FL pipeline name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): FL pipeline name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int or None: FLpipelineId or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+    <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">my_eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">result_proxy</span> <span class="o">=</span> <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT id FROM FLpipeline WHERE name = &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_proxy</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">id</span></div>
+
+
+<div class="viewcode-block" id="get_feddataset_id_from_name"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.get_feddataset_id_from_name">[docs]</a><span class="k">def</span> <span class="nf">get_feddataset_id_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the Federated dataset Id from the FedDatasets table based on the federated dataset name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Federated dataset name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int or None: FedId or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+    <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">my_eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        
+        <span class="n">result_proxy</span> <span class="o">=</span> <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT FedId FROM FedDatasets WHERE name = &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_proxy</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">id</span></div>
+
+
+<div class="viewcode-block" id="master_table_exists"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.net_helper.master_table_exists">[docs]</a><span class="k">def</span> <span class="nf">master_table_exists</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the MasterDataset table exists in the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the table exists, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+        <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="n">my_eng</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+        <span class="c1"># SQLite-specific query to check if table exists</span>
+        <span class="n">sql_query</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">&quot;SELECT name FROM sqlite_master WHERE type=&#39;table&#39; AND name=&#39;MasterDataset&#39;&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql_query</span><span class="p">)</span>
+        <span class="n">exists</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">exists</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error checking MasterDataset table existence: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
