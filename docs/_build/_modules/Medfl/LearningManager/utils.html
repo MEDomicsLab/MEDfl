@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.LearningManager.utils &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../../_static/dark_mode_js/default_light.js?v=c2e647ce"></script>
+        <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/MEDomics.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">MEDfl.LearningManager.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for MEDfl.LearningManager.utils</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">yaml.loader</span> <span class="kn">import</span> <span class="n">SafeLoader</span>
+
+<span class="kn">from</span> <span class="nn">scripts.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">yaml_path</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;params.yaml&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">SafeLoader</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="custom_classification_report">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.custom_classification_report">[docs]</a>
+<span class="k">def</span> <span class="nf">custom_classification_report</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute custom classification report metrics including accuracy, sensitivity, specificity, precision, NPV,</span>
+<span class="sd">    F1-score, false positive rate, and true positive rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        y_true (array-like): True labels.</span>
+<span class="sd">        y_pred (array-like): Predicted labels.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary containing custom classification report metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="c1"># Accuracy</span>
+    <span class="n">denominator_acc</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator_acc</span> <span class="k">if</span> <span class="n">denominator_acc</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="c1"># Sensitivity/Recall</span>
+    <span class="n">denominator_sen</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span>
+    <span class="n">sen</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="n">denominator_sen</span> <span class="k">if</span> <span class="n">denominator_sen</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="c1"># Specificity</span>
+    <span class="n">denominator_sp</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">/</span> <span class="n">denominator_sp</span> <span class="k">if</span> <span class="n">denominator_sp</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="c1"># PPV/Precision</span>
+    <span class="n">denominator_ppv</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span>
+    <span class="n">ppv</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="n">denominator_ppv</span> <span class="k">if</span> <span class="n">denominator_ppv</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+<span class="c1">#     NPV</span>
+    <span class="n">denominator_npv</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span>
+    <span class="n">npv</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">/</span> <span class="n">denominator_npv</span> <span class="k">if</span> <span class="n">denominator_npv</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="c1"># F1 Score</span>
+    <span class="n">denominator_f1</span> <span class="o">=</span> <span class="n">sen</span> <span class="o">+</span> <span class="n">ppv</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">sen</span> <span class="o">*</span> <span class="n">ppv</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator_f1</span> <span class="k">if</span> <span class="n">denominator_f1</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="c1"># False Positive Rate</span>
+    <span class="n">denominator_fpr</span> <span class="o">=</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span>
+    <span class="n">fpr</span> <span class="o">=</span> <span class="n">fp</span> <span class="o">/</span> <span class="n">denominator_fpr</span> <span class="k">if</span> <span class="n">denominator_fpr</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="c1"># True Positive Rate</span>
+    <span class="n">denominator_tpr</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span>
+    <span class="n">tpr</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="n">denominator_tpr</span> <span class="k">if</span> <span class="n">denominator_tpr</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;confusion matrix&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;TP&quot;</span><span class="p">:</span> <span class="n">tp</span><span class="p">,</span> <span class="s2">&quot;FP&quot;</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span> <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;TN&quot;</span><span class="p">:</span> <span class="n">tn</span><span class="p">},</span>
+        <span class="s2">&quot;Accuracy&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;Sensitivity/Recall&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">sen</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;Specificity&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;PPV/Precision&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">ppv</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;NPV&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">npv</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;F1-score&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;False positive rate&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s2">&quot;True positive rate&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="test">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.test">[docs]</a>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate a model using a test loader and return a custom classification report.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (torch.nn.Module): PyTorch model to evaluate.</span>
+<span class="sd">        test_loader (torch.utils.data.DataLoader): DataLoader for the test dataset.</span>
+<span class="sd">        device (torch.device, optional): Device for model evaluation. Default is &quot;cpu&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary containing custom classification report metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">test_loader</span><span class="o">.</span><span class="n">dataset</span><span class="p">[:][</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_loader</span><span class="o">.</span><span class="n">dataset</span><span class="p">[:][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">custom_classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span></div>
+
+
+
+<span class="n">column_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="s2">&quot;VARCHAR(255)&quot;</span><span class="p">,</span> <span class="s2">&quot;int64&quot;</span><span class="p">:</span> <span class="s2">&quot;INT&quot;</span><span class="p">,</span> <span class="s2">&quot;float64&quot;</span><span class="p">:</span> <span class="s2">&quot;FLOAT&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="empty_db">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.empty_db">[docs]</a>
+<span class="k">def</span> <span class="nf">empty_db</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Empty the database by deleting records from multiple tables and resetting auto-increment counters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># my_eng.execute(text(f&quot;DELETE FROM  {&#39;DataSets&#39;}&quot;))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="s1">&#39;Nodes&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="s1">&#39;FedDatasets&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="s1">&#39;Networks&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="s1">&#39;FLsetup&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="s1">&#39;FLpipeline&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="s1">&#39;Nodes&#39;</span><span class="si">}</span><span class="s2"> AUTO_INCREMENT = 1&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="s1">&#39;Networks&#39;</span><span class="si">}</span><span class="s2"> AUTO_INCREMENT = 1&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="s1">&#39;FedDatasets&#39;</span><span class="si">}</span><span class="s2"> AUTO_INCREMENT = 1&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="s1">&#39;FLsetup&#39;</span><span class="si">}</span><span class="s2"> AUTO_INCREMENT = 1&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ALTER TABLE </span><span class="si">{</span><span class="s1">&#39;FLpipeline&#39;</span><span class="si">}</span><span class="s2"> AUTO_INCREMENT = 1&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DELETE FROM </span><span class="si">{</span><span class="s1">&#39;testresults&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="s1">&#39;masterdataset&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">my_eng</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="s1">&#39;datasets&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_pipeline_from_name">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_pipeline_from_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_pipeline_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the pipeline ID from its name in the database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of the pipeline.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: ID of the pipeline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NodeId</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT id FROM flpipeline WHERE name = &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">),</span> <span class="n">my_eng</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">NodeId</span></div>
+
+
+<div class="viewcode-block" id="get_pipeline_confusion_matrix">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_pipeline_confusion_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">get_pipeline_confusion_matrix</span><span class="p">(</span><span class="n">pipeline_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the global confusion matrix for a pipeline based on test results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pipeline_id (int): ID of the pipeline.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary representing the global confusion matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT confusionmatrix FROM testresults WHERE pipelineid = &#39;</span><span class="si">{</span><span class="n">pipeline_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">),</span> <span class="n">my_eng</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Convert the column of strings into a list of dictionaries representing confusion matrices</span>
+    <span class="n">confusion_matrices</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;confusionmatrix&#39;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Initialize variables for global confusion matrix</span>
+    <span class="n">global_TP</span> <span class="o">=</span> <span class="n">global_FP</span> <span class="o">=</span> <span class="n">global_FN</span> <span class="o">=</span> <span class="n">global_TN</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Iterate through each dictionary and sum the corresponding values for each category</span>
+    <span class="k">for</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="n">confusion_matrices</span><span class="p">:</span>
+        <span class="n">global_TP</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">]</span>
+        <span class="n">global_FP</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span>
+        <span class="n">global_FN</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">]</span>
+        <span class="n">global_TN</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="s1">&#39;TN&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Create a global confusion matrix as a dictionary</span>
+    <span class="n">global_confusion_matrix</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;TP&#39;</span><span class="p">:</span> <span class="n">global_TP</span><span class="p">,</span>
+        <span class="s1">&#39;FP&#39;</span><span class="p">:</span> <span class="n">global_FP</span><span class="p">,</span>
+        <span class="s1">&#39;FN&#39;</span><span class="p">:</span> <span class="n">global_FN</span><span class="p">,</span>
+        <span class="s1">&#39;TN&#39;</span><span class="p">:</span> <span class="n">global_TN</span>
+    <span class="p">}</span>
+    <span class="c1"># Return the list of dictionaries representing confusion matrices</span>
+    <span class="k">return</span> <span class="n">global_confusion_matrix</span></div>
+
+
+<div class="viewcode-block" id="get_node_confusion_matrix">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_node_confusion_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">get_node_confusion_matrix</span><span class="p">(</span><span class="n">pipeline_id</span> <span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the confusion matrix for a specific node in a pipeline based on test results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pipeline_id (int): ID of the pipeline.</span>
+<span class="sd">        node_name (str): Name of the node.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary representing the confusion matrix for the specified node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT confusionmatrix FROM testresults WHERE pipelineid = &#39;</span><span class="si">{</span><span class="n">pipeline_id</span><span class="si">}</span><span class="s2">&#39; AND nodename = &#39;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">),</span> <span class="n">my_eng</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Convert the column of strings into a list of dictionaries representing confusion matrices</span>
+    <span class="n">confusion_matrices</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;confusionmatrix&#39;</span><span class="p">]</span>
+    <span class="p">]</span>
+
+  
+    <span class="c1"># Return the list of dictionaries representing confusion matrices</span>
+    <span class="k">return</span> <span class="n">confusion_matrices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_pipeline_result">
+<a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.utils.get_pipeline_result">[docs]</a>
+<span class="k">def</span> <span class="nf">get_pipeline_result</span><span class="p">(</span><span class="n">pipeline_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the test results for a pipeline.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pipeline_id (int): ID of the pipeline.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: DataFrame containing test results for the specified pipeline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT * FROM testresults WHERE pipelineid = &#39;</span><span class="si">{</span><span class="n">pipeline_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">),</span> <span class="n">my_eng</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
