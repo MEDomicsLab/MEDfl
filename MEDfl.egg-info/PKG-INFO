@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: MEDfl
-Version: 2.0.5
+Version: 2.0.5.dev4
 Summary: Python Open-source package for simulating federated learning and differential privacy
 Home-page: https://github.com/MEDomics-UdeS/MEDfl
 Author: MEDomics consortium
@@ -17,6 +17,37 @@ Classifier: Programming Language :: Python :: 3.9
 Requires-Python: >=3.8,<3.13
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: flwr~=1.18.0
+Requires-Dist: matplotlib~=3.6.3
+Requires-Dist: numpy~=1.26.4
+Requires-Dist: opacus~=1.5.3
+Requires-Dist: pandas~=1.5.2
+Requires-Dist: PyYAML~=6.0
+Requires-Dist: setuptools~=68.0.0
+Requires-Dist: Sphinx~=5.3.0
+Requires-Dist: SQLAlchemy~=1.4.47
+Requires-Dist: torch>=2.7.0
+Requires-Dist: datetime~=5.1
+Requires-Dist: scikit-learn~=1.2.2
+Requires-Dist: sphinx-jsonschema==1.19.1
+Requires-Dist: sphinx-rtd-dark-mode==1.2.4
+Requires-Dist: plotly==5.19.0
+Requires-Dist: optuna==3.5.0
+Requires-Dist: mysql-connector-python~=9.3.0
+Requires-Dist: seaborn~=0.13.2
+Requires-Dist: flwr[simulation]
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license-file
+Dynamic: project-url
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 # MEDfl: A Collaborative Framework for Federated Learning in Medicine
 
