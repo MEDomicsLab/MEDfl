@@ -3,6 +3,7 @@ import subprocess , sys
 from sqlalchemy import create_engine
 from configparser import ConfigParser
 
+
 class DatabaseManager:
     def __init__(self):
         from MEDfl.LearningManager.utils import load_db_config
