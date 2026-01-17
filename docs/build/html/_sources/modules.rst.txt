@@ -5,3 +5,7 @@ MEDfl
    :maxdepth: 4
 
    MEDfl
+   MEDfl.LearningManager
+   MEDfl.NetManager
+   MEDfl.rw
+

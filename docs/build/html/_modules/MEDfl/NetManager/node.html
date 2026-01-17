@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MEDfl.NetManager.node &mdash; MEDfl 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/dark_mode_css/general.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/dark_mode_css/dark.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -37,7 +39,7 @@
           
           <a href="../../../index.html">
             
-              <img src="../../../_static/MEDomics.png" class="logo" alt="Logo"/>
+              <img src="../../../_static/medfl_logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -47,23 +49,27 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Documentation.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../configuration_file.html">Configuration File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#database-management">Database management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#netmanager">NetManager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#transfer-learning">Transfer Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-manager">Learning Manager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-results">Learning Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">MEDfl</a></li>
 </ul>
@@ -93,17 +99,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for MEDfl.NetManager.node</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">.net_helper</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.net_manager_queries</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">MEDfl.LearningManager.utils</span> <span class="kn">import</span> <span class="n">params</span>
-<span class="kn">from</span> <span class="nn">MEDfl.NetManager.database_connector</span> <span class="kn">import</span> <span class="n">DatabaseManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.net_helper</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.net_manager_queries</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.NetManager.database_connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span><span class="p">,</span> <span class="n">exc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span><span class="p">,</span> <span class="n">exc</span>
 
 
-<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class representing a node in the network.</span>
 
@@ -113,7 +119,7 @@
 <span class="sd">        test_fraction (float, optional): The fraction of data used for testing when train=1. Default is 0.2.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Node.__init__"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Node.__init__"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">train</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">test_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -133,7 +139,7 @@
         <span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="p">;</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Node.validate"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.validate"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.validate">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate name, train, test_fraction&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;name argument must be a string&quot;</span><span class="p">)</span>
@@ -144,7 +150,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_fraction</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;test_fraction argument must be a float&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Node.create_node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.create_node">[docs]</a>    <span class="k">def</span> <span class="nf">create_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NetId</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.create_node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.create_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NetId</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a node in the database.</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">            NetId (int): The ID of the network to which the node belongs.</span>
@@ -156,11 +162,11 @@
             <span class="n">text</span><span class="p">(</span><span class="n">INSERT_NODE_QUERY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">NetId</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">))</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Node.delete_node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.delete_node">[docs]</a>    <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.delete_node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.delete_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">delete_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete the node from the database.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">DELETE_NODE_QUERY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span></div>
 
-<div class="viewcode-block" id="Node.check_dataset_compatibility"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.check_dataset_compatibility">[docs]</a>    <span class="k">def</span> <span class="nf">check_dataset_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_df</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.check_dataset_compatibility"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.check_dataset_compatibility">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_dataset_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_df</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the dataset is compatible with the master dataset.</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">            data_df (DataFrame): The dataset to check.</span>
@@ -180,11 +186,11 @@
 
             <span class="k">assert</span> <span class="p">[</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">master_table_columns</span><span class="p">,</span> <span class="n">columns</span><span class="p">)]</span></div>
 
-<div class="viewcode-block" id="Node.update_node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.update_node">[docs]</a>    <span class="k">def</span> <span class="nf">update_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.update_node"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.update_node">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">update_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the node information (not implemented).&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Node.get_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.get_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.get_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.get_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the dataset for the node based on the given column name.</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">            column_name (str, optional): The column name to filter the dataset. Default is None.</span>
@@ -203,7 +209,7 @@
 
         <span class="k">return</span> <span class="n">node_dataset</span></div>
 
-<div class="viewcode-block" id="Node.upload_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.upload_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">upload_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path_to_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;path_to_test_csv&#39;</span><span class="p">]):</span>
+<div class="viewcode-block" id="Node.upload_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.upload_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">upload_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path_to_csv</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;path_to_test_csv&#39;</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload the dataset to the database for the node.</span>
 
 <span class="sd">        Parameters:</span>
@@ -232,7 +238,7 @@
         <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">SQLAlchemyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error uploading dataset: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Node.assign_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.assign_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">assign_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.assign_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.assign_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">assign_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigning existing dataSet to node</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">            dataset_name (str): The name of the dataset to assign.</span>
@@ -245,7 +251,7 @@
         <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;UPDATE DataSets SET nodeId = </span><span class="si">{</span><span class="n">nodeId</span><span class="si">}</span><span class="s2"> WHERE DataSetName = &#39;</span><span class="si">{</span><span class="n">dataset_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">query</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Node.unassign_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.unassign_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">unassign_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.unassign_dataset"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.unassign_dataset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">unassign_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;unssigning existing dataSet to node</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">            dataset_name (str): The name of the dataset to assign.</span>
@@ -257,7 +263,7 @@
         <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;UPDATE DataSets SET nodeId = </span><span class="si">{</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2"> WHERE DataSetName = &#39;</span><span class="si">{</span><span class="n">dataset_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">query</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Node.list_alldatasets"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.list_alldatasets">[docs]</a>    <span class="k">def</span> <span class="nf">list_alldatasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.list_alldatasets"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.list_alldatasets">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">list_alldatasets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;List all datasets associated with the node.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame: A DataFrame containing information about all datasets associated with the node.</span>
@@ -268,7 +274,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Node.list_allnodes"><a class="viewcode-back" href="../../../MEDfl.NetManager.html#MEDfl.NetManager.node.Node.list_allnodes">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">list_allnodes</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_allnodes</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;List all nodes in the database.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame: A DataFrame containing information about all nodes in the database.</span>

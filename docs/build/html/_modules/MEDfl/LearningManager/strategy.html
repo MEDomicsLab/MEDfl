@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MEDfl.LearningManager.strategy &mdash; MEDfl 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/dark_mode_css/general.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/dark_mode_css/dark.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -37,7 +39,7 @@
           
           <a href="../../../index.html">
             
-              <img src="../../../_static/MEDomics.png" class="logo" alt="Logo"/>
+              <img src="../../../_static/medfl_logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -47,23 +49,27 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Documentation.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../configuration_file.html">Configuration File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#database-management">Database management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#netmanager">NetManager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#transfer-learning">Transfer Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-manager">Learning Manager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#learning-results">Learning Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">MEDfl</a></li>
 </ul>
@@ -94,18 +100,18 @@
              
   <h1>Source code for MEDfl.LearningManager.strategy</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">flwr</span> <span class="k">as</span> <span class="nn">fl</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flwr</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">import</span> <span class="nn">optuna</span>
-
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
 
 
-<div class="viewcode-block" id="Strategy"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy">[docs]</a><span class="k">class</span>  <span class="nc">Strategy</span><span class="p">:</span>
+
+
+<div class="viewcode-block" id="Strategy"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy">[docs]</a><span class="k">class</span><span class="w">  </span><span class="nc">Strategy</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class representing a strategy for Federated Learning.</span>
 
@@ -121,7 +127,7 @@
 <span class="sd">     </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Strategy.__init__"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Strategy.__init__"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;FedAvg&quot;</span><span class="p">,</span>
         <span class="n">fraction_fit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -154,13 +160,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_fn</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
     
-<div class="viewcode-block" id="Strategy.optuna_fed_optimization"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.optuna_fed_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">optuna_fed_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span><span class="nb">str</span> <span class="p">,</span> <span class="n">hpo_rate</span><span class="p">:</span><span class="nb">int</span> <span class="p">,</span> <span class="n">params_config</span><span class="p">):</span>
+<div class="viewcode-block" id="Strategy.optuna_fed_optimization"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.optuna_fed_optimization">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">optuna_fed_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span><span class="nb">str</span> <span class="p">,</span> <span class="n">hpo_rate</span><span class="p">:</span><span class="nb">int</span> <span class="p">,</span> <span class="n">params_config</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">study</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">create_study</span><span class="p">(</span><span class="n">direction</span><span class="o">=</span><span class="n">direction</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hpo_rate</span> <span class="o">=</span> <span class="n">hpo_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_config</span> <span class="o">=</span> <span class="n">params_config</span></div>
     
  
-<div class="viewcode-block" id="Strategy.create_strategy"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.create_strategy">[docs]</a>    <span class="k">def</span> <span class="nf">create_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Strategy.create_strategy"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.create_strategy">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">strategy_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_strategy_by_name</span><span class="p">()(</span>
             <span class="n">fraction_fit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fraction_fit</span><span class="p">,</span>
             <span class="n">fraction_evaluate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fraction_evaluate</span><span class="p">,</span>
@@ -170,7 +176,7 @@
             <span class="n">initial_parameters</span><span class="o">=</span><span class="n">fl</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">ndarrays_to_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_parameters</span><span class="p">),</span>
             <span class="n">evaluate_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evaluate_fn</span>
         <span class="p">)</span></div>
-<div class="viewcode-block" id="Strategy.get_strategy_by_name"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.get_strategy_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_strategy_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Strategy.get_strategy_by_name"><a class="viewcode-back" href="../../../MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy.get_strategy_by_name">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_strategy_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fl.server.strategy.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
     
     

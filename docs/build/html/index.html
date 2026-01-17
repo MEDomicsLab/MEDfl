@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to the MEDfl documentation! &mdash; MEDfl 0.1.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
-      <link rel="stylesheet" href="_static/dark_mode_css/general.css" type="text/css" />
-      <link rel="stylesheet" href="_static/dark_mode_css/dark.css" type="text/css" />
+  <title>Welcome to the MEDfl Documentation &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -39,7 +41,7 @@
           
           <a href="#">
             
-              <img src="_static/MEDomics.png" class="logo" alt="Logo"/>
+              <img src="_static/medfl_logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,23 +51,27 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration File</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#database-management">Database management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#netmanager">NetManager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#transfer-learning">Transfer Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-manager">Learning Manager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-results">Learning Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a></li>
 </ul>
@@ -84,7 +90,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to the MEDfl documentation!</li>
+      <li class="breadcrumb-item active">Welcome to the MEDfl Documentation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -95,40 +101,106 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-the-medfl-documentation">
-<h1>Welcome to the MEDfl documentation!<a class="headerlink" href="#welcome-to-the-medfl-documentation" title="Permalink to this heading"></a></h1>
-<p>This Python package is an open-source tool designed for simulating federated learning and incorporating differential privacy. It empowers researchers and developers to effortlessly create, execute, and assess federated learning pipelines while seamlessly working with various tabular datasets.</p>
-<img alt="_images/MEDfl_Diagramm.png" src="_images/MEDfl_Diagramm.png" />
+<h1>Welcome to the MEDfl Documentation<a class="headerlink" href="#welcome-to-the-medfl-documentation" title="Permalink to this heading"></a></h1>
+<a class="reference internal image-reference" href="_images/medfl_logo.png"><img alt="_images/medfl_logo.png" class="align-center" src="_images/medfl_logo.png" style="width: 300px;" /></a>
+<p>MEDfl is a modular and extensible Python framework designed to accelerate
+research and deployment in Federated Learning (FL), particularly in the medical
+domain.</p>
+<p>MEDfl supports <strong>two complementary modes</strong>:</p>
+<ul class="simple">
+<li><p><strong>Simulation Mode</strong> — a controlled environment with virtual clients that allows
+researchers to rapidly experiment, test assumptions, and validate hypotheses
+before moving to real-world deployment.</p></li>
+<li><p><strong>Real-World Mode</strong> — a production-ready execution layer where FL pipelines
+run on distributed machines using the MEDfl Agent, Flower, and secure
+networking. This mode enables seamless deployment across hospitals,
+institutions, and research teams.</p></li>
+</ul>
+<img alt="MEDfl architecture diagram" class="align-center" src="_images/medfl_use.png" />
+<p>Together, these two modes provide a complete workflow:
+from <strong>idea → experiment → validation → real-world deployment</strong>.</p>
+<img alt="MEDfl architecture diagram" class="align-center" src="_images/medfl_workflow.png" />
+<p>For users seeking an even more accessible experience, MEDfl is fully
+integrated into <strong>MEDfl application</strong>, a user-friendly desktop application that
+simplifies the creation and orchestration of FL pipelines. MEDomicsLab bridges
+the gap between medical researchers and computer scientists, promoting
+collaboration through intuitive tools, automated workflows, and secure
+distributed execution.</p>
+<img alt="MEDfl architecture diagram" class="align-center" src="_images/medfl_integration.png" />
+<p>Explore the sections below to begin working with MEDfl, understand its
+architecture, or build your own federated learning pipelines.</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration File</a></li>
 </ul>
 </div>
+</section>
+<section id="simulation-mode">
+<h1>Simulation Mode<a class="headerlink" href="#simulation-mode" title="Permalink to this heading"></a></h1>
+<p>MEDfl’s <strong>simulation mode</strong> enables you to design, analyze, and validate FL
+pipelines using virtual clients running locally. This environment is ideal for:</p>
+<ul class="simple">
+<li><p>testing hypotheses</p></li>
+<li><p>benchmarking FL configurations</p></li>
+<li><p>evaluating differential privacy and transfer learning</p></li>
+<li><p>exploring architectural variations</p></li>
+<li><p>iterating rapidly and safely before real-world deployment</p></li>
+</ul>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#database-management">Database management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#netmanager">NetManager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#transfer-learning">Transfer Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-manager">Learning Manager</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#learning-results">Learning Results</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
 </ul>
 </div>
+</section>
+<hr class="docutils" />
+<section id="real-world-mode">
+<h1>Real-World Mode<a class="headerlink" href="#real-world-mode" title="Permalink to this heading"></a></h1>
+<p>MEDfl’s <strong>real-world mode</strong> enables deploying FL pipelines across distributed
+machines such as hospital servers, institutional workstations, or research
+nodes. This mode integrates:</p>
+<ul class="simple">
+<li><p>the MEDfl Python Agent</p></li>
+<li><p>Flower federated learning protocol</p></li>
+<li><p>secure peer-to-peer networking via Tailscale</p></li>
+<li><p>environment validation and client orchestration</p></li>
+<li><p>robust, production-ready execution</p></li>
+</ul>
+<p>It provides a seamless path from validated simulation to real, distributed
+collaboration in medical research.</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+</div>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.html">MEDfl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html">MEDfl.LearningManager package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html">MEDfl.NetManager package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.rw.html">MEDfl.rw package</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </section>
+</section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>

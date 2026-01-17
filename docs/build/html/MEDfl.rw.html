@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.rw package &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/dark_mode_js/default_light.js"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="MEDfl.NetManager package" href="MEDfl.NetManager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/medfl_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">MEDfl</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.html">MEDfl package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.LearningManager.html">MEDfl.LearningManager package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html">MEDfl.NetManager package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MEDfl.rw package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.rw.client">Submodules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.client.DPConfig"><code class="docutils literal notranslate"><span class="pre">DPConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.client.FlowerClient"><code class="docutils literal notranslate"><span class="pre">FlowerClient</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.server.FederatedServer"><code class="docutils literal notranslate"><span class="pre">FederatedServer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.server.TrackingClientManager"><code class="docutils literal notranslate"><span class="pre">TrackingClientManager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.model.Net"><code class="docutils literal notranslate"><span class="pre">Net</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.strategy.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.strategy.aggregate_eval_metrics"><code class="docutils literal notranslate"><span class="pre">aggregate_eval_metrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.rw.strategy.aggregate_fit_metrics"><code class="docutils literal notranslate"><span class="pre">aggregate_fit_metrics()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">MEDfl</a></li>
+          <li class="breadcrumb-item"><a href="MEDfl.html">MEDfl package</a></li>
+      <li class="breadcrumb-item active">MEDfl.rw package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/MEDfl.rw.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-MEDfl.rw">
+<span id="medfl-rw-package"></span><h1>MEDfl.rw package<a class="headerlink" href="#module-MEDfl.rw" title="Permalink to this heading"></a></h1>
+<section id="module-MEDfl.rw.client">
+<span id="submodules"></span><h2>Submodules<a class="headerlink" href="#module-MEDfl.rw.client" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.rw.client.DPConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.rw.client.</span></span><span class="sig-name descname"><span class="pre">DPConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_grad_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secure_rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#DPConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.DPConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for differential privacy.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.client.DPConfig.noise_multiplier">
+<span class="sig-name descname"><span class="pre">noise_multiplier</span></span><a class="headerlink" href="#MEDfl.rw.client.DPConfig.noise_multiplier" title="Permalink to this definition"></a></dt>
+<dd><p>Noise multiplier for DP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.client.DPConfig.max_grad_norm">
+<span class="sig-name descname"><span class="pre">max_grad_norm</span></span><a class="headerlink" href="#MEDfl.rw.client.DPConfig.max_grad_norm" title="Permalink to this definition"></a></dt>
+<dd><p>Maximum gradient norm for clipping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.client.DPConfig.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><a class="headerlink" href="#MEDfl.rw.client.DPConfig.batch_size" title="Permalink to this definition"></a></dt>
+<dd><p>Batch size for training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.client.DPConfig.secure_rng">
+<span class="sig-name descname"><span class="pre">secure_rng</span></span><a class="headerlink" href="#MEDfl.rw.client.DPConfig.secure_rng" title="Permalink to this definition"></a></dt>
+<dd><p>Use a secure random generator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.rw.client.</span></span><span class="sig-name descname"><span class="pre">FlowerClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'data/data.csv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NumPyClient</span></code></p>
+<p>Federated learning client for MEDfl real-world pipelines.</p>
+<dl class="simple">
+<dt>This client:</dt><dd><ul class="simple">
+<li><p>connects to a Flower server,</p></li>
+<li><p>loads local CSV data,</p></li>
+<li><p>applies server-provided schema (features/target),</p></li>
+<li><p>handles train/val/test splits (fractions or test_ids),</p></li>
+<li><p>optionally enables differential privacy with Opacus.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>server_address</strong> (<em>str</em>) – Address of the Flower server, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;127.0.0.1:8080&quot;</span></code>.</p></li>
+<li><p><strong>data_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the local CSV file. Default is <code class="docutils literal notranslate"><span class="pre">&quot;data/data.csv&quot;</span></code>.</p></li>
+<li><p><strong>dp_config</strong> (<a class="reference internal" href="#MEDfl.rw.client.DPConfig" title="MEDfl.rw.client.DPConfig"><em>DPConfig</em></a><em>, </em><em>optional</em>) – Differential privacy configuration. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, DP is disabled.</p></li>
+<li><p><strong>val_frac</strong> (<em>float</em><em>, </em><em>optional</em>) – Client-side validation fraction override. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use server value.</p></li>
+<li><p><strong>test_frac</strong> (<em>float</em><em>, </em><em>optional</em>) – Client-side test fraction override. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use server value.</p></li>
+<li><p><strong>id_col</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the ID column used when selecting test samples via <code class="docutils literal notranslate"><span class="pre">test_ids</span></code>.</p></li>
+<li><p><strong>test_ids</strong> (<em>str</em><em>, </em><em>optional</em>) – Comma-separated list of IDs (or line numbers) to use as test set.</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Random seed used for splits. Default is <code class="docutils literal notranslate"><span class="pre">42</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient._lazy_init_from_server_config">
+<span class="sig-name descname"><span class="pre">_lazy_init_from_server_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient._lazy_init_from_server_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient._lazy_init_from_server_config" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Build model and (train, val, test) loaders once, using:</dt><dd><ul class="simple">
+<li><p>Server-enforced schema: config[‘features’] (comma-separated), config[‘target’]</p></li>
+<li><p>Split fractions: client overrides win; else use server’s val_fraction/test_fraction</p></li>
+<li><p>NEW: if config[‘test_ids’] is set (per-client from strategy), use ID-based split</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate the provided parameters using the locally held dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<em>NDArrays</em>) – The current (global) model parameters.</p></li>
+<li><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Scalar</em><em>]</em>) – Configuration parameters which allow the server to influence
+evaluation on the client. It can be used to communicate
+arbitrary values from the server to the client, for example,
+to influence the number of examples used for evaluation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>loss</strong> (<em>float</em>) – The evaluation loss of the model on the local dataset.</p></li>
+<li><p><strong>num_examples</strong> (<em>int</em>) – The number of examples used for evaluation.</p></li>
+<li><p><strong>metrics</strong> (<em>Dict[str, Scalar]</em>) – A dictionary mapping arbitrary string keys to values of
+type bool, bytes, float, int, or str. It can be used to
+communicate arbitrary values back to the server.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The previous return type format (int, float, float) and the
+extended format (int, float, float, Dict[str, Scalar]) have been
+deprecated and removed since Flower 0.19.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Train the provided parameters using the locally held dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<em>NDArrays</em>) – The current (global) model parameters.</p></li>
+<li><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Scalar</em><em>]</em>) – Configuration parameters which allow the
+server to influence training on the client. It can be used to
+communicate arbitrary values from the server to the client, for
+example, to set the number of (local) training epochs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>parameters</strong> (<em>NDArrays</em>) – The locally updated model parameters.</p></li>
+<li><p><strong>num_examples</strong> (<em>int</em>) – The number of examples used for training.</p></li>
+<li><p><strong>metrics</strong> (<em>Dict[str, Scalar]</em>) – A dictionary mapping arbitrary string keys to values of type
+bool, bytes, float, int, or str. It can be used to communicate
+arbitrary values back to the server.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Return the current local model parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Config</em>) – Configuration parameters requested by the server.
+This can be used to tell the client which parameters
+are needed along with some Scalar attributes.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>parameters</strong> – The local model parameters as a list of NumPy ndarrays.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient.get_properties">
+<span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient.get_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient.get_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Return a client’s set of properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Config</em>) – Configuration parameters requested by the server.
+This can be used to tell the client which properties
+are needed along with some Scalar attributes.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>properties</strong> – A dictionary mapping arbitrary string keys to values of type
+bool, bytes, float, int, or str. It can be used to communicate
+arbitrary property values back to the server.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Scalar]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient.set_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient.set_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.client.FlowerClient.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/client.html#FlowerClient.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.client.FlowerClient.start" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-MEDfl.rw.server"></span><dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.rw.server.</span></span><span class="sig-name descname"><span class="pre">FederatedServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">certificates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#FederatedServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.FederatedServer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>FederatedServer wraps the launch and configuration of a Flower federated learning server.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.server_address">
+<span class="sig-name descname"><span class="pre">server_address</span></span><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.server_address" title="Permalink to this definition"></a></dt>
+<dd><p>Server host and port in the format “host:port”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.server_config">
+<span class="sig-name descname"><span class="pre">server_config</span></span><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.server_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the Flower server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ServerConfig</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.strategy_wrapper">
+<span class="sig-name descname"><span class="pre">strategy_wrapper</span></span><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.strategy_wrapper" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper around the actual Flower strategy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy" title="MEDfl.LearningManager.strategy.Strategy">Strategy</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.strategy">
+<span class="sig-name descname"><span class="pre">strategy</span></span><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.strategy" title="Permalink to this definition"></a></dt>
+<dd><p>Actual Flower strategy instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>flwr.server.Strategy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.certificates">
+<span class="sig-name descname"><span class="pre">certificates</span></span><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.certificates" title="Permalink to this definition"></a></dt>
+<dd><p>Optional TLS certificates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.connected_clients">
+<span class="sig-name descname"><span class="pre">connected_clients</span></span><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.connected_clients" title="Permalink to this definition"></a></dt>
+<dd><p>List of connected client IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#FederatedServer.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.start" title="Permalink to this definition"></a></dt>
+<dd><p>Launch the Flower server with the specified strategy and log client connections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.server.FederatedServer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">certificates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#FederatedServer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.FederatedServer.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the FederatedServer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>str</em>) – Hostname or IP to bind the server to.</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – Port to listen on.</p></li>
+<li><p><strong>num_rounds</strong> (<em>int</em>) – Number of federated learning rounds to execute.</p></li>
+<li><p><strong>strategy</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="MEDfl.LearningManager.html#MEDfl.LearningManager.strategy.Strategy" title="MEDfl.LearningManager.strategy.Strategy"><em>Strategy</em></a><em>]</em>) – Optional custom strategy wrapper.</p></li>
+<li><p><strong>certificates</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em>) – Optional TLS certificates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#FederatedServer.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>Start the Flower server with the configured strategy and track client connections.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.rw.server.TrackingClientManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.rw.server.</span></span><span class="sig-name descname"><span class="pre">TrackingClientManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#TrackingClientManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.TrackingClientManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleClientManager</span></code></p>
+<p>TrackingClientManager extends the default SimpleClientManager to log client connections.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.TrackingClientManager.server">
+<span class="sig-name descname"><span class="pre">server</span></span><a class="headerlink" href="#MEDfl.rw.server.TrackingClientManager.server" title="Permalink to this definition"></a></dt>
+<dd><p>The FederatedServer instance this manager belongs to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.rw.server.FederatedServer" title="MEDfl.rw.server.FederatedServer">FederatedServer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.rw.server.TrackingClientManager.client_properties">
+<span class="sig-name descname"><span class="pre">client_properties</span></span><a class="headerlink" href="#MEDfl.rw.server.TrackingClientManager.client_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Placeholder for storing client-specific properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.server.TrackingClientManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#TrackingClientManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.TrackingClientManager.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the TrackingClientManager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>server</strong> (<a class="reference internal" href="#MEDfl.rw.server.FederatedServer" title="MEDfl.rw.server.FederatedServer"><em>FederatedServer</em></a>) – Reference to the FederatedServer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.server.TrackingClientManager._fetch_and_log_hostname">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_fetch_and_log_hostname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#TrackingClientManager._fetch_and_log_hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.TrackingClientManager._fetch_and_log_hostname" title="Permalink to this definition"></a></dt>
+<dd><p>Asynchronously fetch and log the client’s hostname or CID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>client</strong> (<em>ClientProxy</em>) – The client proxy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.server.TrackingClientManager.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/server.html#TrackingClientManager.register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.server.TrackingClientManager.register" title="Permalink to this definition"></a></dt>
+<dd><p>Register a client and log its connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>client</strong> (<em>ClientProxy</em>) – The client proxy being registered.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the client was registered successfully.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-MEDfl.rw.model"></span><dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.rw.model.Net">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.rw.model.</span></span><span class="sig-name descname"><span class="pre">Net</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[64,</span> <span class="pre">32]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'binary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_logits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kaiming'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/model.html#Net"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.model.Net" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Flexible MLP with task-aware output.
+- hidden_dims: e.g., [128, 64, 32]
+- activation: ‘relu’ | ‘gelu’ | ‘leaky_relu’ | …
+- batchnorm: apply BatchNorm1d after each linear (except output)
+- dropout: float in [0,1] or list per hidden layer
+- task: ‘binary’ | ‘multiclass’ | ‘multilabel’ | ‘regression’
+- num_classes: required for ‘multiclass’; for ‘binary’ ignore; for ‘multilabel’ set to label count
+- return_logits: always True for training (recommended). Use .predict() for post-activation outputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.model.Net.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/model.html#Net.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.model.Net.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Define the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.model.Net.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/model.html#Net.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.model.Net.predict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-MEDfl.rw.strategy"></span><dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.rw.strategy.Strategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.rw.strategy.</span></span><span class="sig-name descname"><span class="pre">Strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FedAvg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_evaluate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fit_clients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_evaluate_clients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_available_clients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluate_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_metrics_aggregation_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluate_metrics_aggregation_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SGD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savingPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveOnRounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_rounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'global'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_fractions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/strategy.html#Strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.strategy.Strategy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl>
+<dt>Flower Strategy wrapper:</dt><dd><ul class="simple">
+<li><p>Dynamic hyperparameters via on_fit_config_fn</p></li>
+<li><p>Custom metric aggregation</p></li>
+<li><p>Per-client &amp; aggregated metric logging</p></li>
+<li><p>Synchronous get_properties() inspection in configure_fit()</p></li>
+<li><p>Saving global parameters every saveOnRounds to savingPath</p></li>
+</ul>
+<p>Extended:
+- split_mode:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“global”: use global val_fraction/test_fraction for all clients</p></li>
+<li><p>“per_client”: use client_fractions[hostname] if present</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><dl>
+<dt>client_fractions:</dt><dd><dl class="simple">
+<dt>{</dt><dd><dl class="simple">
+<dt>“HOSTNAME_1”: {</dt><dd><p>“val_fraction”: float (optional),
+“test_fraction”: float (optional),
+“test_ids”: [..] or “id1,id2” (optional)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>In per_client mode:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>if test_ids is present for a client:</dt><dd><p>-&gt; send test_ids
+-&gt; do NOT use that client’s test_fraction</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>otherwise:</dt><dd><dl class="simple">
+<dt>-&gt; use that client’s val_fraction/test_fraction if provided,</dt><dd><p>else fall back to global val_fraction/test_fraction</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>client id in this mapping = hostname from client.get_properties()</p></li>
+<li><dl class="simple">
+<dt>id_col:</dt><dd><ul class="simple">
+<li><p>column name used on clients to match test_ids (default “id”)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.rw.strategy.Strategy.create_strategy">
+<span class="sig-name descname"><span class="pre">create_strategy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/strategy.html#Strategy.create_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.strategy.Strategy.create_strategy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.rw.strategy.aggregate_eval_metrics">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.rw.strategy.</span></span><span class="sig-name descname"><span class="pre">aggregate_eval_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/strategy.html#aggregate_eval_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.strategy.aggregate_eval_metrics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.rw.strategy.aggregate_fit_metrics">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.rw.strategy.</span></span><span class="sig-name descname"><span class="pre">aggregate_fit_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/rw/strategy.html#aggregate_fit_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.rw.strategy.aggregate_fit_metrics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="MEDfl.NetManager.html" class="btn btn-neutral float-left" title="MEDfl.NetManager package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
