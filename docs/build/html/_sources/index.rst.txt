@@ -1,36 +1,124 @@
-.. MEDfl-package-docs documentation master file, created by
-   sphinx-quickstart on Wed Jan 10 21:46:56 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. MEDfl documentation master file
+   This file defines the main structure of the documentation.
+Welcome to the MEDfl Documentation
+==================================
 
-Welcome to the MEDfl documentation!
-==============================================
-This Python package is an open-source tool designed for simulating federated learning and incorporating differential privacy. It empowers researchers and developers to effortlessly create, execute, and assess federated learning pipelines while seamlessly working with various tabular datasets.
+.. image:: figures/Images/medfl_logo.png
+   :align: center
+   :width: 300px
 
-.. image:: figures/Images/MEDfl_Diagramm.png
+MEDfl is a modular and extensible Python framework designed to accelerate
+research and deployment in Federated Learning (FL), particularly in the medical
+domain.
+
+MEDfl supports **two complementary modes**:
+
+- **Simulation Mode** — a controlled environment with virtual clients that allows
+  researchers to rapidly experiment, test assumptions, and validate hypotheses
+  before moving to real-world deployment.
+
+- **Real-World Mode** — a production-ready execution layer where FL pipelines
+  run on distributed machines using the MEDfl Agent, Flower, and secure
+  networking. This mode enables seamless deployment across hospitals,
+  institutions, and research teams.
+
+.. image:: figures/Images/medfl_use.png
+   :alt: MEDfl architecture diagram
+   :align: center
+
+
+Together, these two modes provide a complete workflow:  
+from **idea → experiment → validation → real-world deployment**.
+
+.. image:: figures/Images/medfl_workflow.png
+   :alt: MEDfl architecture diagram
+   :align: center
+
+
+For users seeking an even more accessible experience, MEDfl is fully
+integrated into **MEDfl application**, a user-friendly desktop application that
+simplifies the creation and orchestration of FL pipelines. MEDomicsLab bridges
+the gap between medical researchers and computer scientists, promoting
+collaboration through intuitive tools, automated workflows, and secure
+distributed execution.
+
+.. image:: figures/Images/medfl_integration.png
+   :alt: MEDfl architecture diagram
+   :align: center
+
+
+
+Explore the sections below to begin working with MEDfl, understand its
+architecture, or build your own federated learning pipelines.
+
+
 
 .. toctree::
    :maxdepth: 1
-   :caption: Getting started
+   :caption: Getting Started
 
    Installation
    Documentation
-   configuration_file
-   
+
+
+
+Simulation Mode
+===============
+
+MEDfl's **simulation mode** enables you to design, analyze, and validate FL
+pipelines using virtual clients running locally. This environment is ideal for:
+
+- testing hypotheses  
+- benchmarking FL configurations  
+- evaluating differential privacy and transfer learning  
+- exploring architectural variations  
+- iterating rapidly and safely before real-world deployment  
+
 
 .. toctree::
    :maxdepth: 1
-   :caption: Tutorials
+   :caption: Simulation Tutorials
 
-   tutorials
+   simulation_tutorials
+   simulation_tutorials_complete
+
+----
+
+Real-World Mode
+===============
+
+MEDfl's **real-world mode** enables deploying FL pipelines across distributed
+machines such as hospital servers, institutional workstations, or research
+nodes. This mode integrates:
+
+- the MEDfl Python Agent  
+- Flower federated learning protocol  
+- secure peer-to-peer networking via Tailscale  
+- environment validation and client orchestration  
+- robust, production-ready execution  
+
+It provides a seamless path from validated simulation to real, distributed
+collaboration in medical research.
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: 🌍 Real-World Tutorials
+
+   rw_tutorial_complete
+
+
+
+API Reference
+-------------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
 
    modules
 
-Indices and tables
+Indices and Tables
 ==================
 
 * :ref:`genindex`

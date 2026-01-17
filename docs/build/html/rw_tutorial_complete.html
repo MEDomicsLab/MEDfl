@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real-world Federated Learning Tutorial &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/dark_mode_js/default_light.js"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MEDfl" href="modules.html" />
+    <link rel="prev" title="MEDfl Complete Tutorial (Simulation)" href="simulation_tutorials_complete.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/medfl_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Real-world Federated Learning Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#high-level-architecture">High-level architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-client-data">1. Preparing client data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server-configuration">2. Server configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-parameters">Key parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#client-configuration">3. Client configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enabling-differential-privacy-optional">4. Enabling Differential Privacy (optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-experiment">5. Running the experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-splits-per-client">6. Customizing splits per client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">7. Summary</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Real-world Federated Learning Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rw_tutorial_complete.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="real-world-federated-learning-tutorial">
+<h1>Real-world Federated Learning Tutorial<a class="headerlink" href="#real-world-federated-learning-tutorial" title="Permalink to this heading"></a></h1>
+<p>This tutorial shows how to use the <code class="docutils literal notranslate"><span class="pre">MEDfl.rw</span></code> (real-world) module to run a
+<strong>true multi-machine federated learning experiment</strong>:</p>
+<ul class="simple">
+<li><p>One <strong>central server</strong> (orchestrator)</p></li>
+<li><p>Several <strong>remote clients</strong> (hospitals / institutions)</p></li>
+<li><p>Each client keeps its data <strong>local</strong> in a CSV file</p></li>
+<li><p>The server enforces a <strong>shared schema</strong> (same features/target on all sites)</p></li>
+<li><p>Validation / test splits are done <strong>per client</strong>, with optional overrides</p></li>
+<li><p>Optional <strong>Differential Privacy (DP)</strong> configuration per client</p></li>
+</ul>
+<section id="high-level-architecture">
+<h2>High-level architecture<a class="headerlink" href="#high-level-architecture" title="Permalink to this heading"></a></h2>
+<p>In real-world mode, MEDfl is organized as follows:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="MEDfl.rw.html#module-MEDfl.rw.server" title="MEDfl.rw.server"><code class="xref py py-mod docutils literal notranslate"><span class="pre">MEDfl.rw.server</span></code></a></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">FederatedServer</span></code>: wraps the Flower server and coordinates the training</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Strategy</span></code>: defines the aggregation and training hyperparameters</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="MEDfl.rw.html#module-MEDfl.rw.client" title="MEDfl.rw.client"><code class="xref py py-mod docutils literal notranslate"><span class="pre">MEDfl.rw.client</span></code></a></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">FlowerClient</span></code>: local client that loads CSV data, applies splits, trains</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DPConfig</span></code>: optional configuration for differential privacy</p></li>
+</ul>
+</li>
+</ul>
+<a class="reference internal image-reference" href="_images/rw_files.png"><img alt="_images/rw_files.png" class="align-center" src="_images/rw_files.png" style="width: 30%;" /></a>
+<p>The typical workflow is:</p>
+<ol class="arabic simple">
+<li><p>Prepare a <strong>CSV dataset</strong> on each client machine.</p></li>
+<li><p>Configure and start the <strong>server</strong> on a reachable host.</p></li>
+<li><p>Configure and start the <strong>clients</strong>, pointing them to the server.</p></li>
+<li><p>Monitor federated rounds and collect saved models and metrics.</p></li>
+</ol>
+</section>
+<section id="preparing-client-data">
+<h2>1. Preparing client data<a class="headerlink" href="#preparing-client-data" title="Permalink to this heading"></a></h2>
+<p>Each client will load data from a <strong>local CSV file</strong>. All clients must share:</p>
+<ul class="simple">
+<li><p>The same <strong>feature columns</strong></p></li>
+<li><p>The same <strong>target column</strong></p></li>
+<li><p>An optional <strong>ID column</strong> (for split_mode based on IDs)</p></li>
+</ul>
+<p>Example structure of a client CSV file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>id,MajorAxisLength,Area,Eccentricity,ConvexArea,label
+0,134.12,10023,0.88,10450,1
+1,120.57,8900,0.76,9100,0
+2,143.34,11010,0.91,11300,1
+...
+</pre></div>
+</div>
+<p>In this tutorial, on the client machine we will use:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>../data/client1_with_id.csv
+</pre></div>
+</div>
+<p>with:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code> as the identifier</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MajorAxisLength,</span> <span class="pre">Area,</span> <span class="pre">Eccentricity,</span> <span class="pre">ConvexArea</span></code> as features</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code> as the target column</p></li>
+</ul>
+</section>
+<section id="server-configuration">
+<h2>2. Server configuration<a class="headerlink" href="#server-configuration" title="Permalink to this heading"></a></h2>
+<p>Create a file called <code class="file docutils literal notranslate"><span class="pre">run_server.py</span></code> on the <strong>server machine</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># run_server.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.rw.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">FederatedServer</span><span class="p">,</span> <span class="n">Strategy</span>
+
+<span class="c1"># Optional: build a list of test IDs (here 0..1499)</span>
+<span class="n">test_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1500</span><span class="p">))</span>
+
+<span class="c1"># Optional per-client overrides:</span>
+<span class="c1"># keys must match the hostname seen by MEDfl on each client machine.</span>
+<span class="n">client_fractions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dinf-medomi-05b&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;val_fraction&quot;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
+        <span class="s2">&quot;test_ids&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1500</span><span class="p">)),</span>  <span class="c1"># here: all IDs used for test</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">custom_strategy</span> <span class="o">=</span> <span class="n">Strategy</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FedAvg&quot;</span><span class="p">,</span>
+    <span class="n">fraction_fit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">min_fit_clients</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">min_evaluate_clients</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">min_available_clients</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+
+    <span class="n">local_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">optimizer_name</span><span class="o">=</span><span class="s2">&quot;SGD&quot;</span><span class="p">,</span>
+
+    <span class="n">saveOnRounds</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>        <span class="c1"># save the model every 3 rounds</span>
+    <span class="n">savingPath</span><span class="o">=</span><span class="s2">&quot;./&quot;</span><span class="p">,</span>       <span class="c1"># where to store the checkpoints</span>
+    <span class="n">total_rounds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+
+    <span class="c1"># --- Data schema enforcement ---</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;MajorAxisLength,Area,Eccentricity,ConvexArea&quot;</span><span class="p">,</span>  <span class="c1"># comma-separated feature names</span>
+    <span class="n">target</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span>                                           <span class="c1"># target column name</span>
+
+    <span class="c1"># --- Default split configuration (can be overridden per client) ---</span>
+    <span class="n">val_fraction</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">test_fraction</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span>
+
+    <span class="c1"># --- Splitting strategy ---</span>
+    <span class="n">split_mode</span><span class="o">=</span><span class="s2">&quot;per_client&quot;</span><span class="p">,</span>  <span class="c1"># split done independently on each client</span>
+    <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>              <span class="c1"># ID column used for test_ids-based splits</span>
+
+    <span class="c1"># --- Optional per-client overrides ---</span>
+    <span class="n">client_fractions</span><span class="o">=</span><span class="n">client_fractions</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">FederatedServer</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>   <span class="c1"># listen on all interfaces</span>
+    <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>        <span class="c1"># port to expose to clients</span>
+    <span class="n">num_rounds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="o">=</span><span class="n">custom_strategy</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<section id="key-parameters">
+<h3>Key parameters<a class="headerlink" href="#key-parameters" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">features</span></code>: comma-separated list of feature names expected in each client CSV.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target</span></code>: target column name for supervised learning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">split_mode=&quot;per_client&quot;</span></code>: each client performs its own train/val/test split.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">id_col</span></code>: column name containing sample IDs. Used when you want to define
+test sets using <code class="docutils literal notranslate"><span class="pre">test_ids</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">val_fraction</span></code> and <code class="docutils literal notranslate"><span class="pre">test_fraction</span></code>: default fractions of data used for
+validation and testing on each client.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">client_fractions</span></code>: per-client overrides, indexed by the <strong>hostname</strong> seen
+by MEDfl on that machine. You can override:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">val_fraction</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_fraction</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_ids</span></code> (list of IDs that must go to the test set)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">saveOnRounds</span></code> and <code class="docutils literal notranslate"><span class="pre">savingPath</span></code>: control how often and where the model
+checkpoints are saved.</p></li>
+</ul>
+</section>
+</section>
+<section id="client-configuration">
+<h2>3. Client configuration<a class="headerlink" href="#client-configuration" title="Permalink to this heading"></a></h2>
+<p>On each <strong>client machine</strong> (e.g. each hospital), create a file
+<code class="file docutils literal notranslate"><span class="pre">run_client.py</span></code> (or <code class="file docutils literal notranslate"><span class="pre">run_client_override_splits.py</span></code>) similar to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># run_client_override_splits.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.rw.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlowerClient</span><span class="p">,</span> <span class="n">DPConfig</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">FlowerClient</span><span class="p">(</span>
+    <span class="n">server_address</span><span class="o">=</span><span class="s2">&quot;100.65.215.27:8080&quot;</span><span class="p">,</span>  <span class="c1"># IP:port of the server</span>
+    <span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;../data/client1_with_id.csv&quot;</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">dp_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                      <span class="c1"># or a DPConfig instance (see below)</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">server_address</span></code>: must point to the <strong>public / reachable address</strong> of the
+server (as configured in <code class="docutils literal notranslate"><span class="pre">FederatedServer</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_path</span></code>: local path to the CSV file on this client machine.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code>: used for deterministic splits.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dp_config</span></code>: optional differential privacy configuration (see next subsection).</p></li>
+</ul>
+</section>
+<section id="enabling-differential-privacy-optional">
+<h2>4. Enabling Differential Privacy (optional)<a class="headerlink" href="#enabling-differential-privacy-optional" title="Permalink to this heading"></a></h2>
+<p>To enable differential privacy on a client, create a <code class="xref py py-class docutils literal notranslate"><span class="pre">DPConfig</span></code> instance
+and pass it to <code class="docutils literal notranslate"><span class="pre">FlowerClient</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.rw.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlowerClient</span><span class="p">,</span> <span class="n">DPConfig</span>
+
+<span class="n">dp_conf</span> <span class="o">=</span> <span class="n">DPConfig</span><span class="p">(</span>
+    <span class="n">noise_multiplier</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">max_grad_norm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">secure_rng</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">FlowerClient</span><span class="p">(</span>
+    <span class="n">server_address</span><span class="o">=</span><span class="s2">&quot;100.65.215.27:8080&quot;</span><span class="p">,</span>
+    <span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;../data/client1_with_id.csv&quot;</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">dp_config</span><span class="o">=</span><span class="n">dp_conf</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Typical hyperparameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">noise_multiplier</span></code>: controls the magnitude of the added noise (higher =
+more privacy, more utility loss).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_grad_norm</span></code>: gradient clipping norm.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>: local training batch size.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">secure_rng</span></code>: whether to use a cryptographically secure RNG.</p></li>
+</ul>
+</section>
+<section id="running-the-experiment">
+<h2>5. Running the experiment<a class="headerlink" href="#running-the-experiment" title="Permalink to this heading"></a></h2>
+<p>Once both sides are configured:</p>
+<ol class="arabic">
+<li><p><strong>On the server machine</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_server.py
+</pre></div>
+</div>
+<p>The server will start and wait for clients to connect.</p>
+</li>
+<li><p><strong>On each client machine</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>run_client_override_splits.py
+</pre></div>
+</div>
+<p>Each client will:</p>
+<ul class="simple">
+<li><p>Load its local CSV data</p></li>
+<li><p>Apply the default or overridden splits</p></li>
+<li><p>Participate in federated training rounds coordinated by the server</p></li>
+</ul>
+</li>
+<li><p>During training:</p>
+<ul class="simple">
+<li><p>The server runs for <code class="docutils literal notranslate"><span class="pre">num_rounds</span></code> (here 10).</p></li>
+<li><p>Every <code class="docutils literal notranslate"><span class="pre">saveOnRounds</span></code> rounds (here 3), a checkpoint is written to
+<code class="docutils literal notranslate"><span class="pre">savingPath</span></code> on the server (<cite>./</cite> in the example).</p></li>
+<li><p>Metrics (loss, accuracy, etc.) are logged via the strategy / server
+logic implemented in <a class="reference internal" href="MEDfl.rw.html#module-MEDfl.rw" title="MEDfl.rw"><code class="xref py py-mod docutils literal notranslate"><span class="pre">MEDfl.rw</span></code></a>.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="customizing-splits-per-client">
+<h2>6. Customizing splits per client<a class="headerlink" href="#customizing-splits-per-client" title="Permalink to this heading"></a></h2>
+<p>Sometimes you want <strong>fine-grained control</strong> over how each client splits its
+data. MEDfl allows this through the <code class="docutils literal notranslate"><span class="pre">client_fractions</span></code> dictionary.</p>
+<p>Example: a client with hostname <code class="docutils literal notranslate"><span class="pre">dinf-medomi-05b</span></code> should:</p>
+<ul class="simple">
+<li><p>Use <strong>10%</strong> of its data as validation,</p></li>
+<li><p>Use a specific set of IDs as test data.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client_fractions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dinf-medomi-05b&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;val_fraction&quot;</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">,</span>
+        <span class="s2">&quot;test_ids&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1500</span><span class="p">)),</span>  <span class="c1"># IDs 0..1499</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">custom_strategy</span> <span class="o">=</span> <span class="n">Strategy</span><span class="p">(</span>
+    <span class="c1"># ...</span>
+    <span class="n">client_fractions</span><span class="o">=</span><span class="n">client_fractions</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>On that specific machine:</p>
+<ul class="simple">
+<li><p>The effective validation fraction will be 0.10 (instead of the default 0.15).</p></li>
+<li><p>Samples whose <code class="docutils literal notranslate"><span class="pre">id</span></code> is in <code class="docutils literal notranslate"><span class="pre">test_ids</span></code> will be forced into the test set.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure that:</p>
+<ul class="simple">
+<li><p>The hostname key (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;dinf-medomi-05b&quot;</span></code>) exactly matches the name
+seen by MEDfl on the client machine.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">id_col</span></code> in the strategy configuration matches the ID column in the
+client CSV files.</p></li>
+</ul>
+</div>
+</section>
+<section id="summary">
+<h2>7. Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<p>In this real-world tutorial, you have learned how to:</p>
+<ul class="simple">
+<li><p>Prepare local CSV datasets for each client</p></li>
+<li><p>Configure a <strong>FederatedServer</strong> with:</p>
+<ul>
+<li><p>a specific aggregation strategy (<code class="docutils literal notranslate"><span class="pre">FedAvg</span></code>)</p></li>
+<li><p>enforced feature/target schema</p></li>
+<li><p>default and per-client validation/test splits</p></li>
+<li><p>checkpoint saving</p></li>
+</ul>
+</li>
+<li><p>Configure and run <strong>FlowerClient</strong> instances on remote machines</p></li>
+<li><p>Optionally enable <strong>Differential Privacy</strong> using <code class="docutils literal notranslate"><span class="pre">DPConfig</span></code></p></li>
+</ul>
+<p>This setup corresponds to a <strong>true multi-institution environment</strong> where data
+never leaves the client machines, and only model updates are exchanged.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="simulation_tutorials_complete.html" class="btn btn-neutral float-left" title="MEDfl Complete Tutorial (Simulation)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="MEDfl" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
