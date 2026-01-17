@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.LearningManager package &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/dark_mode_js/default_light.js"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="MEDfl.NetManager package" href="MEDfl.NetManager.html" />
+    <link rel="prev" title="MEDfl package" href="MEDfl.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/medfl_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">MEDfl</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.html">MEDfl package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MEDfl.LearningManager package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.client">MEDfl.LearningManager.client module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.client.FlowerClient"><code class="docutils literal notranslate"><span class="pre">FlowerClient</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.dynamicModal">MEDfl.LearningManager.dynamicModal module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.dynamicModal.DynamicModel"><code class="docutils literal notranslate"><span class="pre">DynamicModel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.federated_dataset">MEDfl.LearningManager.federated_dataset module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset"><code class="docutils literal notranslate"><span class="pre">FederatedDataset</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.flpipeline">MEDfl.LearningManager.flpipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.flpipeline.FLpipeline"><code class="docutils literal notranslate"><span class="pre">FLpipeline</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.flpipeline.create_query"><code class="docutils literal notranslate"><span class="pre">create_query()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.model">MEDfl.LearningManager.model module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.plot">MEDfl.LearningManager.plot module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter"><code class="docutils literal notranslate"><span class="pre">AccuracyLossPlotter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.plot.results_dict"><code class="docutils literal notranslate"><span class="pre">results_dict</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.server">MEDfl.LearningManager.server module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.server.FlowerServer"><code class="docutils literal notranslate"><span class="pre">FlowerServer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.strategy">MEDfl.LearningManager.strategy module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.strategy.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager.utils">MEDfl.LearningManager.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.create_MEDfl_db"><code class="docutils literal notranslate"><span class="pre">create_MEDfl_db()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.custom_classification_report"><code class="docutils literal notranslate"><span class="pre">custom_classification_report()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.empty_db"><code class="docutils literal notranslate"><span class="pre">empty_db()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.get_node_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">get_node_confusion_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.get_pipeline_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">get_pipeline_confusion_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.get_pipeline_from_name"><code class="docutils literal notranslate"><span class="pre">get_pipeline_from_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.get_pipeline_result"><code class="docutils literal notranslate"><span class="pre">get_pipeline_result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.load_db_config"><code class="docutils literal notranslate"><span class="pre">load_db_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.load_db_config_dep"><code class="docutils literal notranslate"><span class="pre">load_db_config_dep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.set_db_config"><code class="docutils literal notranslate"><span class="pre">set_db_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.set_db_config_dep"><code class="docutils literal notranslate"><span class="pre">set_db_config_dep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MEDfl.LearningManager.utils.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-MEDfl.LearningManager">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.NetManager.html">MEDfl.NetManager package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MEDfl.rw.html">MEDfl.rw package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">MEDfl</a></li>
+          <li class="breadcrumb-item"><a href="MEDfl.html">MEDfl package</a></li>
+      <li class="breadcrumb-item active">MEDfl.LearningManager package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/MEDfl.LearningManager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="medfl-learningmanager-package">
+<h1>MEDfl.LearningManager package<a class="headerlink" href="#medfl-learningmanager-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-MEDfl.LearningManager.client">
+<span id="medfl-learningmanager-client-module"></span><h2>MEDfl.LearningManager.client module<a class="headerlink" href="#module-MEDfl.LearningManager.client" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.client.</span></span><span class="sig-name descname"><span class="pre">FlowerClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model"><span class="pre">Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_priv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/client.html#FlowerClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NumPyClient</span></code></p>
+<p>FlowerClient class for creating MEDfl clients.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.cid">
+<span class="sig-name descname"><span class="pre">cid</span></span><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.cid" title="Permalink to this definition"></a></dt>
+<dd><p>Client ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.local_model">
+<span class="sig-name descname"><span class="pre">local_model</span></span><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.local_model" title="Permalink to this definition"></a></dt>
+<dd><p>Local model of the federated learning network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model">Model</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.trainloader">
+<span class="sig-name descname"><span class="pre">trainloader</span></span><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.trainloader" title="Permalink to this definition"></a></dt>
+<dd><p>DataLoader for training data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.valloader">
+<span class="sig-name descname"><span class="pre">valloader</span></span><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.valloader" title="Permalink to this definition"></a></dt>
+<dd><p>DataLoader for validation data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataLoader</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.diff_priv">
+<span class="sig-name descname"><span class="pre">diff_priv</span></span><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.diff_priv" title="Permalink to this definition"></a></dt>
+<dd><p>Flag indicating whether to use differential privacy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model"><span class="pre">Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_priv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/client.html#FlowerClient.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes the FlowerClient instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cid</strong> (<em>str</em>) – Client ID.</p></li>
+<li><p><strong>local_model</strong> (<a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model"><em>Model</em></a>) – Local model of the federated learning network.</p></li>
+<li><p><strong>trainloader</strong> (<em>DataLoader</em>) – DataLoader for training data.</p></li>
+<li><p><strong>valloader</strong> (<em>DataLoader</em>) – DataLoader for validation data.</p></li>
+<li><p><strong>diff_priv</strong> (<em>bool</em>) – Flag indicating whether to use differential privacy.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/client.html#FlowerClient.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluates the local model on the validation data and returns the loss and accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> – Parameters received from the server.</p></li>
+<li><p><strong>config</strong> – Configuration information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loss, number of validation examples, and accuracy information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/client.html#FlowerClient.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fits the local model to the received parameters using federated learning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> – Parameters received from the server.</p></li>
+<li><p><strong>config</strong> – Configuration information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parameters of the local model, number of training examples, and privacy information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/client.html#FlowerClient.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the current parameters of the local model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> – Configuration information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parameters of the local model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.client.FlowerClient.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/client.html#FlowerClient.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.client.FlowerClient.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validates cid, local_model, trainloader, valloader.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.dynamicModal">
+<span id="medfl-learningmanager-dynamicmodal-module"></span><h2>MEDfl.LearningManager.dynamicModal module<a class="headerlink" href="#module-MEDfl.LearningManager.dynamicModal" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.dynamicModal.</span></span><span class="sig-name descname"><span class="pre">DynamicModel</span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DynamicModel class for creating various types of neural network models.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_binary_classifier">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_binary_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_binary_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_binary_classifier" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a binary classifier neural network model with customizable architecture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input data.</p></li>
+<li><p><strong>hidden_dims</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of dimensions for hidden layers.</p></li>
+<li><p><strong>output_dim</strong> (<em>int</em>) – Dimension of the output (number of classes).</p></li>
+<li><p><strong>activation</strong> (<em>str</em><em>, </em><em>optional</em>) – Activation function for hidden layers. Default is ‘relu’.</p></li>
+<li><p><strong>dropout_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout rate for regularization. Default is 0.0 (no dropout).</p></li>
+<li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply batch normalization. Default is False.</p></li>
+<li><p><strong>use_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use GPU acceleration. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_convolutional_neural_network">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_convolutional_neural_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_convolutional_neural_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_convolutional_neural_network" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a convolutional neural network (CNN) model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_channels</strong> (<em>int</em>) – Number of input channels.</p></li>
+<li><p><strong>output_channels</strong> (<em>int</em>) – Number of output channels.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Size of the convolutional kernel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_linear_regressor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_linear_regressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_linear_regressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_linear_regressor" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a linear regressor neural network model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input data.</p></li>
+<li><p><strong>output_dim</strong> (<em>int</em>) – Dimension of the output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_logistic_regressor">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_logistic_regressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_logistic_regressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_logistic_regressor" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a logistic regressor neural network model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_lstm_network">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_lstm_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_lstm_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_lstm_network" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a Long Short-Term Memory (LSTM) network model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_size</strong> (<em>int</em>) – Size of the input layer.</p></li>
+<li><p><strong>hidden_size</strong> (<em>int</em>) – Size of the hidden layer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_model">
+<span class="sig-name descname"><span class="pre">create_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Module</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_model" title="Permalink to this definition"></a></dt>
+<dd><p>Create a specific type of model dynamically based on the given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<em>str</em>) – Type of the model to create (‘Binary Classifier’, ‘Multiclass Classifier’, ‘Linear Regressor’, ‘Logistic Regressor’, ‘SVM’, ‘Neural Network Classifier’, ‘Convolutional Neural Network’, ‘Recurrent Neural Network’, ‘LSTM Network’, ‘Autoencoder’).</p></li>
+<li><p><strong>params_dict</strong> (<em>dict</em>) – Dictionary containing parameters for model creation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_multiclass_classifier">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_multiclass_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_multiclass_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_multiclass_classifier" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a multiclass classifier neural network model with customizable architecture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> (<em>int</em>) – Dimension of the input data.</p></li>
+<li><p><strong>hidden_dims</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of dimensions for hidden layers.</p></li>
+<li><p><strong>output_dim</strong> (<em>int</em>) – Dimension of the output (number of classes).</p></li>
+<li><p><strong>activation</strong> (<em>str</em><em>, </em><em>optional</em>) – Activation function for hidden layers. Default is ‘relu’.</p></li>
+<li><p><strong>dropout_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout rate for regularization. Default is 0.0 (no dropout).</p></li>
+<li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply batch normalization. Default is False.</p></li>
+<li><p><strong>use_gpu</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use GPU acceleration. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.dynamicModal.DynamicModel.create_recurrent_neural_network">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_recurrent_neural_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/dynamicModal.html#DynamicModel.create_recurrent_neural_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.dynamicModal.DynamicModel.create_recurrent_neural_network" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a recurrent neural network (RNN) model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_size</strong> (<em>int</em>) – Size of the input.</p></li>
+<li><p><strong>hidden_size</strong> (<em>int</em>) – Size of the hidden layer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Created PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.federated_dataset">
+<span id="medfl-learningmanager-federated-dataset-module"></span><h2>MEDfl.LearningManager.federated_dataset module<a class="headerlink" href="#module-MEDfl.LearningManager.federated_dataset" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.federated_dataset.FederatedDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.federated_dataset.</span></span><span class="sig-name descname"><span class="pre">FederatedDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainloaders</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valloaders</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testloaders</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/federated_dataset.html#FederatedDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.federated_dataset.FederatedDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainloaders</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valloaders</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testloaders</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/federated_dataset.html#FederatedDataset.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Represents a Federated Dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name of the Federated Dataset.</p></li>
+<li><p><strong>train_nodes</strong> – List of train nodes.</p></li>
+<li><p><strong>test_nodes</strong> – List of test nodes.</p></li>
+<li><p><strong>trainloaders</strong> – List of train data loaders.</p></li>
+<li><p><strong>valloaders</strong> – List of validation data loaders.</p></li>
+<li><p><strong>testloaders</strong> – List of test data loaders.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.federated_dataset.FederatedDataset.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FLsetupId</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/federated_dataset.html#FederatedDataset.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new Federated Dataset in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>FLsetupId</strong> – The FLsetup ID associated with the Federated Dataset.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.federated_dataset.FederatedDataset.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FLpipeId</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FedId</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/federated_dataset.html#FederatedDataset.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update the FLpipe ID associated with the Federated Dataset in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FLpipeId</strong> – The new FLpipe ID to be updated.</p></li>
+<li><p><strong>FedId</strong> – The Federated Dataset ID.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.flpipeline">
+<span id="medfl-learningmanager-flpipeline-module"></span><h2>MEDfl.LearningManager.flpipeline module<a class="headerlink" href="#module-MEDfl.LearningManager.flpipeline" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.flpipeline.</span></span><span class="sig-name descname"><span class="pre">FLpipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.server.FlowerServer" title="MEDfl.LearningManager.server.FlowerServer"><span class="pre">FlowerServer</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#FLpipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>FLpipeline class for managing Federated Learning pipelines.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the FLpipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.description" title="Permalink to this definition"></a></dt>
+<dd><p>A description of the FLpipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.server">
+<span class="sig-name descname"><span class="pre">server</span></span><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.server" title="Permalink to this definition"></a></dt>
+<dd><p>The FlowerServer object associated with the FLpipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.LearningManager.server.FlowerServer" title="MEDfl.LearningManager.server.FlowerServer">FlowerServer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__(self,</span> <span class="pre">name</span></span></dt>
+<dd><p>str, description: str, server: FlowerServer) -&gt; None:
+Initialize FLpipeline with the specified name, description, and server.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.auto_test">
+<span class="sig-name descname"><span class="pre">auto_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#FLpipeline.auto_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.auto_test" title="Permalink to this definition"></a></dt>
+<dd><p>Automatically test the FLpipeline on all nodes with the specified test_frac.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>test_frac</strong> (<em>float</em><em>, </em><em>optional</em>) – The fraction of the test data to use. Default is 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries containing the node names and the classification reports.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#FLpipeline.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new FLpipeline entry in the database with the given result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>result</strong> (<em>str</em>) – The result string to store in the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#FLpipeline.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.delete" title="Permalink to this definition"></a></dt>
+<dd><p>Delete the FLpipeline entry from the database based on its name.</p>
+<p>Note: This is a placeholder method and needs to be implemented based on your specific database setup.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.test_by_node">
+<span class="sig-name descname"><span class="pre">test_by_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#FLpipeline.test_by_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.test_by_node" title="Permalink to this definition"></a></dt>
+<dd><p>Test the FLpipeline by node with the specified test_frac.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_name</strong> (<em>str</em>) – The name of the node to test.</p></li>
+<li><p><strong>test_frac</strong> (<em>float</em><em>, </em><em>optional</em>) – The fraction of the test data to use. Default is 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing the node name and the classification report.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.FLpipeline.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#FLpipeline.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.FLpipeline.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate the name, description, and server attributes.
+:raises TypeError: If the name is not a string, the description is not a string,
+    or the server is not a FlowerServer object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.flpipeline.create_query">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.flpipeline.</span></span><span class="sig-name descname"><span class="pre">create_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">creation_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/flpipeline.html#create_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.flpipeline.create_query" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.model">
+<span id="medfl-learningmanager-model-module"></span><h2>MEDfl.LearningManager.model module<a class="headerlink" href="#module-MEDfl.LearningManager.model" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model class for training and testing PyTorch neural networks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#MEDfl.LearningManager.model.Model.model" title="Permalink to this definition"></a></dt>
+<dd><p>PyTorch neural network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.optimizer">
+<span class="sig-name descname"><span class="pre">optimizer</span></span><a class="headerlink" href="#MEDfl.LearningManager.model.Model.optimizer" title="Permalink to this definition"></a></dt>
+<dd><p>PyTorch optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.optim.Optimizer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.criterion">
+<span class="sig-name descname"><span class="pre">criterion</span></span><a class="headerlink" href="#MEDfl.LearningManager.model.Model.criterion" title="Permalink to this definition"></a></dt>
+<dd><p>Loss function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Callable</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Model class with the specified model, optimizer, and criterion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – PyTorch neural network.</p></li>
+<li><p><strong>optimizer</strong> (<em>torch.optim.Optimizer</em>) – PyTorch optimizer.</p></li>
+<li><p><strong>criterion</strong> (<em>Callable</em>) – Loss function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate the model on the given validation data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val_loader</strong> – The data loader for validation data.</p></li>
+<li><p><strong>device</strong> – The device on which to perform the evaluation. Default is ‘cpu’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluation loss and accuracy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.get_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get the parameters of the model as a list of NumPy arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The parameters of the model as a list of NumPy arrays.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.load_model">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.load_model" title="Permalink to this definition"></a></dt>
+<dd><p>Loads a PyTorch model from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_path</strong> (<em>str</em>) – Path to the model file to be loaded.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loaded PyTorch model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.save_model">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.save_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.save_model" title="Permalink to this definition"></a></dt>
+<dd><p>Saves a PyTorch model to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – PyTorch model to be saved.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If there is an issue during the saving process.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.set_parameters">
+<span class="sig-name descname"><span class="pre">set_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.set_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.set_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Set the parameters of the model from a list of NumPy arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>List</em><em>[</em><em>np.ndarray</em><em>]</em>) – The parameters to be set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">privacy_engine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_priv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.train" title="Permalink to this definition"></a></dt>
+<dd><p>Train the model on the given train_loader for one epoch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_loader</strong> – The data loader for training data.</p></li>
+<li><p><strong>epoch</strong> (<em>int</em>) – The current epoch number.</p></li>
+<li><p><strong>device</strong> – The device on which to perform the training.</p></li>
+<li><p><strong>privacy_engine</strong> – The privacy engine used for differential privacy (if enabled).</p></li>
+<li><p><strong>diff_priv</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether differential privacy is used. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of epsilon used in differential privacy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.model.Model.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/model.html#Model.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.model.Model.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate model and optimizer.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.plot">
+<span id="medfl-learningmanager-plot-module"></span><h2>MEDfl.LearningManager.plot module<a class="headerlink" href="#module-MEDfl.LearningManager.plot" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.plot.</span></span><span class="sig-name descname"><span class="pre">AccuracyLossPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/plot.html#AccuracyLossPlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A utility class for plotting accuracy and loss metrics based on experiment results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>results_dict</strong> (<em>dict</em>) – Dictionary containing experiment results organized by parameters and metrics.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.results_dict">
+<span class="sig-name descname"><span class="pre">results_dict</span></span><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.results_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dictionary containing experiment results organized by parameters and metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.parameters" title="Permalink to this definition"></a></dt>
+<dd><p>List of unique parameters in the experiment results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.metrics">
+<span class="sig-name descname"><span class="pre">metrics</span></span><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.metrics" title="Permalink to this definition"></a></dt>
+<dd><p>List of unique metrics in the experiment results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.iterations">
+<span class="sig-name descname"><span class="pre">iterations</span></span><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.iterations" title="Permalink to this definition"></a></dt>
+<dd><p>Range of iterations (rounds or epochs) in the experiment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>range</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/plot.html#AccuracyLossPlotter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the AccuracyLossPlotter with experiment results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>results_dict</strong> (<em>dict</em>) – Dictionary containing experiment results organized by parameters and metrics.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_accuracy_loss">
+<span class="sig-name descname"><span class="pre">plot_accuracy_loss</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/plot.html#AccuracyLossPlotter.plot_accuracy_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_accuracy_loss" title="Permalink to this definition"></a></dt>
+<dd><p>Plot accuracy and loss metrics for different parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_classification_report">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_classification_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/plot.html#AccuracyLossPlotter.plot_classification_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_classification_report" title="Permalink to this definition"></a></dt>
+<dd><p>Plot a comparison of classification report metrics between nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pipeline_name</strong> (<em>str</em>) – Name of the pipeline.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_confusion_Matrix_by_node">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_confusion_Matrix_by_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/plot.html#AccuracyLossPlotter.plot_confusion_Matrix_by_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_confusion_Matrix_by_node" title="Permalink to this definition"></a></dt>
+<dd><p>Plot a confusion matrix for a specific node in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_name</strong> (<em>str</em>) – Name of the node.</p></li>
+<li><p><strong>pipeline_name</strong> (<em>str</em>) – Name of the pipeline.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_global_confusion_matrix">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_global_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/plot.html#AccuracyLossPlotter.plot_global_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.plot.AccuracyLossPlotter.plot_global_confusion_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Plot a global confusion matrix based on pipeline results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pipeline_name</strong> (<em>str</em>) – Name of the pipeline.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.plot.results_dict">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.plot.</span></span><span class="sig-name descname"><span class="pre">results_dict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{('LR:</span> <span class="pre">0.001,</span> <span class="pre">Optimizer:</span> <span class="pre">Adam',</span> <span class="pre">'accuracy'):</span> <span class="pre">[0.85,</span> <span class="pre">0.89,</span> <span class="pre">0.92,</span> <span class="pre">0.94,</span> <span class="pre">Ellipsis],</span> <span class="pre">('LR:</span> <span class="pre">0.001,</span> <span class="pre">Optimizer:</span> <span class="pre">Adam',</span> <span class="pre">'loss'):</span> <span class="pre">[0.2,</span> <span class="pre">0.15,</span> <span class="pre">0.1,</span> <span class="pre">0.08,</span> <span class="pre">Ellipsis],</span> <span class="pre">('LR:</span> <span class="pre">0.01,</span> <span class="pre">Optimizer:</span> <span class="pre">SGD',</span> <span class="pre">'accuracy'):</span> <span class="pre">[0.88,</span> <span class="pre">0.91,</span> <span class="pre">0.93,</span> <span class="pre">0.95,</span> <span class="pre">Ellipsis],</span> <span class="pre">('LR:</span> <span class="pre">0.01,</span> <span class="pre">Optimizer:</span> <span class="pre">SGD',</span> <span class="pre">'loss'):</span> <span class="pre">[0.18,</span> <span class="pre">0.13,</span> <span class="pre">0.09,</span> <span class="pre">0.07,</span> <span class="pre">Ellipsis],</span> <span class="pre">('LR:</span> <span class="pre">0.1,</span> <span class="pre">Optimizer:</span> <span class="pre">Adam',</span> <span class="pre">'accuracy'):</span> <span class="pre">[0.82,</span> <span class="pre">0.87,</span> <span class="pre">0.91,</span> <span class="pre">0.93,</span> <span class="pre">Ellipsis],</span> <span class="pre">('LR:</span> <span class="pre">0.1,</span> <span class="pre">Optimizer:</span> <span class="pre">Adam',</span> <span class="pre">'loss'):</span> <span class="pre">[0.25,</span> <span class="pre">0.2,</span> <span class="pre">0.15,</span> <span class="pre">0.12,</span> <span class="pre">Ellipsis]}</span></em><a class="headerlink" href="#MEDfl.LearningManager.plot.results_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>server should have:</dt><dd><dl class="simple">
+<dt>#len = num of rounds</dt><dd><p>self.accuracies
+self.losses</p>
+</dd>
+</dl>
+</dd>
+<dt>Client should have</dt><dd><p># len = num of epochs
+self.accuracies
+self.losses
+self.epsilons
+self.deltas</p>
+</dd>
+</dl>
+<p>#common things : LR,SGD, Aggregation</p>
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.server">
+<span id="medfl-learningmanager-server-module"></span><h2>MEDfl.LearningManager.server module<a class="headerlink" href="#module-MEDfl.LearningManager.server" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.server.</span></span><span class="sig-name descname"><span class="pre">FlowerServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model"><span class="pre">Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.strategy.Strategy" title="MEDfl.LearningManager.strategy.Strategy"><span class="pre">Strategy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_rounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fed_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="MEDfl.LearningManager.federated_dataset.FederatedDataset"><span class="pre">FederatedDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_privacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_resources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'num_cpus':</span> <span class="pre">1,</span> <span class="pre">'num_gpus':</span> <span class="pre">0.0}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/server.html#FlowerServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class representing the central server for Federated Learning using Flower.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.global_model">
+<span class="sig-name descname"><span class="pre">global_model</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.global_model" title="Permalink to this definition"></a></dt>
+<dd><p>The global model that will be federated among clients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model">Model</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.strategy">
+<span class="sig-name descname"><span class="pre">strategy</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.strategy" title="Permalink to this definition"></a></dt>
+<dd><p>The strategy used for federated learning, specifying communication and aggregation methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.LearningManager.strategy.Strategy" title="MEDfl.LearningManager.strategy.Strategy">Strategy</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.num_rounds">
+<span class="sig-name descname"><span class="pre">num_rounds</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.num_rounds" title="Permalink to this definition"></a></dt>
+<dd><p>The number of federated learning rounds to perform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.num_clients">
+<span class="sig-name descname"><span class="pre">num_clients</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.num_clients" title="Permalink to this definition"></a></dt>
+<dd><p>The number of clients participating in the federated learning process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.fed_dataset">
+<span class="sig-name descname"><span class="pre">fed_dataset</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.fed_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>The federated dataset used for training and evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="MEDfl.LearningManager.federated_dataset.FederatedDataset">FederatedDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.diff_priv">
+<span class="sig-name descname"><span class="pre">diff_priv</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.diff_priv" title="Permalink to this definition"></a></dt>
+<dd><p>Whether differential privacy is used during the federated learning process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.accuracies">
+<span class="sig-name descname"><span class="pre">accuracies</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.accuracies" title="Permalink to this definition"></a></dt>
+<dd><p>A list to store the accuracy of the global model during each round.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.losses">
+<span class="sig-name descname"><span class="pre">losses</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.losses" title="Permalink to this definition"></a></dt>
+<dd><p>A list to store the loss of the global model during each round.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.flower_clients">
+<span class="sig-name descname"><span class="pre">flower_clients</span></span><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.flower_clients" title="Permalink to this definition"></a></dt>
+<dd><p>A list to store the FlowerClient objects representing individual clients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#MEDfl.LearningManager.client.FlowerClient" title="MEDfl.LearningManager.client.FlowerClient">FlowerClient</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model"><span class="pre">Model</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.strategy.Strategy" title="MEDfl.LearningManager.strategy.Strategy"><span class="pre">Strategy</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_rounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fed_dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="MEDfl.LearningManager.federated_dataset.FederatedDataset"><span class="pre">FederatedDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_privacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_resources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{'num_cpus':</span> <span class="pre">1,</span> <span class="pre">'num_gpus':</span> <span class="pre">0.0}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/server.html#FlowerServer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a FlowerServer object with the specified parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>global_model</strong> (<a class="reference internal" href="#MEDfl.LearningManager.model.Model" title="MEDfl.LearningManager.model.Model"><em>Model</em></a>) – The global model that will be federated among clients.</p></li>
+<li><p><strong>strategy</strong> (<a class="reference internal" href="#MEDfl.LearningManager.strategy.Strategy" title="MEDfl.LearningManager.strategy.Strategy"><em>Strategy</em></a>) – The strategy used for federated learning, specifying communication and aggregation methods.</p></li>
+<li><p><strong>num_rounds</strong> (<em>int</em>) – The number of federated learning rounds to perform.</p></li>
+<li><p><strong>num_clients</strong> (<em>int</em>) – The number of clients participating in the federated learning process.</p></li>
+<li><p><strong>fed_dataset</strong> (<a class="reference internal" href="#MEDfl.LearningManager.federated_dataset.FederatedDataset" title="MEDfl.LearningManager.federated_dataset.FederatedDataset"><em>FederatedDataset</em></a>) – The federated dataset used for training and evaluation.</p></li>
+<li><p><strong>diff_privacy</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether differential privacy is used during the federated learning process.
+Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.client_fn">
+<span class="sig-name descname"><span class="pre">client_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cid</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#MEDfl.LearningManager.client.FlowerClient" title="MEDfl.LearningManager.client.FlowerClient"><span class="pre">FlowerClient</span></a></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/server.html#FlowerServer.client_fn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.client_fn" title="Permalink to this definition"></a></dt>
+<dd><p>Return a FlowerClient object for a specific client ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cid</strong> – The client ID.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A FlowerClient object representing the individual client.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#MEDfl.LearningManager.client.FlowerClient" title="MEDfl.LearningManager.client.FlowerClient">FlowerClient</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server_round</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/server.html#FlowerServer.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate the global model on the validation dataset and update the accuracies and losses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>server_round</strong> (<em>int</em>) – The current round of the federated learning process.</p></li>
+<li><p><strong>parameters</strong> (<em>fl.common.NDArrays</em>) – The global model parameters.</p></li>
+<li><p><strong>config</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>fl.common.Scalar</em><em>]</em>) – Configuration dictionary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The evaluation loss and accuracy.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[float, Dict[str, fl.common.Scalar]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/server.html#FlowerServer.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.run" title="Permalink to this definition"></a></dt>
+<dd><p>Run the federated learning process using Flower simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The history of the accuracies and losses during the training of each node</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>History</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.server.FlowerServer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/server.html#FlowerServer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.server.FlowerServer.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate global_model, strategy, num_clients, num_rounds, fed_dataset, diff_privacy</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.strategy">
+<span id="medfl-learningmanager-strategy-module"></span><h2>MEDfl.LearningManager.strategy module<a class="headerlink" href="#module-MEDfl.LearningManager.strategy" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.strategy.</span></span><span class="sig-name descname"><span class="pre">Strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'FedAvg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_fit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_evaluate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fit_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_evaluate_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_available_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_methode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'centralized'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/strategy.html#Strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class representing a strategy for Federated Learning.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.name" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the strategy. Default is “FedAvg”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.fraction_fit">
+<span class="sig-name descname"><span class="pre">fraction_fit</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.fraction_fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fraction of clients to use for training during each round. Default is 1.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.fraction_evaluate">
+<span class="sig-name descname"><span class="pre">fraction_evaluate</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.fraction_evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Fraction of clients to use for evaluation during each round. Default is 1.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.min_fit_clients">
+<span class="sig-name descname"><span class="pre">min_fit_clients</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.min_fit_clients" title="Permalink to this definition"></a></dt>
+<dd><p>Minimum number of clients to use for training during each round. Default is 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.min_evaluate_clients">
+<span class="sig-name descname"><span class="pre">min_evaluate_clients</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.min_evaluate_clients" title="Permalink to this definition"></a></dt>
+<dd><p>Minimum number of clients to use for evaluation during each round. Default is 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.min_available_clients">
+<span class="sig-name descname"><span class="pre">min_available_clients</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.min_available_clients" title="Permalink to this definition"></a></dt>
+<dd><p>Minimum number of available clients required to start a round. Default is 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.initial_parameters">
+<span class="sig-name descname"><span class="pre">initial_parameters</span></span><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.initial_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>The initial parameters of the server model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Methods:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'FedAvg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_fit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_evaluate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_fit_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_evaluate_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_available_clients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_methode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'centralized'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/MEDfl/LearningManager/strategy.html#Strategy.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a Strategy object with the specified parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the strategy. Default is “FedAvg”.</p></li>
+<li><p><strong>fraction_fit</strong> (<em>float</em>) – Fraction of clients to use for training during each round. Default is 1.0.</p></li>
+<li><p><strong>fraction_evaluate</strong> (<em>float</em>) – Fraction of clients to use for evaluation during each round. Default is 1.0.</p></li>
+<li><p><strong>min_fit_clients</strong> (<em>int</em>) – Minimum number of clients to use for training during each round. Default is 2.</p></li>
+<li><p><strong>min_evaluate_clients</strong> (<em>int</em>) – Minimum number of clients to use for evaluation during each round. Default is 2.</p></li>
+<li><p><strong>min_available_clients</strong> (<em>int</em>) – Minimum number of available clients required to start a round. Default is 2.</p></li>
+<li><p><strong>initial_parameters</strong> (<em>Optional</em><em>[</em><em>]</em>) – The initial parametres of the server model</p></li>
+<li><p><strong>evaluation_methode</strong> (<em>&quot;centralized&quot;</em><em> | </em><em>&quot;distributed&quot;</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.create_strategy">
+<span class="sig-name descname"><span class="pre">create_strategy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/strategy.html#Strategy.create_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.create_strategy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.get_strategy_by_name">
+<span class="sig-name descname"><span class="pre">get_strategy_by_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/strategy.html#Strategy.get_strategy_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.get_strategy_by_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.strategy.Strategy.optuna_fed_optimization">
+<span class="sig-name descname"><span class="pre">optuna_fed_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hpo_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/strategy.html#Strategy.optuna_fed_optimization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.strategy.Strategy.optuna_fed_optimization" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager.utils">
+<span id="medfl-learningmanager-utils-module"></span><h2>MEDfl.LearningManager.utils module<a class="headerlink" href="#module-MEDfl.LearningManager.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.create_MEDfl_db">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">create_MEDfl_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#create_MEDfl_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.create_MEDfl_db" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.custom_classification_report">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">custom_classification_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred_prob</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#custom_classification_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.custom_classification_report" title="Permalink to this definition"></a></dt>
+<dd><p>Compute custom classification report metrics including accuracy, sensitivity, specificity, precision, NPV,
+F1-score, false positive rate, and true positive rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<em>array-like</em>) – True labels.</p></li>
+<li><p><strong>y_pred</strong> (<em>array-like</em>) – Predicted labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing custom classification report metrics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.empty_db">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">empty_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#empty_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.empty_db" title="Permalink to this definition"></a></dt>
+<dd><p>Empty the database by deleting records from multiple tables and resetting auto-increment counters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.get_node_confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">get_node_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#get_node_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.get_node_confusion_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Get the confusion matrix for a specific node in a pipeline based on test results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_id</strong> (<em>int</em>) – ID of the pipeline.</p></li>
+<li><p><strong>node_name</strong> (<em>str</em>) – Name of the node.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary representing the confusion matrix for the specified node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.get_pipeline_confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">get_pipeline_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#get_pipeline_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.get_pipeline_confusion_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Get the global confusion matrix for a pipeline based on test results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pipeline_id</strong> (<em>int</em>) – ID of the pipeline.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary representing the global confusion matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.get_pipeline_from_name">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">get_pipeline_from_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#get_pipeline_from_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.get_pipeline_from_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the pipeline ID from its name in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the pipeline.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ID of the pipeline.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.get_pipeline_result">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">get_pipeline_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#get_pipeline_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.get_pipeline_result" title="Permalink to this definition"></a></dt>
+<dd><p>Get the test results for a pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pipeline_id</strong> (<em>int</em>) – ID of the pipeline.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing test results for the specified pipeline.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.load_db_config">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">load_db_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#load_db_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.load_db_config" title="Permalink to this definition"></a></dt>
+<dd><p>Read a dictionary from an environment variable.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.load_db_config_dep">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">load_db_config_dep</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#load_db_config_dep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.load_db_config_dep" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.set_db_config">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">set_db_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#set_db_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.set_db_config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.set_db_config_dep">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">set_db_config_dep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#set_db_config_dep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.set_db_config_dep" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MEDfl.LearningManager.utils.test">
+<span class="sig-prename descclassname"><span class="pre">MEDfl.LearningManager.utils.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">device(type='cpu')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MEDfl/LearningManager/utils.html#test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#MEDfl.LearningManager.utils.test" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate a model using a test loader and return a custom classification report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>torch.nn.Module</em>) – PyTorch model to evaluate.</p></li>
+<li><p><strong>test_loader</strong> (<em>torch.utils.data.DataLoader</em>) – DataLoader for the test dataset.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em>, </em><em>optional</em>) – Device for model evaluation. Default is “cpu”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing custom classification report metrics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-MEDfl.LearningManager">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-MEDfl.LearningManager" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="MEDfl.html" class="btn btn-neutral float-left" title="MEDfl package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MEDfl.NetManager.html" class="btn btn-neutral float-right" title="MEDfl.NetManager package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

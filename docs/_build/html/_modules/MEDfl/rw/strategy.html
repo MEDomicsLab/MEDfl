@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl.rw.strategy &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/dark_mode_js/default_light.js"></script>
+        <script src="../../../_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/medfl_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Documentation.html">Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simulation_tutorials_complete.html">MEDfl Complete Tutorial (Simulation)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">MEDfl.rw.strategy</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for MEDfl.rw.strategy</h1><div class="highlight"><pre>
+<span></span><span class="c1"># File: MEDfl/rw/strategy.py</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flwr</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flwr.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetPropertiesIns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flwr.server.client_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flwr.server.client_proxy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientProxy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.rw.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Net</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="c1"># ===================================================</span>
+<span class="c1"># Custom metric aggregation functions</span>
+<span class="c1"># ===================================================</span>
+<div class="viewcode-block" id="aggregate_fit_metrics"><a class="viewcode-back" href="../../../MEDfl.rw.html#MEDfl.rw.strategy.aggregate_fit_metrics">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">aggregate_fit_metrics</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;train_accuracy&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">auc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;train_auc&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;train_loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span> <span class="s2">&quot;train_accuracy&quot;</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span> <span class="s2">&quot;train_auc&quot;</span><span class="p">:</span> <span class="n">auc</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="aggregate_eval_metrics"><a class="viewcode-back" href="../../../MEDfl.rw.html#MEDfl.rw.strategy.aggregate_eval_metrics">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">aggregate_eval_metrics</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_loss&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_accuracy&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="n">auc</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_auc&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;eval_loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span> <span class="s2">&quot;eval_accuracy&quot;</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span> <span class="s2">&quot;eval_auc&quot;</span><span class="p">:</span> <span class="n">auc</span><span class="p">}</span></div>
+
+<span class="c1"># ===================================================</span>
+<span class="c1"># Strategy Wrapper</span>
+<span class="c1"># ===================================================</span>
+<div class="viewcode-block" id="Strategy"><a class="viewcode-back" href="../../../MEDfl.rw.html#MEDfl.rw.strategy.Strategy">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Strategy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flower Strategy wrapper:</span>
+<span class="sd">      - Dynamic hyperparameters via on_fit_config_fn</span>
+<span class="sd">      - Custom metric aggregation</span>
+<span class="sd">      - Per-client &amp; aggregated metric logging</span>
+<span class="sd">      - Synchronous get_properties() inspection in configure_fit()</span>
+<span class="sd">      - Saving global parameters every saveOnRounds to savingPath</span>
+
+<span class="sd">      Extended:</span>
+<span class="sd">      - split_mode:</span>
+<span class="sd">          * &quot;global&quot;: use global val_fraction/test_fraction for all clients</span>
+<span class="sd">          * &quot;per_client&quot;: use client_fractions[hostname] if present</span>
+<span class="sd">      - client_fractions:</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;HOSTNAME_1&quot;: {</span>
+<span class="sd">               &quot;val_fraction&quot;: float (optional),</span>
+<span class="sd">               &quot;test_fraction&quot;: float (optional),</span>
+<span class="sd">               &quot;test_ids&quot;: [..] or &quot;id1,id2&quot; (optional)</span>
+<span class="sd">            },</span>
+<span class="sd">            ...</span>
+<span class="sd">          }</span>
+<span class="sd">      - In per_client mode:</span>
+<span class="sd">          * if test_ids is present for a client:</span>
+<span class="sd">                -&gt; send test_ids</span>
+<span class="sd">                -&gt; do NOT use that client&#39;s test_fraction</span>
+<span class="sd">          * otherwise:</span>
+<span class="sd">                -&gt; use that client&#39;s val_fraction/test_fraction if provided,</span>
+<span class="sd">                   else fall back to global val_fraction/test_fraction</span>
+<span class="sd">      - client id in this mapping = hostname from client.get_properties()</span>
+<span class="sd">      - id_col:</span>
+<span class="sd">          * column name used on clients to match test_ids (default &quot;id&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FedAvg&quot;</span><span class="p">,</span>
+        <span class="n">fraction_fit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">fraction_evaluate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">min_fit_clients</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">min_evaluate_clients</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">min_available_clients</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">initial_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">evaluate_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fit_metrics_aggregation_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">evaluate_metrics_aggregation_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">local_epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+        <span class="n">optimizer_name</span><span class="o">=</span><span class="s2">&quot;SGD&quot;</span><span class="p">,</span>
+        <span class="n">savingPath</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">saveOnRounds</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">total_rounds</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">features</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">val_fraction</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span>
+        <span class="n">test_fraction</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span>
+        <span class="c1"># NEW: splitting control (added at the end to not break existing calls)</span>
+        <span class="n">split_mode</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">,</span>                  <span class="c1"># &quot;global&quot; or &quot;per_client&quot;</span>
+        <span class="n">client_fractions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># NEW: id column for test_ids mapping</span>
+        <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fraction_fit</span> <span class="o">=</span> <span class="n">fraction_fit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fraction_evaluate</span> <span class="o">=</span> <span class="n">fraction_evaluate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_fit_clients</span> <span class="o">=</span> <span class="n">min_fit_clients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_evaluate_clients</span> <span class="o">=</span> <span class="n">min_evaluate_clients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_available_clients</span> <span class="o">=</span> <span class="n">min_available_clients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_parameters</span> <span class="o">=</span> <span class="n">initial_parameters</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_fn</span> <span class="o">=</span> <span class="n">evaluate_fn</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_metrics_aggregation_fn</span> <span class="o">=</span> <span class="n">fit_metrics_aggregation_fn</span> <span class="ow">or</span> <span class="n">aggregate_fit_metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_metrics_aggregation_fn</span> <span class="o">=</span> <span class="n">evaluate_metrics_aggregation_fn</span> <span class="ow">or</span> <span class="n">aggregate_eval_metrics</span>
+
+        <span class="c1"># Dynamic hyperparams</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_epochs</span> <span class="o">=</span> <span class="n">local_epochs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_name</span> <span class="o">=</span> <span class="n">optimizer_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">savingPath</span> <span class="o">=</span> <span class="n">savingPath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveOnRounds</span> <span class="o">=</span> <span class="n">saveOnRounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_rounds</span> <span class="o">=</span> <span class="n">total_rounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">=</span> <span class="n">features</span>  <span class="c1"># comma-separated or &quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target</span> <span class="o">=</span> <span class="n">target</span>      <span class="c1"># or &quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_val_fraction</span> <span class="o">=</span> <span class="n">val_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_test_fraction</span> <span class="o">=</span> <span class="n">test_fraction</span>
+
+        <span class="c1"># NEW</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">split_mode</span> <span class="o">=</span> <span class="n">split_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_fractions</span> <span class="o">=</span> <span class="n">client_fractions</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_col</span> <span class="o">=</span> <span class="n">id_col</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy_object</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Strategy.create_strategy"><a class="viewcode-back" href="../../../MEDfl.rw.html#MEDfl.rw.strategy.Strategy.create_strategy">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 1) Pick the Flower Strategy class</span>
+        <span class="n">StrategyClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fl</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">strategy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># 2) Define on_fit_config_fn _before_ instantiation (global defaults)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fit_config_fn</span><span class="p">(</span><span class="n">server_round</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;local_epochs&quot;</span><span class="p">:</span>   <span class="bp">self</span><span class="o">.</span><span class="n">local_epochs</span><span class="p">,</span>
+                <span class="s2">&quot;threshold&quot;</span><span class="p">:</span>      <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+                <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span>
+                <span class="s2">&quot;optimizer&quot;</span><span class="p">:</span>      <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_name</span><span class="p">,</span>
+                <span class="s2">&quot;features&quot;</span><span class="p">:</span>       <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">,</span>
+                <span class="s2">&quot;target&quot;</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_target</span><span class="p">,</span>
+                <span class="s2">&quot;val_fraction&quot;</span><span class="p">:</span>   <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_val_fraction</span><span class="p">),</span>
+                <span class="s2">&quot;test_fraction&quot;</span><span class="p">:</span>  <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_test_fraction</span><span class="p">),</span>
+                <span class="c1"># NEW: always send id_col so clients know which column to use for test_ids</span>
+                <span class="s2">&quot;id_col&quot;</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">id_col</span><span class="p">,</span>
+            <span class="p">}</span>
+
+        <span class="c1"># 3) Build params including on_fit_config_fn</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;fraction_fit&quot;</span><span class="p">:</span>                     <span class="bp">self</span><span class="o">.</span><span class="n">fraction_fit</span><span class="p">,</span>
+            <span class="s2">&quot;fraction_evaluate&quot;</span><span class="p">:</span>                <span class="bp">self</span><span class="o">.</span><span class="n">fraction_evaluate</span><span class="p">,</span>
+            <span class="s2">&quot;min_fit_clients&quot;</span><span class="p">:</span>                  <span class="bp">self</span><span class="o">.</span><span class="n">min_fit_clients</span><span class="p">,</span>
+            <span class="s2">&quot;min_evaluate_clients&quot;</span><span class="p">:</span>             <span class="bp">self</span><span class="o">.</span><span class="n">min_evaluate_clients</span><span class="p">,</span>
+            <span class="s2">&quot;min_available_clients&quot;</span><span class="p">:</span>            <span class="bp">self</span><span class="o">.</span><span class="n">min_available_clients</span><span class="p">,</span>
+            <span class="s2">&quot;evaluate_fn&quot;</span><span class="p">:</span>                      <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_fn</span><span class="p">,</span>
+            <span class="s2">&quot;on_fit_config_fn&quot;</span><span class="p">:</span>                 <span class="n">fit_config_fn</span><span class="p">,</span>
+            <span class="s2">&quot;fit_metrics_aggregation_fn&quot;</span><span class="p">:</span>       <span class="bp">self</span><span class="o">.</span><span class="n">fit_metrics_aggregation_fn</span><span class="p">,</span>
+            <span class="s2">&quot;evaluate_metrics_aggregation_fn&quot;</span><span class="p">:</span>  <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_metrics_aggregation_fn</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_parameters</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;initial_parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fl</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">ndarrays_to_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_parameters</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># derive initial params from server-specified features</span>
+            <span class="n">feat_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">feat_cols</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;No initial_parameters provided and &#39;features&#39; is empty. &quot;</span>
+                    <span class="s2">&quot;Provide Strategy(..., features=&#39;col1,col2,...&#39;) or pass initial_parameters.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">input_dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feat_cols</span><span class="p">)</span>
+            <span class="n">_model</span> <span class="o">=</span> <span class="n">Net</span><span class="p">(</span><span class="n">input_dim</span><span class="p">)</span>
+            <span class="n">_arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;initial_parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fl</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">ndarrays_to_parameters</span><span class="p">(</span><span class="n">_arrays</span><span class="p">)</span>
+
+        <span class="c1"># 4) Instantiate the real Flower strategy</span>
+        <span class="n">strat</span> <span class="o">=</span> <span class="n">StrategyClass</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># 5) Wrap aggregate_fit for logging (prints unchanged)</span>
+        <span class="n">original_agg_fit</span> <span class="o">=</span> <span class="n">strat</span><span class="o">.</span><span class="n">aggregate_fit</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">logged_agg_fit</span><span class="p">(</span><span class="n">server_round</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">failures</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Server] 🔄 Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2"> - Client Training Metrics:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">client_id</span><span class="p">,</span> <span class="n">fit_res</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; CTM Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2"> Client:</span><span class="si">{</span><span class="n">client_id</span><span class="o">.</span><span class="n">cid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fit_res</span><span class="o">.</span><span class="n">metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">agg_params</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">original_agg_fit</span><span class="p">(</span><span class="n">server_round</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">failures</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Server] ✅ Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2"> - Aggregated Training Metrics: </span><span class="si">{</span><span class="n">metrics</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># save the model parameters if savingPath is set on each saveOnRounds </span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">savingPath</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">server_round</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveOnRounds</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_rounds</span> <span class="ow">and</span> <span class="n">server_round</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_rounds</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="n">arrays</span> <span class="o">=</span> <span class="n">fl</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">parameters_to_ndarrays</span><span class="p">(</span><span class="n">agg_params</span><span class="p">)</span>
+                <span class="c1"># Determine filename: final_model on last round else round_{n}</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;round_</span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2">_final_model.npz&quot;</span>
+                    <span class="k">if</span> <span class="n">server_round</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_rounds</span>
+                    <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;round_</span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2">_model.npz&quot;</span>
+                <span class="p">)</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">savingPath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">agg_params</span><span class="p">,</span> <span class="n">metrics</span>
+
+        <span class="n">strat</span><span class="o">.</span><span class="n">aggregate_fit</span> <span class="o">=</span> <span class="n">logged_agg_fit</span>
+
+        <span class="c1"># 6) Wrap aggregate_evaluate for logging (prints unchanged)</span>
+        <span class="n">original_agg_eval</span> <span class="o">=</span> <span class="n">strat</span><span class="o">.</span><span class="n">aggregate_evaluate</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">logged_agg_eval</span><span class="p">(</span><span class="n">server_round</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">failures</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Server] 📊 Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2"> - Client Evaluation Metrics:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">client_id</span><span class="p">,</span> <span class="n">eval_res</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; CEM Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2"> Client:</span><span class="si">{</span><span class="n">client_id</span><span class="o">.</span><span class="n">cid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">eval_res</span><span class="o">.</span><span class="n">metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">loss</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">original_agg_eval</span><span class="p">(</span><span class="n">server_round</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">failures</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Server] ✅ Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2"> - Aggregated Evaluation Metrics:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s2">, Metrics: </span><span class="si">{</span><span class="n">metrics</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">metrics</span>
+
+        <span class="n">strat</span><span class="o">.</span><span class="n">aggregate_evaluate</span> <span class="o">=</span> <span class="n">logged_agg_eval</span>
+
+        <span class="c1"># 7) Wrap configure_fit to:</span>
+        <span class="c1">#    - log client properties (unchanged)</span>
+        <span class="c1">#    - apply split_mode/client_fractions to fit_ins.config (NEW)</span>
+        <span class="n">original_conf_fit</span> <span class="o">=</span> <span class="n">strat</span><span class="o">.</span><span class="n">configure_fit</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrapped_conf_fit</span><span class="p">(</span>
+            <span class="n">server_round</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="p">,</span>
+            <span class="n">client_manager</span>
+        <span class="p">):</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="n">original_conf_fit</span><span class="p">(</span>
+                <span class="n">server_round</span><span class="o">=</span><span class="n">server_round</span><span class="p">,</span>
+                <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+                <span class="n">client_manager</span><span class="o">=</span><span class="n">client_manager</span>
+            <span class="p">)</span>
+
+            <span class="n">ins</span> <span class="o">=</span> <span class="n">GetPropertiesIns</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{})</span>
+
+            <span class="k">for</span> <span class="n">client</span><span class="p">,</span> <span class="n">fit_ins</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+                <span class="n">hostname</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">props</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span><span class="n">ins</span><span class="o">=</span><span class="n">ins</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📋 [Round </span><span class="si">{</span><span class="n">server_round</span><span class="si">}</span><span class="s2">] Client </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">cid</span><span class="si">}</span><span class="s2"> Properties: </span><span class="si">{</span><span class="n">props</span><span class="o">.</span><span class="n">properties</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">hostname</span> <span class="o">=</span> <span class="n">props</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hostname&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Failed to get properties from </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">cid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Fallback: if no hostname returned, use Flower cid</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">hostname</span><span class="p">:</span>
+                    <span class="n">hostname</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">cid</span>
+
+                <span class="c1"># Keep same object</span>
+                <span class="n">cfg</span> <span class="o">=</span> <span class="n">fit_ins</span><span class="o">.</span><span class="n">config</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_mode</span> <span class="o">==</span> <span class="s2">&quot;per_client&quot;</span><span class="p">:</span>
+                    <span class="c1"># Lookup by hostname (preferred) or cid</span>
+                    <span class="n">per_cfg</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">client_fractions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_fractions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">cid</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="p">{}</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># val_fraction: per-client override if present</span>
+                    <span class="k">if</span> <span class="s2">&quot;val_fraction&quot;</span> <span class="ow">in</span> <span class="n">per_cfg</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;val_fraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">per_cfg</span><span class="p">[</span><span class="s2">&quot;val_fraction&quot;</span><span class="p">])</span>
+                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                            <span class="k">pass</span>  <span class="c1"># keep existing if invalid</span>
+
+                    <span class="c1"># test: prefer test_ids if provided</span>
+                    <span class="k">if</span> <span class="s2">&quot;test_ids&quot;</span> <span class="ow">in</span> <span class="n">per_cfg</span> <span class="ow">and</span> <span class="n">per_cfg</span><span class="p">[</span><span class="s2">&quot;test_ids&quot;</span><span class="p">]:</span>
+                        <span class="n">test_ids_val</span> <span class="o">=</span> <span class="n">per_cfg</span><span class="p">[</span><span class="s2">&quot;test_ids&quot;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test_ids_val</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">set</span><span class="p">)):</span>
+                            <span class="n">test_ids_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">test_ids_val</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">test_ids_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">test_ids_val</span><span class="p">)</span>
+                        <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;test_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_ids_str</span>
+                        <span class="c1"># when using explicit IDs, do not force a test_fraction for this client</span>
+                        <span class="k">if</span> <span class="s2">&quot;test_fraction&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+                            <span class="k">del</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;test_fraction&quot;</span><span class="p">]</span>
+                        <span class="c1"># ensure id_col is sent so client can map IDs</span>
+                        <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;id_col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_col</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># no test_ids -&gt; use per-client test_fraction if present</span>
+                        <span class="k">if</span> <span class="s2">&quot;test_fraction&quot;</span> <span class="ow">in</span> <span class="n">per_cfg</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;test_fraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">per_cfg</span><span class="p">[</span><span class="s2">&quot;test_fraction&quot;</span><span class="p">])</span>
+                            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                                <span class="k">pass</span>  <span class="c1"># keep existing if invalid</span>
+                        <span class="c1"># if no test_ids: id_col not strictly required, leave as-is</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># split_mode == &quot;global&quot;: enforce global fractions, clear any test_ids</span>
+                    <span class="k">if</span> <span class="s2">&quot;test_ids&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;test_ids&quot;</span><span class="p">]</span>
+                    <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;val_fraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_val_fraction</span><span class="p">)</span>
+                    <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;test_fraction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_test_fraction</span><span class="p">)</span>
+                    <span class="c1"># also send id_col so clients know column name if needed</span>
+                    <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;id_col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_col</span>
+
+            <span class="k">return</span> <span class="n">selected</span>
+
+        <span class="n">strat</span><span class="o">.</span><span class="n">configure_fit</span> <span class="o">=</span> <span class="n">wrapped_conf_fit</span>
+
+        <span class="c1"># 8) Save the ready-to-use strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy_object</span> <span class="o">=</span> <span class="n">strat</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
