@@ -47,6 +47,35 @@ class DPConfig:
 
 
 class FlowerClient(fl.client.NumPyClient):
+    """
+    Federated learning client for MEDfl real-world pipelines.
+
+    This client:
+      - connects to a Flower server,
+      - loads local CSV data,
+      - applies server-provided schema (features/target),
+      - handles train/val/test splits (fractions or test_ids),
+      - optionally enables differential privacy with Opacus.
+
+    Parameters
+    ----------
+    server_address : str
+        Address of the Flower server, e.g. ``"127.0.0.1:8080"``.
+    data_path : str, optional
+        Path to the local CSV file. Default is ``"data/data.csv"``.
+    dp_config : DPConfig, optional
+        Differential privacy configuration. If ``None``, DP is disabled.
+    val_frac : float, optional
+        Client-side validation fraction override. If ``None``, use server value.
+    test_frac : float, optional
+        Client-side test fraction override. If ``None``, use server value.
+    id_col : str, optional
+        Name of the ID column used when selecting test samples via ``test_ids``.
+    test_ids : str, optional
+        Comma-separated list of IDs (or line numbers) to use as test set.
+    seed : int, optional
+        Random seed used for splits. Default is ``42``.
+    """
     def __init__(
         self,
         server_address,

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEDfl Complete Tutorial (Simulation) &mdash; MEDfl 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/general.css" />
+      <link rel="stylesheet" type="text/css" href="_static/dark_mode_css/dark.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/dark_mode_js/default_light.js"></script>
+        <script src="_static/dark_mode_js/theme_switcher.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Real-world Federated Learning Tutorial" href="rw_tutorial_complete.html" />
+    <link rel="prev" title="Introduction" href="simulation_tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/medfl_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simulation Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#database-management">Database management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#netmanager">NetManager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#transfer-learning">Transfer Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-manager">Learning Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#learning-results">Learning Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation_tutorials.html#model-choice">Model choice</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MEDfl Complete Tutorial (Simulation)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#real-world-motivation">Real-world motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">0. Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment-and-imports">1. Environment and imports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-configuration">2. Database configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#network-creation-netmanager">3. Network creation (NetManager)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#federated-learning-setup-flsetup">4. Federated Learning setup (FLsetup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-creation-and-dataset-upload">5. Node creation and dataset upload</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#federated-dataset-creation">6. Federated dataset creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-definition-dynamicmodel">7. Model definition (DynamicModel)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aggregation-strategy">8. Aggregation strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#federated-learning-server">9. Federated learning server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fl-pipeline-creation-and-training">10. FL pipeline creation and training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-accuracy-and-loss">11. Plotting accuracy and loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-testing-and-result-storage">12. Automatic testing and result storage</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rw_tutorial_complete.html">Real-world Federated Learning Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MEDfl</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MEDfl</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MEDfl Complete Tutorial (Simulation)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/simulation_tutorials_complete.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="medfl-complete-tutorial-simulation">
+<h1>MEDfl Complete Tutorial (Simulation)<a class="headerlink" href="#medfl-complete-tutorial-simulation" title="Permalink to this heading"></a></h1>
+<p>In this complete tutorial, we will demonstrate how to use the <code class="docutils literal notranslate"><span class="pre">MEDfl</span></code> package
+to set up and run a <strong>federated learning experiment in simulation mode</strong>.</p>
+<p>Starting from a <em>realistic healthcare scenario</em>, we will:</p>
+<ul class="simple">
+<li><p>Configure the <strong>database</strong> used by MEDfl</p></li>
+<li><p>Create a <strong>network</strong> and <strong>nodes</strong> with the <code class="docutils literal notranslate"><span class="pre">NetManager</span></code></p></li>
+<li><p>Generate a <strong>federated dataset</strong></p></li>
+<li><p>Define a <strong>dynamic model</strong></p></li>
+<li><p>Configure the <strong>aggregation strategy</strong></p></li>
+<li><p>Start a <strong>Flower-based FL server</strong></p></li>
+<li><p>Run the <strong>federated training pipeline</strong></p></li>
+<li><p>Plot <strong>accuracy and loss</strong></p></li>
+<li><p>Automatically <strong>test</strong> the final model and store results in the database</p></li>
+</ul>
+<p>This tutorial is based on the accompanying Jupyter notebook. It is designed as a
+step-by-step guide you can follow and adapt to your own datasets and
+configurations.</p>
+<section id="real-world-motivation">
+<h2>Real-world motivation<a class="headerlink" href="#real-world-motivation" title="Permalink to this heading"></a></h2>
+<p><strong>Martin</strong> is an AI researcher whose main interest is applying AI to the healthcare
+domain. He is contacted by a prestigious institute to study the feasibility of a
+new project:</p>
+<blockquote>
+<div><p>Designing and developing a federated learning system between several hospitals,
+using deep learning while preserving patient privacy.</p>
+</div></blockquote>
+<p>After analyzing the requirements, Martin identifies that the project needs:</p>
+<ul class="simple">
+<li><p><strong>Federated Learning (FL)</strong> to keep data local to each hospital</p></li>
+<li><p><strong>Differential Privacy (DP)</strong> to protect model updates</p></li>
+<li><p>A robust <strong>data and experiment management</strong> layer</p></li>
+</ul>
+<p>Martin knows <code class="docutils literal notranslate"><span class="pre">MEDfl</span></code> has been designed for exactly these kinds of tasks.
+With its two main sub-packages, <code class="docutils literal notranslate"><span class="pre">NetManager</span></code> and <code class="docutils literal notranslate"><span class="pre">LearningManager</span></code>, MEDfl
+allows him to:</p>
+<ul class="simple">
+<li><p>Design different <strong>federated learning architectures (setups)</strong></p></li>
+<li><p>Simulate <strong>real-world collaborations</strong> between hospitals</p></li>
+<li><p>Integrate <strong>transfer learning</strong> and <strong>differential privacy</strong></p></li>
+<li><p>Store and compare <strong>results</strong> systematically in a database</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>0. Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Before following this tutorial, make sure you have:</p>
+<ul>
+<li><p>Installed <code class="docutils literal notranslate"><span class="pre">MEDfl</span></code> and its dependencies (see <span class="xref std std-doc">installation</span>)</p></li>
+<li><p>A Python environment (e.g. <code class="docutils literal notranslate"><span class="pre">fl-env</span></code>) with:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">torch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flwr</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code></p></li>
+</ul>
+</li>
+<li><p>A CSV dataset. In this tutorial we use a diabetes dataset located at:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">../</span><span class="n">data</span><span class="o">/</span><span class="n">masterDataSet</span><span class="o">/</span><span class="n">diabetes_dataset</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In production, MEDfl can be connected to a <strong>MySQL</strong> database
+(see <span class="xref std std-doc">database_management</span>).
+In this tutorial, for simplicity, we use a <strong>local SQLite database</strong>.</p>
+</div>
+</section>
+<section id="environment-and-imports">
+<h2>1. Environment and imports<a class="headerlink" href="#environment-and-imports" title="Permalink to this heading"></a></h2>
+<p>We start by making sure the project root is on the Python path and importing all
+the necessary modules.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../..&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PYTHONPATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;../..&quot;</span>
+
+<span class="c1"># Database and data handling</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Torch imports</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+
+<span class="c1"># Flower</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flwr</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fl</span>
+
+<span class="c1"># MEDfl imports - NetManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.NetManager.node</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.NetManager.network</span><span class="w"> </span><span class="kn">import</span> <span class="n">Network</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.NetManager.flsetup</span><span class="w"> </span><span class="kn">import</span> <span class="n">FLsetup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.NetManager.database_connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
+
+<span class="c1"># MEDfl imports - LearningManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.dynamicModal</span><span class="w"> </span><span class="kn">import</span> <span class="n">DynamicModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.strategy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Strategy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.server</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlowerServer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.flpipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">FLpipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">AccuracyLossPlotter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">MEDfl.LearningManager.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_db_config</span>
+</pre></div>
+</div>
+</section>
+<section id="database-configuration">
+<h2>2. Database configuration<a class="headerlink" href="#database-configuration" title="Permalink to this heading"></a></h2>
+<p>In MEDfl, all networks, nodes, datasets, setups, pipelines, and results are
+stored in a relational database.</p>
+<p>In this tutorial we use a local SQLite database file named
+<code class="docutils literal notranslate"><span class="pre">medfl_database.db</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure the database path</span>
+<span class="n">set_db_config</span><span class="p">(</span><span class="s2">&quot;./medfl_database.db&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create and connect the database manager</span>
+<span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">()</span>
+<span class="n">db_manager</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">connection</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">get_connection</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Database connection OK&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we generate the necessary MEDfl tables based on a <strong>master dataset</strong> CSV
+file. This file describes the global structure of the data that will later be
+partitioned across hospitals.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">db_manager</span><span class="o">.</span><span class="n">create_MEDfl_db</span><span class="p">(</span>
+    <span class="n">path_to_csv</span><span class="o">=</span><span class="s2">&quot;../data/masterDataSet/diabetes_dataset.csv&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">create_MEDfl_db</span></code>:</p>
+<ul class="simple">
+<li><p>infers dataset-related tables from the CSV structure,</p></li>
+<li><p>creates the core MEDfl tables to manage networks, nodes, datasets and
+experiments.</p></li>
+</ul>
+</div>
+</section>
+<section id="network-creation-netmanager">
+<h2>3. Network creation (NetManager)<a class="headerlink" href="#network-creation-netmanager" title="Permalink to this heading"></a></h2>
+<p>We now create a <strong>federated network</strong> that will hold all hospitals (nodes) and
+the corresponding datasets.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a new network</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">(</span><span class="s2">&quot;Net1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Register the network in the database</span>
+<span class="n">net</span><span class="o">.</span><span class="n">create_network</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># &quot;Net1&quot;</span>
+</pre></div>
+</div>
+<p>We then register the <strong>master dataset</strong> associated with this network:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">create_master_dataset</span><span class="p">(</span>
+    <span class="s2">&quot;../data/masterDataSet/diabetes_dataset.csv&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="federated-learning-setup-flsetup">
+<h2>4. Federated Learning setup (FLsetup)<a class="headerlink" href="#federated-learning-setup-flsetup" title="Permalink to this heading"></a></h2>
+<p>An <code class="docutils literal notranslate"><span class="pre">FLsetup</span></code> describes a <strong>federated learning configuration</strong> for a given
+network: which network it uses, how datasets are split, and how the federated
+dataset will be derived.</p>
+<p>Here we create an automatic setup:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auto_fl</span> <span class="o">=</span> <span class="n">FLsetup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Flsetup_2&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The second FL setup&quot;</span><span class="p">,</span>
+    <span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">auto_fl</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+
+<span class="n">auto_fl</span><span class="o">.</span><span class="n">list_allsetups</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will show a table of FL setups stored in the database, including the one we
+just created.</p>
+</section>
+<section id="node-creation-and-dataset-upload">
+<h2>5. Node creation and dataset upload<a class="headerlink" href="#node-creation-and-dataset-upload" title="Permalink to this heading"></a></h2>
+<p>Now we add <strong>hospital nodes</strong> to the network. Each node receives a local
+dataset, representing that hospital’s data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train node: hospital_1</span>
+<span class="n">hospital_1</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;hospital_1&quot;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">hospital_1</span><span class="p">)</span>
+<span class="n">hospital_1</span><span class="o">.</span><span class="n">upload_dataset</span><span class="p">(</span>
+    <span class="s2">&quot;hospital_1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;../data/masterDataSet/client_1_dataset.csv&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train node: hospital_2</span>
+<span class="n">hospital_2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;hospital_2&quot;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">hospital_2</span><span class="p">)</span>
+<span class="n">hospital_2</span><span class="o">.</span><span class="n">upload_dataset</span><span class="p">(</span>
+    <span class="s2">&quot;hospital_2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;../data/masterDataSet/client_2_dataset.csv&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test node: hospital_3 (no local training)</span>
+<span class="n">hospital_3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;hospital_3&quot;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">hospital_3</span><span class="p">)</span>
+<span class="n">hospital_3</span><span class="o">.</span><span class="n">upload_dataset</span><span class="p">(</span>
+    <span class="s2">&quot;hospital_3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;../data/masterDataSet/client_3_dataset.csv&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can list all nodes registered in the network:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">list_allnodes</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="federated-dataset-creation">
+<h2>6. Federated dataset creation<a class="headerlink" href="#federated-dataset-creation" title="Permalink to this heading"></a></h2>
+<p>We now ask MEDfl to build a <strong>federated dataset</strong> from:</p>
+<ul class="simple">
+<li><p>the FL setup,</p></li>
+<li><p>the nodes,</p></li>
+<li><p>and the master dataset.</p></li>
+</ul>
+<p>In this example, we consider <code class="docutils literal notranslate"><span class="pre">&quot;diabetes&quot;</span></code> as the target variable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fl_dataset</span> <span class="o">=</span> <span class="n">auto_fl</span><span class="o">.</span><span class="n">create_federated_dataset</span><span class="p">(</span>
+    <span class="n">output</span><span class="o">=</span><span class="s2">&quot;diabetes&quot;</span><span class="p">,</span>   <span class="c1"># target column</span>
+    <span class="n">fit_encode</span><span class="o">=</span><span class="p">[],</span>       <span class="c1"># columns to encode (if any)</span>
+    <span class="n">to_drop</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;diabetes&quot;</span><span class="p">]</span> <span class="c1"># columns to drop from the inputs</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can inspect the federated dataset object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fl_dataset</span><span class="o">.</span><span class="n">size</span>          <span class="c1"># number of clients / partitions</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auto_fl</span><span class="o">.</span><span class="n">get_flDataSet</span><span class="p">()</span>  <span class="c1"># summary table stored in the DB</span>
+</pre></div>
+</div>
+</section>
+<section id="model-definition-dynamicmodel">
+<h2>7. Model definition (DynamicModel)<a class="headerlink" href="#model-definition-dynamicmodel" title="Permalink to this heading"></a></h2>
+<p>MEDfl provides a <code class="docutils literal notranslate"><span class="pre">DynamicModel</span></code> class to create models dynamically depending
+on the task (binary classification, multiclass, regression, etc.).</p>
+<p>In this tutorial, we build a <strong>binary classifier</strong> with 8 input features:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a DynamicModel helper</span>
+<span class="n">dynamic_model</span> <span class="o">=</span> <span class="n">DynamicModel</span><span class="p">()</span>
+
+<span class="c1"># Build a specific model</span>
+<span class="n">specific_model</span> <span class="o">=</span> <span class="n">dynamic_model</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Binary Classifier&quot;</span><span class="p">,</span>
+    <span class="n">params_dict</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;input_dim&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;output_dim&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;hidden_dims&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Optimizer and loss</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">specific_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<span class="c1"># Wrap everything into a MEDfl Model</span>
+<span class="n">global_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">specific_model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">criterion</span><span class="p">)</span>
+
+<span class="c1"># Initial parameters (to share with clients)</span>
+<span class="n">init_params</span> <span class="o">=</span> <span class="n">global_model</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="aggregation-strategy">
+<h2>8. Aggregation strategy<a class="headerlink" href="#aggregation-strategy" title="Permalink to this heading"></a></h2>
+<p>The aggregation strategy specifies how local model updates are combined on the
+server side (e.g., FedAvg, FedAdam, etc.).</p>
+<p>Here we use <code class="docutils literal notranslate"><span class="pre">FedAdam</span></code> as an example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aggreg_algo</span> <span class="o">=</span> <span class="n">Strategy</span><span class="p">(</span>
+    <span class="s2">&quot;FedAdam&quot;</span><span class="p">,</span>
+    <span class="n">fraction_fit</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">fraction_evaluate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">min_fit_clients</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">min_evaluate_clients</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">min_available_clients</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">initial_parameters</span><span class="o">=</span><span class="n">init_params</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">aggreg_algo</span><span class="o">.</span><span class="n">create_strategy</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="federated-learning-server">
+<h2>9. Federated learning server<a class="headerlink" href="#federated-learning-server" title="Permalink to this heading"></a></h2>
+<p>We now create the <strong>Flower-based federated server</strong> that will orchestrate
+training across the clients (nodes) using the federated dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="o">=</span> <span class="n">FlowerServer</span><span class="p">(</span>
+    <span class="n">global_model</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="o">=</span><span class="n">aggreg_algo</span><span class="p">,</span>
+    <span class="n">num_rounds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">num_clients</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">fl_dataset</span><span class="o">.</span><span class="n">trainloaders</span><span class="p">),</span>
+    <span class="n">fed_dataset</span><span class="o">=</span><span class="n">fl_dataset</span><span class="p">,</span>
+    <span class="n">diff_privacy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># set True to enable DP</span>
+    <span class="n">client_resources</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;num_cpus&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">&quot;num_gpus&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="fl-pipeline-creation-and-training">
+<h2>10. FL pipeline creation and training<a class="headerlink" href="#fl-pipeline-creation-and-training" title="Permalink to this heading"></a></h2>
+<p>To make the experiment reproducible and easy to manage, MEDfl provides the
+<code class="docutils literal notranslate"><span class="pre">FLpipeline</span></code> class. It links the server, setup, and results together.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ppl_1</span> <span class="o">=</span> <span class="n">FLpipeline</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;the first fl_pipeline&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;This is our first FL pipeline&quot;</span><span class="p">,</span>
+    <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To start federated training:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">history</span> <span class="o">=</span> <span class="n">ppl_1</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-accuracy-and-loss">
+<h2>11. Plotting accuracy and loss<a class="headerlink" href="#plotting-accuracy-and-loss" title="Permalink to this heading"></a></h2>
+<p>After training, we can visualize the evolution of global accuracy and loss
+across federated rounds.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">global_accuracy</span> <span class="o">=</span> <span class="n">ppl_1</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">accuracies</span>
+<span class="n">global_loss</span> <span class="o">=</span> <span class="n">ppl_1</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">losses</span>
+
+<span class="n">results_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;LR: 0.001, Optimizer: SGD&quot;</span><span class="p">,</span> <span class="s2">&quot;accuracy&quot;</span><span class="p">):</span> <span class="n">global_accuracy</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;LR: 0.001, Optimizer: SGD&quot;</span><span class="p">,</span> <span class="s2">&quot;loss&quot;</span><span class="p">):</span> <span class="n">global_loss</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">plotter</span> <span class="o">=</span> <span class="n">AccuracyLossPlotter</span><span class="p">(</span><span class="n">results_dict</span><span class="p">)</span>
+<span class="n">plotter</span><span class="o">.</span><span class="n">plot_accuracy_loss</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This produces a figure showing the training curves over the rounds, helping you
+compare different configurations or hyperparameters.</p>
+</section>
+<section id="automatic-testing-and-result-storage">
+<h2>12. Automatic testing and result storage<a class="headerlink" href="#automatic-testing-and-result-storage" title="Permalink to this heading"></a></h2>
+<p>Finally, we can automatically test the global model on <strong>test nodes</strong> and store
+the metrics in the database:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_results</span> <span class="o">=</span> <span class="n">ppl_1</span><span class="o">.</span><span class="n">auto_test</span><span class="p">()</span>
+<span class="n">test_results</span>
+</pre></div>
+</div>
+<p>Each entry in <code class="docutils literal notranslate"><span class="pre">test_results</span></code> contains:</p>
+<ul class="simple">
+<li><p>The <strong>node name</strong></p></li>
+<li><p>A <strong>classification report</strong> including:</p>
+<ul>
+<li><p>Confusion matrix (TP, FP, FN, TN)</p></li>
+<li><p>Accuracy</p></li>
+<li><p>Sensitivity/Recall</p></li>
+<li><p>Specificity</p></li>
+<li><p>PPV/Precision</p></li>
+<li><p>NPV</p></li>
+<li><p>F1-score</p></li>
+<li><p>False positive rate</p></li>
+<li><p>True positive rate</p></li>
+<li><p>AUC</p></li>
+</ul>
+</li>
+</ul>
+<p>All these results are also saved in the MEDfl database, allowing you to:</p>
+<ul class="simple">
+<li><p>Compare different FL setups</p></li>
+<li><p>Track experiments across time</p></li>
+<li><p>Reuse configurations in future studies</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="simulation_tutorials.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rw_tutorial_complete.html" class="btn btn-neutral float-right" title="Real-world Federated Learning Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MEDomics consortium.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
