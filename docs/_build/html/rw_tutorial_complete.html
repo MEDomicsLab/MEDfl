@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Real-world Federated Learning Tutorial &mdash; MEDfl 0.1.0 documentation</title>
+  <title>Connecting Clients Behind Private Networks Using Tailscale &mdash; MEDfl 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -70,7 +70,18 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">🌍 Real-World Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Real-world Federated Learning Tutorial</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Connecting Clients Behind Private Networks Using Tailscale</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-tailscale">Why Tailscale?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-tailscale-account">Creating a Tailscale Account</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-tailscale-on-each-machine">Installing Tailscale on Each Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-machines-to-the-tailnet">Adding Machines to the Tailnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-tailscale-ip-addresses-in-medfl">Using Tailscale IP Addresses in MEDfl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#real-world-federated-learning-tutorial">Real-world Federated Learning Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#high-level-architecture">High-level architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#preparing-client-data">1. Preparing client data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#server-configuration">2. Server configuration</a><ul>
@@ -81,7 +92,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#enabling-differential-privacy-optional">4. Enabling Differential Privacy (optional)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#running-the-experiment">5. Running the experiment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#customizing-splits-per-client">6. Customizing splits per client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#summary">7. Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">7. Summary</a></li>
 </ul>
 </li>
 </ul>
@@ -104,7 +115,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Real-world Federated Learning Tutorial</li>
+      <li class="breadcrumb-item active">Connecting Clients Behind Private Networks Using Tailscale</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/rw_tutorial_complete.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -114,7 +125,179 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="real-world-federated-learning-tutorial">
+  <section id="connecting-clients-behind-private-networks-using-tailscale">
+<h1>Connecting Clients Behind Private Networks Using Tailscale<a class="headerlink" href="#connecting-clients-behind-private-networks-using-tailscale" title="Permalink to this heading"></a></h1>
+<p>In real-world federated learning experiments, client machines (e.g. hospitals,
+institutions, or secured servers) are often located behind <strong>private networks</strong>:</p>
+<ul class="simple">
+<li><p>NAT-ed home or institutional routers</p></li>
+<li><p>Private subnets without public IPs</p></li>
+<li><p>Firewalls blocking inbound connections</p></li>
+<li><p>VPNs that isolate machines from the public Internet</p></li>
+</ul>
+<p>In such situations, the <strong>central federated server cannot directly reach the
+clients</strong>, even if the server itself has a public IP address.</p>
+<p>To solve this issue, MEDfl supports running experiments over a <strong>private overlay
+network</strong> using <strong>Tailscale</strong>.</p>
+<section id="why-tailscale">
+<h2>Why Tailscale?<a class="headerlink" href="#why-tailscale" title="Permalink to this heading"></a></h2>
+<p>Tailscale creates a <strong>secure, peer-to-peer virtual private network (VPN)</strong> between
+machines, based on WireGuard. It allows machines to communicate as if they were
+on the same local network, even if they are:</p>
+<ul class="simple">
+<li><p>behind NATs</p></li>
+<li><p>on different physical networks</p></li>
+<li><p>distributed across institutions or countries</p></li>
+</ul>
+<p>Key advantages:</p>
+<ul class="simple">
+<li><p>No port forwarding required</p></li>
+<li><p>No firewall reconfiguration in most cases</p></li>
+<li><p>End-to-end encryption by default</p></li>
+<li><p>Each machine receives a <strong>stable private IP address</strong></p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Before starting, ensure that:</p>
+<ul class="simple">
+<li><p>You have access to all machines (server + clients)</p></li>
+<li><p>Python and MEDfl are already installed on each machine</p></li>
+<li><p>You can install third-party software (Tailscale)</p></li>
+</ul>
+<p>You will need:</p>
+<ul class="simple">
+<li><p>A <strong>Tailscale account</strong></p></li>
+<li><p>Internet access on all machines (outbound is sufficient)</p></li>
+</ul>
+</section>
+<section id="creating-a-tailscale-account">
+<h2>Creating a Tailscale Account<a class="headerlink" href="#creating-a-tailscale-account" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Go to the official Tailscale website:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>https://tailscale.com
+</pre></div>
+</div>
+</li>
+<li><p>Create an account using one of the supported identity providers
+(Google, GitHub, Microsoft, etc.).</p></li>
+</ol>
+</section>
+<section id="installing-tailscale-on-each-machine">
+<h2>Installing Tailscale on Each Machine<a class="headerlink" href="#installing-tailscale-on-each-machine" title="Permalink to this heading"></a></h2>
+<p>Tailscale must be installed on <strong>all machines</strong> involved in the experiment:</p>
+<ul class="simple">
+<li><p>The <strong>central server</strong></p></li>
+<li><p>Every <strong>federated client</strong></p></li>
+</ul>
+<p>### On Linux</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://tailscale.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+sudo<span class="w"> </span>tailscale<span class="w"> </span>up
+</pre></div>
+</div>
+<p>### On Windows</p>
+<ol class="arabic">
+<li><p>Download the installer from:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>https://tailscale.com/download
+</pre></div>
+</div>
+</li>
+<li><p>Run the installer and follow the setup wizard.</p></li>
+<li><p>Launch Tailscale and log in.</p></li>
+</ol>
+<p>### On macOS</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>tailscale
+sudo<span class="w"> </span>tailscale<span class="w"> </span>up
+</pre></div>
+</div>
+</section>
+<section id="adding-machines-to-the-tailnet">
+<h2>Adding Machines to the Tailnet<a class="headerlink" href="#adding-machines-to-the-tailnet" title="Permalink to this heading"></a></h2>
+<p>After logging in on each machine:</p>
+<ul>
+<li><p>All machines will automatically join the same <strong>tailnet</strong>
+(Tailscale private network associated with your account).</p></li>
+<li><p>Each machine is assigned a <strong>unique private IP address</strong> in the form:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>100.x.y.z
+</pre></div>
+</div>
+</li>
+</ul>
+<p>You can list connected machines using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tailscale<span class="w"> </span>status
+</pre></div>
+</div>
+<p>Example output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>100.65.215.27   server-node        linux   active
+100.72.88.14    client-hospital-1  windows active
+100.91.33.52    client-hospital-2  linux   active
+</pre></div>
+</div>
+</section>
+<section id="using-tailscale-ip-addresses-in-medfl">
+<h2>Using Tailscale IP Addresses in MEDfl<a class="headerlink" href="#using-tailscale-ip-addresses-in-medfl" title="Permalink to this heading"></a></h2>
+<p>Once all machines are connected via Tailscale, <strong>you must use the Tailscale IP
+addresses instead of local or public IPs</strong> when configuring MEDfl.</p>
+<p>### Server configuration</p>
+<p>On the server machine, the server listens as usual:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="o">=</span> <span class="n">FederatedServer</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+    <span class="n">num_rounds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="o">=</span><span class="n">custom_strategy</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The server does <strong>not</strong> need to know it is running behind Tailscale.</p>
+<p>### Client configuration (important)</p>
+<p>On each client machine, update the <code class="docutils literal notranslate"><span class="pre">server_address</span></code> to use the
+<strong>Tailscale IP of the server</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">FlowerClient</span><span class="p">(</span>
+    <span class="n">server_address</span><span class="o">=</span><span class="s2">&quot;100.65.215.27:8080&quot;</span><span class="p">,</span>  <span class="c1"># Tailscale IP of the server</span>
+    <span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;../data/client1_with_id.csv&quot;</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">dp_config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This ensures that:</p>
+<ul class="simple">
+<li><p>Clients can reach the server even behind private networks</p></li>
+<li><p>No public IP or port forwarding is required</p></li>
+</ul>
+</section>
+<section id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>All communication over Tailscale is <strong>encrypted by default</strong></p></li>
+<li><p>Only machines authorized in your tailnet can connect</p></li>
+<li><p>You can further restrict access using:
+* Tailscale ACLs
+* Device tags
+* Ephemeral nodes (for temporary clients)</p></li>
+</ul>
+<p>This makes Tailscale well-suited for <strong>medical and sensitive data environments</strong>.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<p>When clients are located behind private VPNs or unreachable networks:</p>
+<ul class="simple">
+<li><p>Direct connections to the server may fail</p></li>
+<li><p>Tailscale provides a simple and secure solution</p></li>
+<li><p>Steps are:</p>
+<ol class="arabic simple">
+<li><p>Create a Tailscale account</p></li>
+<li><p>Install Tailscale on server and clients</p></li>
+<li><p>Add all machines to the same tailnet</p></li>
+<li><p>Use <strong>Tailscale IP addresses</strong> in MEDfl configuration</p></li>
+</ol>
+</li>
+</ul>
+<p>This approach enables <strong>true real-world federated learning experiments</strong>
+across institutions without modifying existing network infrastructures.</p>
+</section>
+</section>
+<section id="real-world-federated-learning-tutorial">
 <h1>Real-world Federated Learning Tutorial<a class="headerlink" href="#real-world-federated-learning-tutorial" title="Permalink to this heading"></a></h1>
 <p>This tutorial shows how to use the <code class="docutils literal notranslate"><span class="pre">MEDfl.rw</span></code> (real-world) module to run a
 <strong>true multi-machine federated learning experiment</strong>:</p>
@@ -393,8 +576,8 @@ client CSV files.</p></li>
 </ul>
 </div>
 </section>
-<section id="summary">
-<h2>7. Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<section id="id1">
+<h2>7. Summary<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>In this real-world tutorial, you have learned how to:</p>
 <ul class="simple">
 <li><p>Prepare local CSV datasets for each client</p></li>

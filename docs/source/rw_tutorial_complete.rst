@@ -1,3 +1,236 @@
+
+Connecting Clients Behind Private Networks Using Tailscale
+===========================================================
+
+In real-world federated learning experiments, client machines (e.g. hospitals,
+institutions, or secured servers) are often located behind **private networks**:
+
+* NAT-ed home or institutional routers
+* Private subnets without public IPs
+* Firewalls blocking inbound connections
+* VPNs that isolate machines from the public Internet
+
+In such situations, the **central federated server cannot directly reach the
+clients**, even if the server itself has a public IP address.
+
+To solve this issue, MEDfl supports running experiments over a **private overlay
+network** using **Tailscale**.
+
+Why Tailscale?
+--------------
+
+Tailscale creates a **secure, peer-to-peer virtual private network (VPN)** between
+machines, based on WireGuard. It allows machines to communicate as if they were
+on the same local network, even if they are:
+
+* behind NATs
+* on different physical networks
+* distributed across institutions or countries
+
+Key advantages:
+
+* No port forwarding required
+* No firewall reconfiguration in most cases
+* End-to-end encryption by default
+* Each machine receives a **stable private IP address**
+
+.. image:: figures/Images/tailscale_architecture_placeholder.png
+   :width: 70%
+   :align: center
+   :alt: Tailscale overlay network architecture (placeholder)
+
+   *(Placeholder: diagram showing server and clients connected via Tailscale)*
+
+
+Prerequisites
+-------------
+
+Before starting, ensure that:
+
+* You have access to all machines (server + clients)
+* Python and MEDfl are already installed on each machine
+* You can install third-party software (Tailscale)
+
+You will need:
+
+* A **Tailscale account**
+* Internet access on all machines (outbound is sufficient)
+
+Creating a Tailscale Account
+----------------------------
+
+1. Go to the official Tailscale website:
+
+   .. code-block:: text
+
+      https://tailscale.com
+
+2. Create an account using one of the supported identity providers
+   (Google, GitHub, Microsoft, etc.).
+
+.. image:: figures/Images/tailscale_signup_placeholder.png
+   :width: 60%
+   :align: center
+   :alt: Tailscale signup page (placeholder)
+
+   *(Placeholder: screenshot of Tailscale signup page)*
+
+
+Installing Tailscale on Each Machine
+------------------------------------
+
+Tailscale must be installed on **all machines** involved in the experiment:
+
+* The **central server**
+* Every **federated client**
+
+### On Linux
+
+.. code-block:: bash
+
+   curl -fsSL https://tailscale.com/install.sh | sh
+   sudo tailscale up
+
+### On Windows
+
+1. Download the installer from:
+
+   .. code-block:: text
+
+      https://tailscale.com/download
+
+2. Run the installer and follow the setup wizard.
+3. Launch Tailscale and log in.
+
+.. image:: figures/Images/tailscale_windows_install_placeholder.png
+   :width: 60%
+   :align: center
+   :alt: Tailscale Windows installer (placeholder)
+
+   *(Placeholder: screenshot of Tailscale Windows installer)*
+
+### On macOS
+
+.. code-block:: bash
+
+   brew install --cask tailscale
+   sudo tailscale up
+
+
+Adding Machines to the Tailnet
+------------------------------
+
+After logging in on each machine:
+
+* All machines will automatically join the same **tailnet**
+  (Tailscale private network associated with your account).
+* Each machine is assigned a **unique private IP address** in the form:
+
+  .. code-block:: text
+
+     100.x.y.z
+
+You can list connected machines using:
+
+.. code-block:: bash
+
+   tailscale status
+
+Example output:
+
+.. code-block:: text
+
+   100.65.215.27   server-node        linux   active
+   100.72.88.14    client-hospital-1  windows active
+   100.91.33.52    client-hospital-2  linux   active
+
+.. image:: figures/Images/tailscale_admin_console_placeholder.png
+   :width: 80%
+   :align: center
+   :alt: Tailscale admin console (placeholder)
+
+   *(Placeholder: screenshot of Tailscale admin console showing machines)*
+
+
+Using Tailscale IP Addresses in MEDfl
+-------------------------------------
+
+Once all machines are connected via Tailscale, **you must use the Tailscale IP
+addresses instead of local or public IPs** when configuring MEDfl.
+
+### Server configuration
+
+On the server machine, the server listens as usual:
+
+.. code-block:: python
+
+   server = FederatedServer(
+       host="0.0.0.0",
+       port=8080,
+       num_rounds=10,
+       strategy=custom_strategy,
+   )
+
+The server does **not** need to know it is running behind Tailscale.
+
+### Client configuration (important)
+
+On each client machine, update the ``server_address`` to use the
+**Tailscale IP of the server**:
+
+.. code-block:: python
+
+   client = FlowerClient(
+       server_address="100.65.215.27:8080",  # Tailscale IP of the server
+       data_path="../data/client1_with_id.csv",
+       seed=42,
+       dp_config=None,
+   )
+
+This ensures that:
+
+* Clients can reach the server even behind private networks
+* No public IP or port forwarding is required
+
+.. image:: figures/Images/tailscale_ip_usage_placeholder.png
+   :width: 70%
+   :align: center
+   :alt: Using Tailscale IPs in configuration (placeholder)
+
+   *(Placeholder: diagram showing clients connecting to server via Tailscale IP)*
+
+
+Security Considerations
+-----------------------
+
+* All communication over Tailscale is **encrypted by default**
+* Only machines authorized in your tailnet can connect
+* You can further restrict access using:
+  * Tailscale ACLs
+  * Device tags
+  * Ephemeral nodes (for temporary clients)
+
+This makes Tailscale well-suited for **medical and sensitive data environments**.
+
+
+Summary
+-------
+
+When clients are located behind private VPNs or unreachable networks:
+
+* Direct connections to the server may fail
+* Tailscale provides a simple and secure solution
+* Steps are:
+
+  1. Create a Tailscale account
+  2. Install Tailscale on server and clients
+  3. Add all machines to the same tailnet
+  4. Use **Tailscale IP addresses** in MEDfl configuration
+
+This approach enables **true real-world federated learning experiments**
+across institutions without modifying existing network infrastructures.
+
+
 Real-world Federated Learning Tutorial
 ======================================
 
