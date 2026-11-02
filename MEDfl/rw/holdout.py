@@ -17,6 +17,14 @@ histogram bin width: two scores falling in the same bin count as a tie.
 The holdout goes through the same preprocessing as the client training
 data: the server features in the server order, the raw values (the
 real-world clients do not impute or scale), and a binary 0/1 target.
+
+Optimized threshold (threshold_source="optimized"): in the same final
+round, every client also sends the two score histograms of its validation
+split (never used for training). The server sums them and picks the
+threshold among the histogram bin edges (Youden's J or a target
+sensitivity). At a bin edge, the histograms give exact confusion matrices,
+so the holdout results are then recomputed from the holdout histograms
+at that threshold. The holdout histograms are never used to choose it.
 """
 
 from __future__ import annotations
@@ -36,6 +44,10 @@ HOLDOUT_SKIPPED = "skipped"  # fewer rows than minimum_samples
 HOLDOUT_MISSING = "missing"  # no holdout file on this client
 HOLDOUT_FAILED = "failed"
 HOLDOUT_UNSUPPORTED = "unsupported_task"
+
+THRESHOLD_SOURCES = ("manual", "optimized")
+# criterion key -> label shown in the results
+THRESHOLD_CRITERIA = {"youden": "Youden's J", "target_sensitivity": "Target sensitivity"}
 
 
 @dataclass
@@ -57,6 +69,16 @@ class HoldoutConfig:
 
     include_client_results: bool = True
 
+    # "manual": the threshold above. "optimized": chosen on the clients'
+    # validation splits, at a histogram bin edge (resolution 1 / num_bins)
+    threshold_source: str = "manual"
+
+    # "youden" or "target_sensitivity" (optimized threshold only)
+    threshold_criterion: str = "youden"
+
+    # minimal pooled validation sensitivity of the target_sensitivity criterion
+    target_sensitivity: float = 0.9
+
     def validate(self) -> None:
         if not isinstance(self.enabled, bool):
             raise TypeError("Holdout enabled must be a boolean")
@@ -70,6 +92,19 @@ class HoldoutConfig:
         if int(self.minimum_samples) <= 0:
             raise ValueError("Holdout minimum_samples must be greater than zero")
 
+        if self.threshold_source not in THRESHOLD_SOURCES:
+            raise ValueError(
+                f"Holdout threshold_source must be one of {THRESHOLD_SOURCES}"
+            )
+
+        if self.threshold_criterion not in THRESHOLD_CRITERIA:
+            raise ValueError(
+                f"Holdout threshold_criterion must be one of {tuple(THRESHOLD_CRITERIA)}"
+            )
+
+        if not 0.0 < float(self.target_sensitivity) <= 1.0:
+            raise ValueError("Holdout target_sensitivity must be in (0, 1]")
+
     def to_evaluate_config(self) -> Dict[str, Any]:
         """
         Keys added to the evaluate config of the final round.
@@ -80,6 +115,8 @@ class HoldoutConfig:
             "holdout_threshold": float(self.threshold),
             "holdout_num_bins": int(self.num_bins),
             "holdout_minimum_samples": int(self.minimum_samples),
+            # the clients also send their validation histograms
+            "threshold_optimization_enabled": self.threshold_source == "optimized",
         }
 
 
@@ -242,6 +279,117 @@ def local_holdout_summary(
     }
 
 
+def local_validation_summary(
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    num_bins: int,
+    minimum_samples: int,
+    client_id: str,
+) -> Dict[str, Any]:
+    """
+    Summary of one client's validation split for the optimized threshold,
+    safe to send to the server: counts and the two score histograms (same
+    bins as the holdout). Below minimum_samples rows, only the counts are sent.
+    """
+    y_true = np.asarray(y_true, dtype=float).reshape(-1)
+    y_prob = np.asarray(y_prob, dtype=float).reshape(-1)
+
+    # e.g. missing feature values in the neural network input
+    predicted = np.isfinite(y_prob)
+    y_true, y_prob = y_true[predicted], y_prob[predicted]
+
+    classes = set(np.unique(y_true).tolist())
+    if not classes.issubset({0.0, 1.0}):
+        raise ValueError(
+            f"The validation target must be binary (0/1), found {len(classes)} "
+            f"values: {sorted(classes)[:10]}"
+        )
+
+    rows = int(len(y_true))
+    positives = int(y_true.sum())
+    summary = {
+        "client_id": client_id,
+        "dataset": {
+            "rows": rows,
+            "positives": positives,
+            "negatives": rows - positives,
+            "rows_without_prediction": int((~predicted).sum()),
+        },
+    }
+
+    if rows == 0:
+        return {
+            **summary,
+            "status": HOLDOUT_MISSING,
+            "reason": "No validation rows (validation fraction of 0?)",
+        }
+
+    if rows < int(minimum_samples):
+        return {
+            **summary,
+            "status": HOLDOUT_SKIPPED,
+            "reason": (
+                f"{rows} validation row(s), fewer than the minimum of "
+                f"{int(minimum_samples)}"
+            ),
+        }
+
+    y_prob = np.clip(y_prob, 0.0, 1.0)
+    edges = _bin_edges(num_bins)
+    return {
+        **summary,
+        "status": HOLDOUT_COMPLETED,
+        "num_bins": int(num_bins),
+        "pos_hist": np.histogram(y_prob[y_true == 1], bins=edges)[0].astype(int).tolist(),
+        "neg_hist": np.histogram(y_prob[y_true == 0], bins=edges)[0].astype(int).tolist(),
+    }
+
+
+def run_local_validation(
+    config: Dict[str, Any],
+    validation: Optional[Callable[[], Tuple[np.ndarray, np.ndarray]]],
+    client_id: str,
+) -> Dict[str, Any]:
+    """
+    Entries to add to the Flower evaluate metrics for the optimized
+    threshold: threshold_validation_status, then threshold_validation
+    (JSON) or threshold_validation_error.
+
+    validation returns (y_true, y_prob) of the client's validation split
+    with the final global model.
+    """
+    if validation is None:
+        return {
+            "threshold_validation_status": HOLDOUT_MISSING,
+            "threshold_validation_error": "This client cannot send validation data",
+        }
+
+    try:
+        y_true, y_prob = validation()
+        summary = local_validation_summary(
+            y_true=y_true,
+            y_prob=y_prob,
+            num_bins=int(config.get("holdout_num_bins", 100)),
+            minimum_samples=int(config.get("holdout_minimum_samples", 10)),
+            client_id=client_id,
+        )
+        print(
+            f"[Client/Holdout] Validation for the threshold: {summary['status']} | "
+            f"client={client_id} | rows={summary['dataset']['rows']}",
+            flush=True,
+        )
+        return {
+            "threshold_validation_status": summary["status"],
+            "threshold_validation": json.dumps(summary, allow_nan=False),
+        }
+    except Exception as exc:
+        print(f"[Client/Holdout] Validation for the threshold failed: {exc}", flush=True)
+        return {
+            "threshold_validation_status": HOLDOUT_FAILED,
+            "threshold_validation_error": str(exc),
+        }
+
+
 def run_local_holdout(
     config: Dict[str, Any],
     holdout_path: Optional[str],
@@ -250,6 +398,7 @@ def run_local_holdout(
     predict: Callable[[np.ndarray], np.ndarray],
     client_id: str,
     drop_missing_features: bool,
+    validation: Optional[Callable[[], Tuple[np.ndarray, np.ndarray]]] = None,
 ) -> Dict[str, Any]:
     """
     Run the holdout test on a client and return the entries to add to the
@@ -258,7 +407,29 @@ def run_local_holdout(
 
     predict maps the holdout features to positive-class probabilities with
     the final global model.
+
+    When the server optimizes the threshold, the validation summary is
+    added too (see run_local_validation), even without a holdout file:
+    the client validation data still helps choose the threshold.
     """
+    entries = {}
+    if bool(config.get("threshold_optimization_enabled", False)):
+        entries = run_local_validation(config, validation, client_id)
+    return {
+        **entries,
+        **_holdout_entries(config, holdout_path, features, target, predict, client_id, drop_missing_features),
+    }
+
+
+def _holdout_entries(
+    config: Dict[str, Any],
+    holdout_path: Optional[str],
+    features: List[str],
+    target: str,
+    predict: Callable[[np.ndarray], np.ndarray],
+    client_id: str,
+    drop_missing_features: bool,
+) -> Dict[str, Any]:
     if not holdout_path or not os.path.exists(holdout_path):
         print(f"[Client/Holdout] No holdout file on this client ({holdout_path})", flush=True)
         return {
@@ -328,6 +499,178 @@ def _client_name(client_proxy) -> str:
     return str(getattr(client_proxy, "cid", client_proxy))
 
 
+def histogram_confusion(pos_hist: np.ndarray, neg_hist: np.ndarray, edge: int) -> Dict[str, int]:
+    """
+    Exact confusion matrix at the threshold bins_edges[edge]: the scores at
+    or above it are the bins edge, edge + 1, ... (np.histogram bins are
+    [left, right) and the last one is closed).
+    """
+    pos_hist, neg_hist = np.asarray(pos_hist), np.asarray(neg_hist)
+    return {
+        "TP": int(pos_hist[edge:].sum()),
+        "FP": int(neg_hist[edge:].sum()),
+        "FN": int(pos_hist[:edge].sum()),
+        "TN": int(neg_hist[:edge].sum()),
+    }
+
+
+def select_threshold_from_histograms(
+    pos_hist: np.ndarray,
+    neg_hist: np.ndarray,
+    criterion: str,
+    target_sensitivity: Optional[float] = None,
+) -> Tuple[int, float]:
+    """
+    Choose the threshold among the inner bin edges of the score histograms
+    and return (edge index, threshold).
+
+    youden: maximizes sensitivity + specificity - 1, the middle edge of the
+    best ones when several tie.
+    target_sensitivity: the highest edge whose sensitivity reaches the
+    target, so the best specificity under that constraint.
+    """
+    pos_hist, neg_hist = np.asarray(pos_hist), np.asarray(neg_hist)
+    num_bins = len(pos_hist)
+    positives, negatives = int(pos_hist.sum()), int(neg_hist.sum())
+    if positives == 0 or negatives == 0:
+        raise ValueError(
+            f"The validation data has a single class ({positives} positive, "
+            f"{negatives} negative): the threshold cannot be optimized"
+        )
+
+    # candidate thresholds, strictly between 0 and 1
+    edges = np.arange(1, num_bins)
+    # scores in bin k and above
+    positives_above = np.cumsum(pos_hist[::-1])[::-1]
+    negatives_above = np.cumsum(neg_hist[::-1])[::-1]
+    sensitivity = positives_above[edges] / positives
+    specificity = 1 - negatives_above[edges] / negatives
+
+    if criterion == "youden":
+        youden = sensitivity + specificity - 1
+        ties = np.flatnonzero(youden >= youden.max() - 1e-12)
+        edge = int(edges[ties[len(ties) // 2]])
+    elif criterion == "target_sensitivity":
+        target = float(target_sensitivity)
+        if not 0.0 < target <= 1.0:
+            raise ValueError(f"The target sensitivity must be in (0, 1] (got {target})")
+        # sensitivity decreases with the edge
+        reached = np.flatnonzero(sensitivity >= target - 1e-12)
+        if not len(reached):
+            raise ValueError(
+                f"No threshold reaches a validation sensitivity of {target}: "
+                f"{int(pos_hist[0])} of the {positives} positive case(s) score below "
+                f"the lowest candidate threshold {1 / num_bins:g}. Increase the number "
+                f"of bins or lower the target sensitivity"
+            )
+        edge = int(edges[reached.max()])
+    else:
+        raise ValueError(f"Unknown threshold criterion '{criterion}'")
+
+    return edge, float(_bin_edges(num_bins)[edge])
+
+
+def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict[str, Any]:
+    """
+    Choose the threshold on the pooled validation histograms of the final
+    round. Returns the selection with status "completed" (threshold, edge,
+    validation metrics) or "failed" (error), and the excluded clients.
+    """
+    completed, skipped, missing, failed = [], [], [], []
+
+    for client_proxy, eval_res in results:
+        metrics = eval_res.metrics or {}
+        status = metrics.get("threshold_validation_status")
+        name = str(metrics.get("holdout_client_id") or _client_name(client_proxy))
+
+        if status is None:
+            missing.append({
+                "client_id": name,
+                "error": "No validation data sent (the client MEDfl version may not support the optimized threshold)",
+            })
+            continue
+
+        summary = None
+        if metrics.get("threshold_validation"):
+            try:
+                summary = json.loads(metrics["threshold_validation"])
+            except Exception as exc:
+                failed.append({"client_id": name, "error": f"Invalid validation JSON: {exc}"})
+                continue
+
+        if status == HOLDOUT_COMPLETED and summary:
+            if int(summary.get("num_bins", -1)) != int(holdout_config.num_bins):
+                failed.append({
+                    "client_id": summary.get("client_id", name),
+                    "error": f"Used {summary.get('num_bins')} histogram bins instead of {holdout_config.num_bins}",
+                })
+                continue
+            completed.append(summary)
+        elif status == HOLDOUT_SKIPPED and summary:
+            skipped.append({
+                "client_id": summary.get("client_id", name),
+                "rows": summary["dataset"]["rows"],
+                "reason": summary.get("reason"),
+            })
+        elif status == HOLDOUT_MISSING:
+            missing.append({
+                "client_id": name,
+                "error": (summary or {}).get("reason") or metrics.get("threshold_validation_error"),
+            })
+        else:
+            failed.append({
+                "client_id": name,
+                "error": metrics.get("threshold_validation_error", "No validation result returned"),
+            })
+
+    criterion = holdout_config.threshold_criterion
+    selection: Dict[str, Any] = {
+        "criterion": criterion,
+        "criterion_label": THRESHOLD_CRITERIA.get(criterion, criterion),
+        "target_sensitivity": (
+            float(holdout_config.target_sensitivity) if criterion == "target_sensitivity" else None
+        ),
+        "method": f"pooled {int(holdout_config.num_bins)}-bin validation score histograms",
+        "num_bins": int(holdout_config.num_bins),
+        # the threshold is a bin edge
+        "resolution": 1.0 / int(holdout_config.num_bins),
+        "skipped_clients": skipped,
+        "missing_clients": missing,
+        "failed_clients": failed,
+    }
+
+    if not completed:
+        return {**selection, "status": "failed", "error": "No client returned validation data"}
+
+    pos_hist = np.sum([summary["pos_hist"] for summary in completed], axis=0)
+    neg_hist = np.sum([summary["neg_hist"] for summary in completed], axis=0)
+    positives, negatives = int(pos_hist.sum()), int(neg_hist.sum())
+    selection["validation"] = {
+        "clients": len(completed),
+        "rows": positives + negatives,
+        "positives": positives,
+        "negatives": negatives,
+    }
+
+    try:
+        edge, threshold = select_threshold_from_histograms(
+            pos_hist, neg_hist, criterion, holdout_config.target_sensitivity
+        )
+    except ValueError as exc:
+        return {**selection, "status": "failed", "error": str(exc)}
+
+    confusion = histogram_confusion(pos_hist, neg_hist, edge)
+    auc, _ = pooled_roc_auc(pos_hist, neg_hist)
+    return {
+        **selection,
+        "status": "completed",
+        "threshold": threshold,
+        "edge": edge,
+        "metrics": {"auc": auc, **confusion_metrics(confusion)},
+        "confusion_matrix": confusion,
+    }
+
+
 def aggregate_federated_holdout(
     results,
     failures,
@@ -390,9 +733,10 @@ def aggregate_federated_holdout(
         else:
             failed.append({"client_id": _client_name(failure[0]), "error": "Evaluation failed"})
 
+    threshold = float(holdout_config.threshold)
     result: Dict[str, Any] = {
         "backend": backend,
-        "threshold": float(holdout_config.threshold),
+        "threshold": threshold,
         "num_bins": int(holdout_config.num_bins),
         "minimum_samples": int(holdout_config.minimum_samples),
         "participating_clients": len(completed),
@@ -400,6 +744,31 @@ def aggregate_federated_holdout(
         "missing_clients": missing,
         "failed_clients": failed,
     }
+
+    if holdout_config.threshold_source == "optimized":
+        # chosen on the validation histograms only, the holdout ones are not read here
+        selection = optimize_federated_threshold(results, holdout_config)
+        result["threshold_selection"] = selection
+        if selection["status"] != "completed":
+            # no fallback to the manual threshold
+            return {
+                **result,
+                "status": "failed",
+                "error": f"Threshold optimization failed: {selection['error']}",
+            }
+
+        threshold = selection["threshold"]
+        result["threshold"] = threshold
+        # the client metrics were computed at the manual threshold: recompute them exactly at the bin edge
+        for summary in completed:
+            summary["threshold"] = threshold
+            summary["confusion_matrix"] = histogram_confusion(
+                summary["pos_hist"], summary["neg_hist"], selection["edge"]
+            )
+            summary["metrics"] = {
+                "auc": summary["metrics"].get("auc"),
+                **confusion_metrics(summary["confusion_matrix"]),
+            }
 
     if not completed:
         return {
@@ -442,7 +811,7 @@ def aggregate_federated_holdout(
                     sum(summary["dataset"]["rows_without_target"] for summary in completed)
                 ),
             },
-            "threshold": float(holdout_config.threshold),
+            "threshold": threshold,
             "metrics": {"auc": auc, **confusion_metrics(confusion)},
             "confusion_matrix": confusion,
             "roc_curve": roc,

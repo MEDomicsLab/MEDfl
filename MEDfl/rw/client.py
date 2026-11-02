@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 from MEDfl.rw.model import Net  # votre définition de modèle
 from MEDfl.LearningManager.shap import LocalPyTorchSHAPExplainer
 from MEDfl.rw.holdout import run_local_holdout
+from MEDfl.rw.identity import client_name
 import socket
 import platform
 import psutil
@@ -426,7 +427,7 @@ class FlowerClient(fl.client.NumPyClient):
 
         # Convert NumPy arrays to lists before JSON serialization.
         serializable_result = {
-            "client_id": socket.gethostname(),
+            "client_id": client_name(),
             "feature_names": feature_names,
             "available_samples": int(len(loader.dataset)),
             "sample_count": explained_samples,
@@ -502,7 +503,7 @@ class FlowerClient(fl.client.NumPyClient):
             auc = float("nan")
         acc = accuracy_score(y_true, binary_preds)
 
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
         metrics = {
             "hostname": hostname,
@@ -608,8 +609,9 @@ class FlowerClient(fl.client.NumPyClient):
                     features=self.effective_features,
                     target=self.effective_target,
                     predict=self._predict_probabilities,
-                    client_id=socket.gethostname(),
+                    client_id=client_name(),
                     drop_missing_features=True,
+                    validation=self._validation_predictions,
                 )
             )
 
@@ -624,8 +626,18 @@ class FlowerClient(fl.client.NumPyClient):
             logits = self.model(torch.tensor(X, dtype=torch.float32))
             return torch.sigmoid(logits.reshape(-1)).cpu().numpy()
 
+    def _validation_predictions(self):
+        """(y_true, y_prob) of the validation split, for the optimized holdout threshold."""
+        if self.val_loader is None:
+            return np.empty((0,)), np.empty((0,))
+        y_parts, prob_parts = [], []
+        for X_batch, y_batch in self.val_loader:
+            y_parts.append(y_batch.cpu().numpy().reshape(-1))
+            prob_parts.append(self._predict_probabilities(X_batch.cpu().numpy()))
+        return np.concatenate(y_parts), np.concatenate(prob_parts)
+
     def get_properties(self, config):
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
 
         if self._initialized:

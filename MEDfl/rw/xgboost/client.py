@@ -3,7 +3,7 @@ import json
 import socket
 import platform
 import shutil
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Tuple
 
 import flwr as fl
 import numpy as np
@@ -31,6 +31,7 @@ try:
 except ImportError:
     GPUtil = None
 
+from MEDfl.rw.identity import client_name
 from MEDfl.rw.xgboost.data import XGBoostDataModule
 from MEDfl.rw.xgboost.metrics import evaluate_predictions
 from MEDfl.rw.xgboost.serialization import (
@@ -374,7 +375,7 @@ class XGBoostFlowerClient(fl.client.Client):
             )
 
         return {
-            "client_id": socket.gethostname(),
+            "client_id": client_name(),
             "feature_names": feature_names,
             "available_samples": available_samples,
             "sample_count": explained_samples,
@@ -457,7 +458,7 @@ class XGBoostFlowerClient(fl.client.Client):
         metrics = {
             "backend": "xgboost",
             "task": self.task,
-            "hostname": socket.gethostname(),
+            "hostname": client_name(),
             "os_type": platform.system(),
             "num_train": int(self.metadata.get("num_train", 0)),
             "features": ",".join(self.metadata.get("features", [])),
@@ -574,7 +575,7 @@ class XGBoostFlowerClient(fl.client.Client):
         if bool(config.get("holdout_enabled", False)):
             if self.task != "binary":
                 metrics["holdout_status"] = HOLDOUT_UNSUPPORTED
-                metrics["holdout_client_id"] = socket.gethostname()
+                metrics["holdout_client_id"] = client_name()
                 metrics["holdout_error"] = (
                     "The holdout test supports binary classification "
                     f"only (task is '{self.task}')"
@@ -587,8 +588,9 @@ class XGBoostFlowerClient(fl.client.Client):
                         features=self.data_module.effective_features,
                         target=self.data_module.effective_target,
                         predict=self._predict_probabilities,
-                        client_id=socket.gethostname(),
+                        client_id=client_name(),
                         drop_missing_features=False,
+                        validation=self._validation_predictions,
                     )
                 )
 
@@ -607,12 +609,21 @@ class XGBoostFlowerClient(fl.client.Client):
         )
         return np.asarray(self.booster.predict(matrix), dtype=float)
 
+    def _validation_predictions(self) -> Tuple[np.ndarray, np.ndarray]:
+        """(y_true, y_prob) of the validation split, for the optimized holdout threshold."""
+        if self.dval is None or int(self.metadata.get("num_val", 0)) == 0:
+            return np.empty((0,)), np.empty((0,))
+        return (
+            np.asarray(self.dval.get_label(), dtype=float),
+            np.asarray(self.booster.predict(self.dval), dtype=float),
+        )
+
     def get_properties(self, ins: GetPropertiesIns) -> GetPropertiesRes:
         """
         Return machine and dataset properties.
         """
 
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
 
         df = self.data_module.df
