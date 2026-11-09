@@ -590,7 +590,7 @@ class XGBoostFlowerClient(fl.client.Client):
                         predict=self._predict_probabilities,
                         client_id=client_name(),
                         drop_missing_features=False,
-                        validation=self._validation_predictions,
+                        validation=self._learning_set_predictions,
                     )
                 )
 
@@ -609,14 +609,21 @@ class XGBoostFlowerClient(fl.client.Client):
         )
         return np.asarray(self.booster.predict(matrix), dtype=float)
 
-    def _validation_predictions(self) -> Tuple[np.ndarray, np.ndarray]:
-        """(y_true, y_prob) of the validation split, for the optimized holdout threshold."""
-        if self.dval is None or int(self.metadata.get("num_val", 0)) == 0:
-            return np.empty((0,)), np.empty((0,))
-        return (
-            np.asarray(self.dval.get_label(), dtype=float),
-            np.asarray(self.booster.predict(self.dval), dtype=float),
-        )
+    def _learning_set_predictions(self) -> Tuple[np.ndarray, np.ndarray, Dict[str, int]]:
+        """
+        (y_true, y_prob, rows per split) of the whole learning set (train + validation + test splits),
+        for the optimized holdout threshold.
+        """
+        y_parts, prob_parts, splits = [], [], {}
+        for split, matrix in (("train", self.dtrain), ("validation", self.dval), ("test", self.dtest)):
+            rows = 0 if matrix is None else int(matrix.num_row())
+            splits[split] = rows
+            if rows:
+                y_parts.append(np.asarray(matrix.get_label(), dtype=float))
+                prob_parts.append(np.asarray(self.booster.predict(matrix), dtype=float))
+        if not y_parts:
+            return np.empty((0,)), np.empty((0,)), splits
+        return np.concatenate(y_parts), np.concatenate(prob_parts), splits
 
     def get_properties(self, ins: GetPropertiesIns) -> GetPropertiesRes:
         """

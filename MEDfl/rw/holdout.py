@@ -19,10 +19,12 @@ data: the server features in the server order, the raw values (the
 real-world clients do not impute or scale), and a binary 0/1 target.
 
 Optimized threshold (threshold_source="optimized"): in the same final
-round, every client also sends the two score histograms of its validation
-split (never used for training). The server sums them and picks the
-threshold among the histogram bin edges (Youden's J or a target
-sensitivity). At a bin edge, the histograms give exact confusion matrices,
+round, every client also sends the two score histograms of its whole
+learning set (train + validation + test splits, LEARNING_SET). The server
+sums them and picks the threshold among the histogram bin edges (Youden's
+J or a target sensitivity). The training rows were used to fit the model,
+so the learning-set metrics at that threshold are optimistic: the holdout
+gives the unbiased estimate. At a bin edge, the histograms give exact confusion matrices,
 so the holdout results are then recomputed from the holdout histograms
 at that threshold. The holdout histograms are never used to choose it.
 """
@@ -46,6 +48,10 @@ HOLDOUT_FAILED = "failed"
 HOLDOUT_UNSUPPORTED = "unsupported_task"
 
 THRESHOLD_SOURCES = ("manual", "optimized")
+# data the clients use for the optimized threshold (sent back in their summary, so a client running an
+# older MEDfl that only sends its validation split is detected)
+LEARNING_SET = "learning_set"
+LEARNING_SET_SPLITS = ("train", "validation", "test")
 # criterion key -> label shown in the results
 THRESHOLD_CRITERIA = {"youden": "Youden's J", "target_sensitivity": "Target sensitivity"}
 
@@ -70,13 +76,14 @@ class HoldoutConfig:
     include_client_results: bool = True
 
     # "manual": the threshold above. "optimized": chosen on the clients'
-    # validation splits, at a histogram bin edge (resolution 1 / num_bins)
+    # learning sets (train + validation + test), at a histogram bin edge
+    # (resolution 1 / num_bins)
     threshold_source: str = "manual"
 
     # "youden" or "target_sensitivity" (optimized threshold only)
     threshold_criterion: str = "youden"
 
-    # minimal pooled validation sensitivity of the target_sensitivity criterion
+    # minimal pooled learning-set sensitivity of the target_sensitivity criterion
     target_sensitivity: float = 0.9
 
     def validate(self) -> None:
@@ -115,7 +122,7 @@ class HoldoutConfig:
             "holdout_threshold": float(self.threshold),
             "holdout_num_bins": int(self.num_bins),
             "holdout_minimum_samples": int(self.minimum_samples),
-            # the clients also send their validation histograms
+            # the clients also send their learning-set histograms
             "threshold_optimization_enabled": self.threshold_source == "optimized",
         }
 
@@ -285,11 +292,13 @@ def local_validation_summary(
     num_bins: int,
     minimum_samples: int,
     client_id: str,
+    splits: Optional[Dict[str, int]] = None,
 ) -> Dict[str, Any]:
     """
-    Summary of one client's validation split for the optimized threshold,
-    safe to send to the server: counts and the two score histograms (same
-    bins as the holdout). Below minimum_samples rows, only the counts are sent.
+    Summary of one client's learning set (train + validation + test) for the
+    optimized threshold, safe to send to the server: counts and the two score
+    histograms (same bins as the holdout). Below minimum_samples rows, only
+    the counts are sent. splits gives the number of rows of each split.
     """
     y_true = np.asarray(y_true, dtype=float).reshape(-1)
     y_prob = np.asarray(y_prob, dtype=float).reshape(-1)
@@ -301,7 +310,7 @@ def local_validation_summary(
     classes = set(np.unique(y_true).tolist())
     if not classes.issubset({0.0, 1.0}):
         raise ValueError(
-            f"The validation target must be binary (0/1), found {len(classes)} "
+            f"The learning-set target must be binary (0/1), found {len(classes)} "
             f"values: {sorted(classes)[:10]}"
         )
 
@@ -309,11 +318,13 @@ def local_validation_summary(
     positives = int(y_true.sum())
     summary = {
         "client_id": client_id,
+        "data": LEARNING_SET,
         "dataset": {
             "rows": rows,
             "positives": positives,
             "negatives": rows - positives,
             "rows_without_prediction": int((~predicted).sum()),
+            "splits": {key: int(value) for key, value in (splits or {}).items()},
         },
     }
 
@@ -321,7 +332,7 @@ def local_validation_summary(
         return {
             **summary,
             "status": HOLDOUT_MISSING,
-            "reason": "No validation rows (validation fraction of 0?)",
+            "reason": "No learning-set rows",
         }
 
     if rows < int(minimum_samples):
@@ -329,7 +340,7 @@ def local_validation_summary(
             **summary,
             "status": HOLDOUT_SKIPPED,
             "reason": (
-                f"{rows} validation row(s), fewer than the minimum of "
+                f"{rows} learning-set row(s), fewer than the minimum of "
                 f"{int(minimum_samples)}"
             ),
         }
@@ -347,35 +358,38 @@ def local_validation_summary(
 
 def run_local_validation(
     config: Dict[str, Any],
-    validation: Optional[Callable[[], Tuple[np.ndarray, np.ndarray]]],
+    validation: Optional[Callable[[], Tuple[np.ndarray, np.ndarray, Dict[str, int]]]],
     client_id: str,
 ) -> Dict[str, Any]:
     """
     Entries to add to the Flower evaluate metrics for the optimized
     threshold: threshold_validation_status, then threshold_validation
-    (JSON) or threshold_validation_error.
+    (JSON) or threshold_validation_error. (The metric names are kept from
+    the validation-only versions; the data is the learning set.)
 
-    validation returns (y_true, y_prob) of the client's validation split
-    with the final global model.
+    validation returns (y_true, y_prob, splits) of the client's whole
+    learning set (train + validation + test) with the final global model,
+    splits being the number of rows of each split.
     """
     if validation is None:
         return {
             "threshold_validation_status": HOLDOUT_MISSING,
-            "threshold_validation_error": "This client cannot send validation data",
+            "threshold_validation_error": "This client cannot send learning-set data",
         }
 
     try:
-        y_true, y_prob = validation()
+        y_true, y_prob, splits = validation()
         summary = local_validation_summary(
             y_true=y_true,
             y_prob=y_prob,
             num_bins=int(config.get("holdout_num_bins", 100)),
             minimum_samples=int(config.get("holdout_minimum_samples", 10)),
             client_id=client_id,
+            splits=splits,
         )
         print(
-            f"[Client/Holdout] Validation for the threshold: {summary['status']} | "
-            f"client={client_id} | rows={summary['dataset']['rows']}",
+            f"[Client/Holdout] Learning set for the threshold: {summary['status']} | "
+            f"client={client_id} | rows={summary['dataset']['rows']} | splits={splits}",
             flush=True,
         )
         return {
@@ -383,7 +397,7 @@ def run_local_validation(
             "threshold_validation": json.dumps(summary, allow_nan=False),
         }
     except Exception as exc:
-        print(f"[Client/Holdout] Validation for the threshold failed: {exc}", flush=True)
+        print(f"[Client/Holdout] Learning set for the threshold failed: {exc}", flush=True)
         return {
             "threshold_validation_status": HOLDOUT_FAILED,
             "threshold_validation_error": str(exc),
@@ -398,7 +412,7 @@ def run_local_holdout(
     predict: Callable[[np.ndarray], np.ndarray],
     client_id: str,
     drop_missing_features: bool,
-    validation: Optional[Callable[[], Tuple[np.ndarray, np.ndarray]]] = None,
+    validation: Optional[Callable[[], Tuple[np.ndarray, np.ndarray, Dict[str, int]]]] = None,
 ) -> Dict[str, Any]:
     """
     Run the holdout test on a client and return the entries to add to the
@@ -408,9 +422,9 @@ def run_local_holdout(
     predict maps the holdout features to positive-class probabilities with
     the final global model.
 
-    When the server optimizes the threshold, the validation summary is
+    When the server optimizes the threshold, the learning-set summary is
     added too (see run_local_validation), even without a holdout file:
-    the client validation data still helps choose the threshold.
+    the client learning set still helps choose the threshold.
     """
     entries = {}
     if bool(config.get("threshold_optimization_enabled", False)):
@@ -534,7 +548,7 @@ def select_threshold_from_histograms(
     positives, negatives = int(pos_hist.sum()), int(neg_hist.sum())
     if positives == 0 or negatives == 0:
         raise ValueError(
-            f"The validation data has a single class ({positives} positive, "
+            f"The learning-set data has a single class ({positives} positive, "
             f"{negatives} negative): the threshold cannot be optimized"
         )
 
@@ -558,7 +572,7 @@ def select_threshold_from_histograms(
         reached = np.flatnonzero(sensitivity >= target - 1e-12)
         if not len(reached):
             raise ValueError(
-                f"No threshold reaches a validation sensitivity of {target}: "
+                f"No threshold reaches a learning-set sensitivity of {target}: "
                 f"{int(pos_hist[0])} of the {positives} positive case(s) score below "
                 f"the lowest candidate threshold {1 / num_bins:g}. Increase the number "
                 f"of bins or lower the target sensitivity"
@@ -572,9 +586,10 @@ def select_threshold_from_histograms(
 
 def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict[str, Any]:
     """
-    Choose the threshold on the pooled validation histograms of the final
-    round. Returns the selection with status "completed" (threshold, edge,
-    validation metrics) or "failed" (error), and the excluded clients.
+    Choose the threshold on the pooled learning-set (train + validation +
+    test) histograms of the final round. Returns the selection with status
+    "completed" (threshold, edge, learning-set metrics) or "failed" (error),
+    and the excluded clients.
     """
     completed, skipped, missing, failed = [], [], [], []
 
@@ -586,7 +601,7 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
         if status is None:
             missing.append({
                 "client_id": name,
-                "error": "No validation data sent (the client MEDfl version may not support the optimized threshold)",
+                "error": "No learning-set data sent (the client MEDfl version may not support the optimized threshold)",
             })
             continue
 
@@ -595,8 +610,16 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
             try:
                 summary = json.loads(metrics["threshold_validation"])
             except Exception as exc:
-                failed.append({"client_id": name, "error": f"Invalid validation JSON: {exc}"})
+                failed.append({"client_id": name, "error": f"Invalid learning-set JSON: {exc}"})
                 continue
+
+        if summary and summary.get("data") != LEARNING_SET:
+            # an older client sends only its validation split: never mix it with learning sets
+            failed.append({
+                "client_id": summary.get("client_id", name),
+                "error": "This client sent only its validation split: update MEDfl on it to use its whole learning set",
+            })
+            continue
 
         if status == HOLDOUT_COMPLETED and summary:
             if int(summary.get("num_bins", -1)) != int(holdout_config.num_bins):
@@ -620,7 +643,7 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
         else:
             failed.append({
                 "client_id": name,
-                "error": metrics.get("threshold_validation_error", "No validation result returned"),
+                "error": metrics.get("threshold_validation_error", "No learning-set result returned"),
             })
 
     criterion = holdout_config.threshold_criterion
@@ -630,7 +653,8 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
         "target_sensitivity": (
             float(holdout_config.target_sensitivity) if criterion == "target_sensitivity" else None
         ),
-        "method": f"pooled {int(holdout_config.num_bins)}-bin validation score histograms",
+        "data": LEARNING_SET,
+        "method": f"pooled {int(holdout_config.num_bins)}-bin learning-set (train + validation + test) score histograms",
         "num_bins": int(holdout_config.num_bins),
         # the threshold is a bin edge
         "resolution": 1.0 / int(holdout_config.num_bins),
@@ -640,16 +664,20 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
     }
 
     if not completed:
-        return {**selection, "status": "failed", "error": "No client returned validation data"}
+        return {**selection, "status": "failed", "error": "No client returned learning-set data"}
 
     pos_hist = np.sum([summary["pos_hist"] for summary in completed], axis=0)
     neg_hist = np.sum([summary["neg_hist"] for summary in completed], axis=0)
     positives, negatives = int(pos_hist.sum()), int(neg_hist.sum())
-    selection["validation"] = {
+    selection["learning_set"] = {
         "clients": len(completed),
         "rows": positives + negatives,
         "positives": positives,
         "negatives": negatives,
+        "splits": {
+            split: int(sum(summary["dataset"].get("splits", {}).get(split, 0) for summary in completed))
+            for split in LEARNING_SET_SPLITS
+        },
     }
 
     try:
@@ -660,7 +688,8 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
         return {**selection, "status": "failed", "error": str(exc)}
 
     confusion = histogram_confusion(pos_hist, neg_hist, edge)
-    auc, _ = pooled_roc_auc(pos_hist, neg_hist)
+    # learning-set ROC curve: its points are the bin edges, so the chosen threshold is one of them
+    auc, roc = pooled_roc_auc(pos_hist, neg_hist)
     return {
         **selection,
         "status": "completed",
@@ -668,6 +697,7 @@ def optimize_federated_threshold(results, holdout_config: HoldoutConfig) -> Dict
         "edge": edge,
         "metrics": {"auc": auc, **confusion_metrics(confusion)},
         "confusion_matrix": confusion,
+        "roc_curve": roc,
     }
 
 
@@ -746,7 +776,7 @@ def aggregate_federated_holdout(
     }
 
     if holdout_config.threshold_source == "optimized":
-        # chosen on the validation histograms only, the holdout ones are not read here
+        # chosen on the learning-set histograms only, the holdout ones are not read here
         selection = optimize_federated_threshold(results, holdout_config)
         result["threshold_selection"] = selection
         if selection["status"] != "completed":
