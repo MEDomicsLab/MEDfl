@@ -3,6 +3,7 @@ from flwr.server.strategy import FedAvg
 from flwr.server.server import ServerConfig
 from MEDfl.rw.strategy import Strategy
 from MEDfl.LearningManager.shap import SHAPConfig
+from MEDfl.rw.holdout import HoldoutConfig
 import asyncio
 from flwr.server.client_manager import ClientManager
 from flwr.server.client_proxy import ClientProxy
@@ -35,6 +36,7 @@ class FederatedServer:
         strategy=None,
         certificates=None,
         shap_config=None,
+        holdout_config=None,
     ):
         """
         Initialize the FederatedServer.
@@ -45,6 +47,9 @@ class FederatedServer:
             num_rounds (int): Number of federated learning rounds to execute.
             strategy (Optional[Strategy]): Optional custom strategy wrapper.
             certificates (Optional[Any]): Optional TLS certificates.
+            shap_config (Optional[SHAPConfig]): Optional final-round federated SHAP.
+            holdout_config (Optional[HoldoutConfig]): Optional final-round federated
+                holdout test. When None, the strategy's own holdout_config is kept.
         """
         # Server address and configuration
         self.server_address = f"{host}:{port}"
@@ -62,16 +67,31 @@ class FederatedServer:
         # The Strategy owns the final-round SHAP orchestration.
         self.strategy_wrapper.shap_config = self.shap_config
 
+        # The Strategy also owns the final-round holdout test.
+        if holdout_config is not None:
+            holdout_config.validate()
+            self.strategy_wrapper.holdout_config = holdout_config
+        self.holdout_config = getattr(
+            self.strategy_wrapper,
+            "holdout_config",
+            None,
+        ) or HoldoutConfig(enabled=False)
+
         # Keep the strategy's final-round marker synchronized with
         # the actual Flower ServerConfig.
         self.strategy_wrapper.total_rounds = int(num_rounds)
 
-        # Validate the PyTorch SHAP configuration before the server starts.
+        # Validate SHAP against the active real-world backend.
         if self.shap_config.enabled:
             feature_columns = [
                 column.strip()
                 for column in (
-                    self.strategy_wrapper._features or ""
+                    getattr(
+                        self.strategy_wrapper,
+                        "_features",
+                        "",
+                    )
+                    or ""
                 ).split(",")
                 if column.strip()
             ]
@@ -79,13 +99,34 @@ class FederatedServer:
             if not feature_columns:
                 raise ValueError(
                     "Federated SHAP requires the Strategy 'features' "
-                    "configuration so the neural-network input size "
-                    "can be validated."
+                    "configuration so the model input size can be "
+                    "validated."
                 )
+
+            backend = (
+                "xgboost"
+                if getattr(
+                    self.strategy_wrapper,
+                    "name",
+                    "",
+                ) == "FedXgbBagging"
+                else "pytorch"
+            )
+
+            task = (
+                getattr(
+                    self.strategy_wrapper,
+                    "task",
+                    None,
+                )
+                if backend == "xgboost"
+                else None
+            )
 
             self.shap_config.validate_backend(
                 input_size=len(feature_columns),
-                backend="pytorch",
+                backend=backend,
+                task=task,
             )
 
         self.strategy_wrapper.create_strategy()
@@ -107,6 +148,14 @@ class FederatedServer:
             )
         }
         self.local_shap_results = []
+
+        self.federated_holdout_result = {
+            "status": (
+                "pending"
+                if self.holdout_config.enabled
+                else "disabled"
+            )
+        }
 
 
     def start(self):
@@ -140,6 +189,20 @@ class FederatedServer:
             print(
                 "[Server/SHAP] Final federated SHAP status: "
                 f"{self.federated_shap_result.get('status')}",
+                flush=True,
+            )
+
+        # The strategy aggregates the holdout test during the final evaluation.
+        self.federated_holdout_result = getattr(
+            self.strategy_wrapper,
+            "federated_holdout_result",
+            self.federated_holdout_result,
+        )
+
+        if self.holdout_config.enabled:
+            print(
+                "[Server/Holdout] Final federated holdout status: "
+                f"{self.federated_holdout_result.get('status')}",
                 flush=True,
             )
 

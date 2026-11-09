@@ -1,14 +1,20 @@
 # File: MEDfl/rw/strategy.py
 
 import os
+import json
 import numpy as np
 import flwr as fl
-from flwr.common import GetPropertiesIns
+from flwr.common import GetPropertiesIns, EvaluateIns
 from flwr.server.client_manager import ClientManager
 from flwr.server.client_proxy import ClientProxy
 import time
 from MEDfl.rw.model import Net
 import torch
+from MEDfl.LearningManager.shap import (
+    SHAPConfig,
+    aggregate_federated_shap,
+)
+from MEDfl.rw.holdout import HoldoutConfig, finalize_federated_holdout
 
 # ===================================================
 # Custom metric aggregation functions
@@ -92,6 +98,10 @@ class Strategy:
         client_fractions=None,
         # NEW: id column for test_ids mapping
         id_col="id",
+        # Optional post-training federated SHAP configuration
+        shap_config=None,
+        # Optional post-training federated holdout test configuration
+        holdout_config=None,
     ):
         self.name = name
         self.fraction_fit = fraction_fit
@@ -123,6 +133,30 @@ class Strategy:
         self.client_fractions = client_fractions or {}
         self.id_col = id_col
 
+        self.shap_config = (
+            shap_config
+            if shap_config is not None
+            else SHAPConfig(enabled=False)
+        )
+        self.federated_shap_result = {
+            "status": "disabled"
+        }
+        self.local_shap_results = []
+
+        self.holdout_config = (
+            holdout_config
+            if holdout_config is not None
+            else HoldoutConfig(enabled=False)
+        )
+        self.holdout_config.validate()
+        self.federated_holdout_result = {
+            "status": (
+                "pending"
+                if self.holdout_config.enabled
+                else "disabled"
+            )
+        }
+
         self.strategy_object = None
 
     def create_strategy(self):
@@ -144,6 +178,69 @@ class Strategy:
                 "id_col":         self.id_col,
             }
 
+        def evaluate_config_fn(server_round):
+            """
+            Send the ordinary dataset/schema configuration on every
+            evaluation. Enable SHAP only on the last federated round.
+            """
+            is_final_round = (
+                int(server_round) == int(self.total_rounds)
+            )
+
+            cfg = {
+                "features": self._features,
+                "target": self._target,
+                "val_fraction": float(self._val_fraction),
+                "test_fraction": float(self._test_fraction),
+                "id_col": self.id_col,
+                "shap_enabled": bool(
+                    self.shap_config.enabled
+                    and is_final_round
+                ),
+            }
+
+            if self.holdout_config.enabled and is_final_round:
+                cfg.update(self.holdout_config.to_evaluate_config())
+
+            if cfg["shap_enabled"]:
+                cfg.update(
+                    {
+                        "shap_explainer": (
+                            self.shap_config.explainer
+                        ),
+                        "shap_data_split": (
+                            self.shap_config.data_split
+                        ),
+                        "shap_background_size": int(
+                            self.shap_config.background_size
+                        ),
+                        "shap_explanation_size": int(
+                            self.shap_config.explanation_size
+                        ),
+                        "shap_random_seed": int(
+                            self.shap_config.random_seed
+                        ),
+                        "shap_minimum_samples": int(
+                            self.shap_config.minimum_samples
+                        ),
+                        # Flower configs are Scalar-only, so None is
+                        # represented by a negative sentinel.
+                        "shap_clipping_value": (
+                            -1.0
+                            if self.shap_config.clipping_value
+                            is None
+                            else float(
+                                self.shap_config.clipping_value
+                            )
+                        ),
+                        "shap_feature_names_json": json.dumps(
+                            self.shap_config.feature_names or []
+                        ),
+                    }
+                )
+
+            return cfg
+
         # 3) Build params including on_fit_config_fn
         params = {
             "fraction_fit":                     self.fraction_fit,
@@ -153,6 +250,7 @@ class Strategy:
             "min_available_clients":            self.min_available_clients,
             "evaluate_fn":                      self.evaluate_fn,
             "on_fit_config_fn":                 fit_config_fn,
+            "on_evaluate_config_fn":            evaluate_config_fn,
             "fit_metrics_aggregation_fn":       self.fit_metrics_aggregation_fn,
             "evaluate_metrics_aggregation_fn":  self.evaluate_metrics_aggregation_fn,
         }
@@ -205,15 +303,207 @@ class Strategy:
         original_agg_eval = strat.aggregate_evaluate
 
         def logged_agg_eval(server_round, results, failures):
-            print(f"\n[Server] 📊 Round {server_round} - Client Evaluation Metrics:")
+            print(
+                f"\n[Server] 📊 Round {server_round} - "
+                "Client Evaluation Metrics:"
+            )
             for i, (client_id, eval_res) in enumerate(results):
-                print(f" CEM Round {server_round} Client:{client_id.cid}: {eval_res.metrics}")
-            loss, metrics = original_agg_eval(server_round, results, failures)
-            print(f"[Server] ✅ Round {server_round} - Aggregated Evaluation Metrics:")
+                print(
+                    f" CEM Round {server_round} "
+                    f"Client:{client_id.cid}: {eval_res.metrics}"
+                )
+
+            loss, metrics = original_agg_eval(
+                server_round,
+                results,
+                failures,
+            )
+
+            print(
+                f"[Server] ✅ Round {server_round} - "
+                "Aggregated Evaluation Metrics:"
+            )
             print(f"    Loss: {loss}, Metrics: {metrics}\n")
+
+            is_final_round = (
+                int(server_round) == int(self.total_rounds)
+            )
+
+            if self.shap_config.enabled and is_final_round:
+                local_results = []
+                shap_failures = []
+
+                for client_proxy, eval_res in results:
+                    client_metrics = eval_res.metrics or {}
+
+                    if (
+                        client_metrics.get("shap_status")
+                        == "completed"
+                        and client_metrics.get("shap_result")
+                    ):
+                        try:
+                            local_result = json.loads(
+                                client_metrics["shap_result"]
+                            )
+                            local_results.append(local_result)
+                        except Exception as exc:
+                            shap_failures.append(
+                                {
+                                    "client_id": client_proxy.cid,
+                                    "error": (
+                                        "Invalid SHAP JSON: "
+                                        f"{exc}"
+                                    ),
+                                }
+                            )
+                    else:
+                        shap_failures.append(
+                            {
+                                "client_id": client_proxy.cid,
+                                "error": client_metrics.get(
+                                    "shap_error",
+                                    "No SHAP result returned",
+                                ),
+                            }
+                        )
+
+                self.local_shap_results = local_results
+
+                if local_results:
+                    try:
+                        federated_result = (
+                            aggregate_federated_shap(
+                                client_results=local_results,
+                                include_client_results=(
+                                    self.shap_config
+                                    .include_client_results
+                                ),
+                            )
+                        )
+
+                        federated_result["explainer"] = (
+                            self.shap_config.explainer
+                        )
+                        federated_result["data_split"] = (
+                            self.shap_config.data_split
+                        )
+                        federated_result["background_size"] = (
+                            self.shap_config.background_size
+                        )
+                        federated_result[
+                            "requested_explanation_size"
+                        ] = (
+                            self.shap_config.explanation_size
+                        )
+
+                        if shap_failures:
+                            federated_result[
+                                "failed_clients"
+                            ] = shap_failures
+
+                        self.federated_shap_result = (
+                            federated_result
+                        )
+
+                        print(
+                            "[Server/SHAP] Federated SHAP "
+                            "completed:"
+                        )
+                        print(
+                            json.dumps(
+                                self.federated_shap_result,
+                                indent=2,
+                            ),
+                            flush=True,
+                        )
+
+                    except Exception as exc:
+                        self.federated_shap_result = {
+                            "status": "failed",
+                            "error": str(exc),
+                            "failed_clients": shap_failures,
+                        }
+                        print(
+                            "[Server/SHAP] Federated SHAP "
+                            f"aggregation failed: {exc}",
+                            flush=True,
+                        )
+
+                else:
+                    self.federated_shap_result = {
+                        "status": "failed",
+                        "error": (
+                            "SHAP was enabled but no client "
+                            "returned a valid SHAP result."
+                        ),
+                        "failed_clients": shap_failures,
+                    }
+                    print(
+                        "[Server/SHAP] No valid local SHAP "
+                        "results were returned.",
+                        flush=True,
+                    )
+
+            if self.holdout_config.enabled and is_final_round:
+                self.federated_holdout_result = (
+                    finalize_federated_holdout(
+                        results,
+                        failures,
+                        self.holdout_config,
+                        backend="pytorch",
+                    )
+                )
+
             return loss, metrics
 
         strat.aggregate_evaluate = logged_agg_eval
+
+        # 6b) On the last round, federated SHAP and the holdout test should
+        # run on every currently connected client, regardless of
+        # fraction_evaluate.
+        original_conf_eval = strat.configure_evaluate
+
+        def wrapped_conf_eval(
+            server_round,
+            parameters,
+            client_manager,
+        ):
+            # SHAP and the holdout test need every connected client
+            is_final_shap_round = (
+                (self.shap_config.enabled or self.holdout_config.enabled)
+                and int(server_round) == int(self.total_rounds)
+            )
+
+            if not is_final_shap_round:
+                return original_conf_eval(
+                    server_round=server_round,
+                    parameters=parameters,
+                    client_manager=client_manager,
+                )
+
+            evaluate_ins = EvaluateIns(
+                parameters=parameters,
+                config=evaluate_config_fn(server_round),
+            )
+
+            available_clients = list(
+                client_manager.all().values()
+            )
+
+            print(
+                "[Server] Final round: requesting the final "
+                f"evaluation from {len(available_clients)} connected "
+                f"client(s) (SHAP: {self.shap_config.enabled}, "
+                f"holdout: {self.holdout_config.enabled}).",
+                flush=True,
+            )
+
+            return [
+                (client, evaluate_ins)
+                for client in available_clients
+            ]
+
+        strat.configure_evaluate = wrapped_conf_eval
 
         # 7) Wrap configure_fit to:
         #    - log client properties (unchanged)

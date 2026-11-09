@@ -1,6 +1,7 @@
 # File: client.py
 
 import argparse
+import json
 import pandas as pd
 import flwr as fl
 import torch
@@ -10,6 +11,9 @@ from torch.utils.data import TensorDataset, DataLoader
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from MEDfl.rw.model import Net  # votre définition de modèle
+from MEDfl.LearningManager.shap import LocalPyTorchSHAPExplainer
+from MEDfl.rw.holdout import run_local_holdout
+from MEDfl.rw.identity import client_name
 import socket
 import platform
 import psutil
@@ -75,6 +79,10 @@ class FlowerClient(fl.client.NumPyClient):
         Comma-separated list of IDs (or line numbers) to use as test set.
     seed : int, optional
         Random seed used for splits. Default is ``42``.
+    holdout_path : str, optional
+        Path to a local holdout CSV, never used for training. When the server
+        enables the federated holdout test, the final global model is tested
+        on it after the last round. Default is ``None`` (no holdout).
     """
     def __init__(
         self,
@@ -87,6 +95,7 @@ class FlowerClient(fl.client.NumPyClient):
         id_col=None,
         test_ids=None,
         seed=42,
+        holdout_path=None,
     ):
         self.server_address = server_address
         self.dp_config = dp_config
@@ -95,6 +104,8 @@ class FlowerClient(fl.client.NumPyClient):
         self.id_col = id_col
         self.test_ids = test_ids
         self.seed = seed
+        # read only when the server asks for the holdout test (features/target come from the server)
+        self.holdout_path = holdout_path
 
         # Load the CSV once; actual column selection happens on first fit using server config
         self._df = pd.read_csv(data_path)
@@ -293,6 +304,155 @@ class FlowerClient(fl.client.NumPyClient):
         self._initialized = True
         print(f"[Client] Initialized with features={feat_cols}, target={target_col}, val={val_frac}, test={self.effective_test_frac}")
 
+
+    # ---------- Federated SHAP helpers ----------
+
+    def _get_shap_loader(self, data_split):
+        """
+        Return the local partition selected for the post-training SHAP phase.
+        """
+        split = str(data_split).lower()
+
+        if split == "train":
+            loader = self.train_loader
+        elif split == "validation":
+            loader = self.val_loader
+        elif split == "test":
+            loader = self.test_loader
+        else:
+            raise ValueError(
+                f"Unsupported SHAP data split '{data_split}'. "
+                "Expected train, validation, or test."
+            )
+
+        if loader is None:
+            raise ValueError(
+                f"The selected SHAP split '{split}' is not available "
+                "on this client."
+            )
+
+        if len(loader.dataset) == 0:
+            raise ValueError(
+                f"The selected SHAP split '{split}' is empty "
+                "on this client."
+            )
+
+        return loader
+
+    def _calculate_local_shap(self, config):
+        """
+        Explain the final global model on this client's local data.
+
+        Only additive SHAP summary statistics are returned. Raw samples and
+        per-sample SHAP values never leave the client.
+        """
+        if not self._initialized:
+            self._lazy_init_from_server_config(config)
+
+        data_split = str(
+            config.get("shap_data_split", "validation")
+        )
+        explainer_type = str(
+            config.get("shap_explainer", "gradient")
+        )
+        background_size = int(
+            config.get("shap_background_size", 100)
+        )
+        explanation_size = int(
+            config.get("shap_explanation_size", 500)
+        )
+        random_seed = int(
+            config.get("shap_random_seed", 42)
+        )
+        minimum_samples = int(
+            config.get("shap_minimum_samples", 10)
+        )
+
+        clipping_raw = float(
+            config.get("shap_clipping_value", -1.0)
+        )
+        clipping_value = (
+            None if clipping_raw <= 0 else clipping_raw
+        )
+
+        feature_names_raw = str(
+            config.get("shap_feature_names_json", "[]")
+        )
+        try:
+            configured_feature_names = json.loads(
+                feature_names_raw
+            )
+        except Exception:
+            configured_feature_names = []
+
+        feature_names = (
+            list(configured_feature_names)
+            if configured_feature_names
+            else list(self.effective_features)
+        )
+
+        if len(feature_names) != len(self.effective_features):
+            raise ValueError(
+                "SHAP feature names do not match the local model input size. "
+                f"Expected {len(self.effective_features)}, "
+                f"received {len(feature_names)}."
+            )
+
+        loader = self._get_shap_loader(data_split)
+
+        # Opacus can wrap the original torch.nn.Module in GradSampleModule.
+        # SHAP should explain the underlying neural network.
+        shap_model = getattr(self.model, "_module", self.model)
+
+        local_explainer = LocalPyTorchSHAPExplainer(
+            explainer_type=explainer_type,
+            background_size=background_size,
+            explanation_size=explanation_size,
+            random_seed=random_seed,
+            clipping_value=clipping_value,
+        )
+
+        result = local_explainer.calculate(
+            model=shap_model,
+            loader=loader,
+            device=torch.device("cpu"),
+        )
+
+        explained_samples = int(result["sample_count"])
+        if explained_samples < minimum_samples:
+            raise ValueError(
+                f"Only {explained_samples} samples were explained, "
+                f"but minimum_samples={minimum_samples}."
+            )
+
+        # Convert NumPy arrays to lists before JSON serialization.
+        serializable_result = {
+            "client_id": client_name(),
+            "feature_names": feature_names,
+            "available_samples": int(len(loader.dataset)),
+            "sample_count": explained_samples,
+            "abs_sum": np.asarray(
+                result["abs_sum"], dtype=np.float64
+            ).tolist(),
+            "signed_sum": np.asarray(
+                result["signed_sum"], dtype=np.float64
+            ).tolist(),
+            "square_sum": np.asarray(
+                result["square_sum"], dtype=np.float64
+            ).tolist(),
+            "positive_count": np.asarray(
+                result["positive_count"], dtype=np.int64
+            ).tolist(),
+            "negative_count": np.asarray(
+                result["negative_count"], dtype=np.int64
+            ).tolist(),
+            "zero_count": np.asarray(
+                result["zero_count"], dtype=np.int64
+            ).tolist(),
+        }
+
+        return serializable_result
+
     # ---------- FL API (unchanged behavior) ----------
 
     def get_parameters(self, config):
@@ -343,7 +503,7 @@ class FlowerClient(fl.client.NumPyClient):
             auc = float("nan")
         acc = accuracy_score(y_true, binary_preds)
 
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
         metrics = {
             "hostname": hostname,
@@ -390,12 +550,94 @@ class FlowerClient(fl.client.NumPyClient):
             "eval_accuracy": acc,
             "eval_auc": auc,
         }
+
+        # ---------------------------------------------------------------
+        # Final-round federated SHAP
+        #
+        # Flower calls evaluate() with the parameters produced by the
+        # current round's aggregation. On the last round, these are the
+        # final global parameters. Therefore every participating client
+        # explains exactly the same final global model.
+        # ---------------------------------------------------------------
+        if bool(config.get("shap_enabled", False)):
+            print(
+                "[Client/SHAP] Starting local SHAP on the final "
+                "global model...",
+                flush=True,
+            )
+
+            try:
+                local_shap_result = self._calculate_local_shap(
+                    config
+                )
+
+                metrics["shap_status"] = "completed"
+                metrics["shap_result"] = json.dumps(
+                    local_shap_result,
+                    allow_nan=False,
+                )
+
+                print(
+                    "[Client/SHAP] Local SHAP completed | "
+                    f"client={local_shap_result['client_id']} | "
+                    f"samples={local_shap_result['sample_count']}",
+                    flush=True,
+                )
+
+            except Exception as exc:
+                metrics["shap_status"] = "failed"
+                metrics["shap_error"] = str(exc)
+
+                print(
+                    "[Client/SHAP] Local SHAP failed: "
+                    f"{exc}",
+                    flush=True,
+                )
+
+        # ---------------------------------------------------------------
+        # Final-round federated holdout test
+        #
+        # Same final global parameters as SHAP above, tested on the local
+        # holdout file. Rows with missing feature values are dropped since
+        # the network cannot predict them.
+        # ---------------------------------------------------------------
+        if bool(config.get("holdout_enabled", False)):
+            metrics.update(
+                run_local_holdout(
+                    config=config,
+                    holdout_path=self.holdout_path,
+                    features=self.effective_features,
+                    target=self.effective_target,
+                    predict=self._predict_probabilities,
+                    client_id=client_name(),
+                    drop_missing_features=True,
+                    validation=self._validation_predictions,
+                )
+            )
+
         print(f"Evaluation metrics: {metrics}")
 
         return float(avg_loss), len(self.test_loader.dataset), metrics
 
+    def _predict_probabilities(self, X):
+        """Positive-class probabilities of the current model for a feature array."""
+        self.model.eval()
+        with torch.no_grad():
+            logits = self.model(torch.tensor(X, dtype=torch.float32))
+            return torch.sigmoid(logits.reshape(-1)).cpu().numpy()
+
+    def _validation_predictions(self):
+        """(y_true, y_prob) of the validation split, for the optimized holdout threshold."""
+        if self.val_loader is None:
+            return np.empty((0,)), np.empty((0,))
+        y_parts, prob_parts = [], []
+        for X_batch, y_batch in self.val_loader:
+            y_parts.append(y_batch.cpu().numpy().reshape(-1))
+            prob_parts.append(self._predict_probabilities(X_batch.cpu().numpy()))
+        return np.concatenate(y_parts), np.concatenate(prob_parts)
+
     def get_properties(self, config):
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
 
         if self._initialized:

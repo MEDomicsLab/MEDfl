@@ -743,4 +743,4 @@ class XGBoostSimulationServer:
                     flush=True,
                 )
 
-        return self.history
+        return self.history 

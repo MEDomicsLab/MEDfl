@@ -8,6 +8,7 @@ import flwr as fl
 from flwr.common import (
     Parameters,
     FitRes,
+    EvaluateIns,
     parameters_to_ndarrays,
 )
 from flwr.common import GetPropertiesIns
@@ -19,6 +20,11 @@ from MEDfl.rw.xgboost.serialization import (
     save_booster,
     XGBOOST_TENSOR_TYPE,
 )
+from MEDfl.LearningManager.shap import (
+    SHAPConfig,
+    aggregate_federated_shap,
+)
+from MEDfl.rw.holdout import HoldoutConfig, finalize_federated_holdout
 
 
 class XGBoostStrategy:
@@ -65,6 +71,8 @@ class XGBoostStrategy:
         savingPath: str = "",
         saveOnRounds: int = 1,
         total_rounds: int = 3,
+        shap_config: Optional[SHAPConfig] = None,
+        holdout_config: Optional[HoldoutConfig] = None,
     ):
         self.name = "FedXgbBagging"
         self.mode = mode
@@ -109,6 +117,39 @@ class XGBoostStrategy:
         self.saveOnRounds = saveOnRounds
         self.total_rounds = total_rounds
 
+        self.shap_config = (
+            shap_config
+            if shap_config is not None
+            else SHAPConfig(enabled=False)
+        )
+        self.federated_shap_result = {
+            "status": (
+                "pending"
+                if self.shap_config.enabled
+                else "disabled"
+            )
+        }
+        self.local_shap_results = []
+
+        self.holdout_config = (
+            holdout_config
+            if holdout_config is not None
+            else HoldoutConfig(enabled=False)
+        )
+        self.holdout_config.validate()
+        if self.holdout_config.enabled and self.task != "binary":
+            raise ValueError(
+                "The federated holdout test supports binary "
+                f"classification only (task is '{self.task}')"
+            )
+        self.federated_holdout_result = {
+            "status": (
+                "pending"
+                if self.holdout_config.enabled
+                else "disabled"
+            )
+        }
+
         self.strategy_object = None
         self.current_booster: Optional[xgb.Booster] = None
         self.current_num_trees: int = 0
@@ -137,7 +178,11 @@ class XGBoostStrategy:
             }
 
         def evaluate_config_fn(server_round: int) -> Dict[str, Any]:
-            return {
+            is_final_round = (
+                int(server_round) == int(self.total_rounds)
+            )
+
+            cfg = {
                 "backend": "xgboost",
                 "mode": self.mode,
                 "task": self.task,
@@ -147,9 +192,58 @@ class XGBoostStrategy:
                 "val_fraction": float(self._val_fraction),
                 "test_fraction": float(self._test_fraction),
                 "id_col": self.id_col,
-                "local_num_boost_round": int(self.local_num_boost_round),
+                "local_num_boost_round": int(
+                    self.local_num_boost_round
+                ),
                 "xgb_params": json.dumps(self.xgb_params),
+                "shap_enabled": bool(
+                    self.shap_config.enabled
+                    and is_final_round
+                ),
             }
+
+            if self.holdout_config.enabled and is_final_round:
+                cfg.update(self.holdout_config.to_evaluate_config())
+
+            if cfg["shap_enabled"]:
+                cfg.update(
+                    {
+                        "shap_explainer": (
+                            self.shap_config.explainer
+                        ),
+                        "shap_data_split": (
+                            self.shap_config.data_split
+                        ),
+                        "shap_background_size": int(
+                            self.shap_config.background_size
+                        ),
+                        "shap_explanation_size": int(
+                            self.shap_config.explanation_size
+                        ),
+                        "shap_random_seed": int(
+                            self.shap_config.random_seed
+                        ),
+                        "shap_minimum_samples": int(
+                            self.shap_config.minimum_samples
+                        ),
+                        "shap_clipping_value": (
+                            -1.0
+                            if self.shap_config.clipping_value
+                            is None
+                            else float(
+                                self.shap_config.clipping_value
+                            )
+                        ),
+                        "shap_feature_names_json": json.dumps(
+                            self.shap_config.feature_names or []
+                        ),
+                        "shap_model_output": (
+                            self.shap_config.model_output
+                        ),
+                    }
+                )
+
+            return cfg
 
         strategy = fl.server.strategy.FedAvg(
             fraction_fit=self.fraction_fit,
@@ -168,6 +262,7 @@ class XGBoostStrategy:
         )
 
         self._wrap_configure_fit(strategy)
+        self._wrap_configure_evaluate(strategy, evaluate_config_fn)
         self._wrap_aggregate_fit(strategy)
         self._wrap_aggregate_evaluate(strategy)
 
@@ -258,6 +353,64 @@ class XGBoostStrategy:
             return selected
 
         strategy.configure_fit = wrapped_configure_fit
+
+    def _wrap_configure_evaluate(
+        self,
+        strategy,
+        evaluate_config_fn,
+    ) -> None:
+        """
+        On the final round, request evaluation/SHAP/holdout from every
+        currently connected client so the federated SHAP and holdout
+        results represent all available institutions.
+        """
+        original_configure_evaluate = (
+            strategy.configure_evaluate
+        )
+
+        def wrapped_configure_evaluate(
+            server_round,
+            parameters,
+            client_manager,
+        ):
+            is_final_shap_round = (
+                (self.shap_config.enabled or self.holdout_config.enabled)
+                and int(server_round)
+                == int(self.total_rounds)
+            )
+
+            if not is_final_shap_round:
+                return original_configure_evaluate(
+                    server_round=server_round,
+                    parameters=parameters,
+                    client_manager=client_manager,
+                )
+
+            evaluate_ins = EvaluateIns(
+                parameters=parameters,
+                config=evaluate_config_fn(server_round),
+            )
+
+            available_clients = list(
+                client_manager.all().values()
+            )
+
+            print(
+                "[Server/XGBoost] Final round: requesting the final "
+                f"evaluation from {len(available_clients)} connected "
+                f"client(s) (SHAP: {self.shap_config.enabled}, "
+                f"holdout: {self.holdout_config.enabled}).",
+                flush=True,
+            )
+
+            return [
+                (client, evaluate_ins)
+                for client in available_clients
+            ]
+
+        strategy.configure_evaluate = (
+            wrapped_configure_evaluate
+        )
 
     def _wrap_aggregate_fit(self, strategy) -> None:
         """
@@ -396,13 +549,23 @@ class XGBoostStrategy:
 
     def _wrap_aggregate_evaluate(self, strategy) -> None:
         """
-        Wrap aggregate_evaluate for logging.
+        Wrap aggregate_evaluate for logging and final federated SHAP and
+        holdout aggregation.
         """
 
-        original_aggregate_evaluate = strategy.aggregate_evaluate
+        original_aggregate_evaluate = (
+            strategy.aggregate_evaluate
+        )
 
-        def wrapped_aggregate_evaluate(server_round, results, failures):
-            print(f"\n[Server/XGBoost] 📊 Round {server_round} - Client Evaluation Metrics:")
+        def wrapped_aggregate_evaluate(
+            server_round,
+            results,
+            failures,
+        ):
+            print(
+                f"\n[Server/XGBoost] 📊 Round {server_round} - "
+                "Client Evaluation Metrics:"
+            )
 
             for client, eval_res in results:
                 print(
@@ -410,14 +573,166 @@ class XGBoostStrategy:
                     f"Client:{client.cid}: {eval_res.metrics}"
                 )
 
-            loss, metrics = original_aggregate_evaluate(server_round, results, failures)
+            loss, metrics = original_aggregate_evaluate(
+                server_round,
+                results,
+                failures,
+            )
 
-            print(f"[Server/XGBoost] ✅ Round {server_round} - Aggregated Evaluation:")
-            print(f"    Loss: {loss}, Metrics: {metrics}\n")
+            print(
+                f"[Server/XGBoost] ✅ Round {server_round} - "
+                "Aggregated Evaluation:"
+            )
+            print(
+                f"    Loss: {loss}, Metrics: {metrics}\n"
+            )
+
+            is_final_round = (
+                int(server_round) == int(self.total_rounds)
+            )
+
+            if self.shap_config.enabled and is_final_round:
+                local_results = []
+                shap_failures = []
+
+                for client_proxy, eval_res in results:
+                    client_metrics = eval_res.metrics or {}
+
+                    if (
+                        client_metrics.get("shap_status")
+                        == "completed"
+                        and client_metrics.get("shap_result")
+                    ):
+                        try:
+                            local_result = json.loads(
+                                client_metrics["shap_result"]
+                            )
+                            local_results.append(
+                                local_result
+                            )
+                        except Exception as exc:
+                            shap_failures.append(
+                                {
+                                    "client_id": client_proxy.cid,
+                                    "error": (
+                                        "Invalid SHAP JSON: "
+                                        f"{exc}"
+                                    ),
+                                }
+                            )
+                    else:
+                        shap_failures.append(
+                            {
+                                "client_id": client_proxy.cid,
+                                "error": client_metrics.get(
+                                    "shap_error",
+                                    "No SHAP result returned",
+                                ),
+                            }
+                        )
+
+                self.local_shap_results = local_results
+
+                if local_results:
+                    try:
+                        federated_result = (
+                            aggregate_federated_shap(
+                                client_results=local_results,
+                                include_client_results=(
+                                    self.shap_config
+                                    .include_client_results
+                                ),
+                            )
+                        )
+
+                        federated_result["backend"] = (
+                            "xgboost"
+                        )
+                        federated_result["explainer"] = (
+                            self.shap_config.explainer
+                        )
+                        federated_result["data_split"] = (
+                            self.shap_config.data_split
+                        )
+                        federated_result["background_size"] = (
+                            self.shap_config.background_size
+                        )
+                        federated_result[
+                            "requested_explanation_size"
+                        ] = (
+                            self.shap_config.explanation_size
+                        )
+                        federated_result["model_output"] = (
+                            self.shap_config.model_output
+                        )
+
+                        if shap_failures:
+                            federated_result[
+                                "failed_clients"
+                            ] = shap_failures
+
+                        self.federated_shap_result = (
+                            federated_result
+                        )
+
+                        print(
+                            "[Server/SHAP] Federated SHAP "
+                            "completed:"
+                        )
+                        print(
+                            json.dumps(
+                                self.federated_shap_result,
+                                indent=2,
+                            ),
+                            flush=True,
+                        )
+
+                    except Exception as exc:
+                        self.federated_shap_result = {
+                            "status": "failed",
+                            "backend": "xgboost",
+                            "error": str(exc),
+                            "failed_clients": shap_failures,
+                        }
+
+                        print(
+                            "[Server/SHAP] XGBoost federated "
+                            f"SHAP aggregation failed: {exc}",
+                            flush=True,
+                        )
+
+                else:
+                    self.federated_shap_result = {
+                        "status": "failed",
+                        "backend": "xgboost",
+                        "error": (
+                            "SHAP was enabled but no XGBoost "
+                            "client returned a valid SHAP result."
+                        ),
+                        "failed_clients": shap_failures,
+                    }
+
+                    print(
+                        "[Server/SHAP] No valid XGBoost local "
+                        "SHAP results were returned.",
+                        flush=True,
+                    )
+
+            if self.holdout_config.enabled and is_final_round:
+                self.federated_holdout_result = (
+                    finalize_federated_holdout(
+                        results,
+                        failures,
+                        self.holdout_config,
+                        backend="xgboost",
+                    )
+                )
 
             return loss, metrics
 
-        strategy.aggregate_evaluate = wrapped_aggregate_evaluate
+        strategy.aggregate_evaluate = (
+            wrapped_aggregate_evaluate
+        )
 
     def _save_if_needed(self, server_round: int, parameters: Parameters) -> None:
         """
@@ -657,6 +972,8 @@ class XGBoostStrategy:
         importance_gain = booster.get_score(importance_type="gain")
         importance_weight = booster.get_score(importance_type="weight")
         importance_cover = booster.get_score(importance_type="cover")
+
+      
 
         print(f"\n[Server/XGBoost] 📊 Round {server_round} Global Feature Importance - Gain:")
         print(importance_gain)

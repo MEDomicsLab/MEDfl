@@ -14,6 +14,7 @@ from MEDfl.LearningManager.shap import (
     SHAPConfig,
     aggregate_federated_shap,
 )
+from MEDfl.rw.holdout import HoldoutConfig, finalize_federated_holdout
 
 # ===================================================
 # Custom metric aggregation functions
@@ -99,6 +100,8 @@ class Strategy:
         id_col="id",
         # Optional post-training federated SHAP configuration
         shap_config=None,
+        # Optional post-training federated holdout test configuration
+        holdout_config=None,
     ):
         self.name = name
         self.fraction_fit = fraction_fit
@@ -139,6 +142,20 @@ class Strategy:
             "status": "disabled"
         }
         self.local_shap_results = []
+
+        self.holdout_config = (
+            holdout_config
+            if holdout_config is not None
+            else HoldoutConfig(enabled=False)
+        )
+        self.holdout_config.validate()
+        self.federated_holdout_result = {
+            "status": (
+                "pending"
+                if self.holdout_config.enabled
+                else "disabled"
+            )
+        }
 
         self.strategy_object = None
 
@@ -181,6 +198,9 @@ class Strategy:
                     and is_final_round
                 ),
             }
+
+            if self.holdout_config.enabled and is_final_round:
+                cfg.update(self.holdout_config.to_evaluate_config())
 
             if cfg["shap_enabled"]:
                 cfg.update(
@@ -424,12 +444,23 @@ class Strategy:
                         flush=True,
                     )
 
+            if self.holdout_config.enabled and is_final_round:
+                self.federated_holdout_result = (
+                    finalize_federated_holdout(
+                        results,
+                        failures,
+                        self.holdout_config,
+                        backend="pytorch",
+                    )
+                )
+
             return loss, metrics
 
         strat.aggregate_evaluate = logged_agg_eval
 
-        # 6b) On the last round, federated SHAP should run on every
-        # currently connected client, regardless of fraction_evaluate.
+        # 6b) On the last round, federated SHAP and the holdout test should
+        # run on every currently connected client, regardless of
+        # fraction_evaluate.
         original_conf_eval = strat.configure_evaluate
 
         def wrapped_conf_eval(
@@ -437,8 +468,9 @@ class Strategy:
             parameters,
             client_manager,
         ):
+            # SHAP and the holdout test need every connected client
             is_final_shap_round = (
-                self.shap_config.enabled
+                (self.shap_config.enabled or self.holdout_config.enabled)
                 and int(server_round) == int(self.total_rounds)
             )
 
@@ -459,9 +491,10 @@ class Strategy:
             )
 
             print(
-                "[Server/SHAP] Final round: requesting local "
-                f"SHAP from {len(available_clients)} connected "
-                "client(s).",
+                "[Server] Final round: requesting the final "
+                f"evaluation from {len(available_clients)} connected "
+                f"client(s) (SHAP: {self.shap_config.enabled}, "
+                f"holdout: {self.holdout_config.enabled}).",
                 flush=True,
             )
 

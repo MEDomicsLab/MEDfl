@@ -37,6 +37,8 @@ MEDfl/NetManager/network.py
 MEDfl/NetManager/node.py
 MEDfl/rw/__init__.py
 MEDfl/rw/client.py
+MEDfl/rw/holdout.py
+MEDfl/rw/identity.py
 MEDfl/rw/model.py
 MEDfl/rw/server.py
 MEDfl/rw/strategy.py
@@ -63,3 +65,4 @@ tests/test_flpipeline.py
 tests/test_flsetup.py
 tests/test_network.py
 tests/test_node.py
+tests/test_rw_holdout.py

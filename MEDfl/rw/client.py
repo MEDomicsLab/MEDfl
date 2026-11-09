@@ -12,6 +12,8 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from MEDfl.rw.model import Net  # votre définition de modèle
 from MEDfl.LearningManager.shap import LocalPyTorchSHAPExplainer
+from MEDfl.rw.holdout import run_local_holdout
+from MEDfl.rw.identity import client_name
 import socket
 import platform
 import psutil
@@ -77,6 +79,10 @@ class FlowerClient(fl.client.NumPyClient):
         Comma-separated list of IDs (or line numbers) to use as test set.
     seed : int, optional
         Random seed used for splits. Default is ``42``.
+    holdout_path : str, optional
+        Path to a local holdout CSV, never used for training. When the server
+        enables the federated holdout test, the final global model is tested
+        on it after the last round. Default is ``None`` (no holdout).
     """
     def __init__(
         self,
@@ -89,6 +95,7 @@ class FlowerClient(fl.client.NumPyClient):
         id_col=None,
         test_ids=None,
         seed=42,
+        holdout_path=None,
     ):
         self.server_address = server_address
         self.dp_config = dp_config
@@ -97,6 +104,8 @@ class FlowerClient(fl.client.NumPyClient):
         self.id_col = id_col
         self.test_ids = test_ids
         self.seed = seed
+        # read only when the server asks for the holdout test (features/target come from the server)
+        self.holdout_path = holdout_path
 
         # Load the CSV once; actual column selection happens on first fit using server config
         self._df = pd.read_csv(data_path)
@@ -253,6 +262,14 @@ class FlowerClient(fl.client.NumPyClient):
         else:
             X_train, y_train = X_trval, y_trval
             X_val, y_val = np.empty((0, X_all.shape[1])), np.empty((0,))
+
+        # the whole learning set, for the optimized holdout threshold. Kept as arrays: with DP, Opacus replaces
+        # the train loader by a Poisson-sampling one that does not go over every training row
+        self._learning_splits = {
+            "train": (X_train, y_train),
+            "validation": (X_val, y_val),
+            "test": (X_test, y_test),
+        }
 
         # ---------- build loaders
         batch_size = self.dp_config.batch_size if self.dp_config else 32
@@ -418,7 +435,7 @@ class FlowerClient(fl.client.NumPyClient):
 
         # Convert NumPy arrays to lists before JSON serialization.
         serializable_result = {
-            "client_id": socket.gethostname(),
+            "client_id": client_name(),
             "feature_names": feature_names,
             "available_samples": int(len(loader.dataset)),
             "sample_count": explained_samples,
@@ -494,7 +511,7 @@ class FlowerClient(fl.client.NumPyClient):
             auc = float("nan")
         acc = accuracy_score(y_true, binary_preds)
 
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
         metrics = {
             "hostname": hostname,
@@ -585,12 +602,56 @@ class FlowerClient(fl.client.NumPyClient):
                     flush=True,
                 )
 
+        # ---------------------------------------------------------------
+        # Final-round federated holdout test
+        #
+        # Same final global parameters as SHAP above, tested on the local
+        # holdout file. Rows with missing feature values are dropped since
+        # the network cannot predict them.
+        # ---------------------------------------------------------------
+        if bool(config.get("holdout_enabled", False)):
+            metrics.update(
+                run_local_holdout(
+                    config=config,
+                    holdout_path=self.holdout_path,
+                    features=self.effective_features,
+                    target=self.effective_target,
+                    predict=self._predict_probabilities,
+                    client_id=client_name(),
+                    drop_missing_features=True,
+                    validation=self._learning_set_predictions,
+                )
+            )
+
         print(f"Evaluation metrics: {metrics}")
 
         return float(avg_loss), len(self.test_loader.dataset), metrics
 
+    def _predict_probabilities(self, X):
+        """Positive-class probabilities of the current model for a feature array."""
+        self.model.eval()
+        with torch.no_grad():
+            logits = self.model(torch.tensor(X, dtype=torch.float32))
+            return torch.sigmoid(logits.reshape(-1)).cpu().numpy()
+
+    def _learning_set_predictions(self):
+        """
+        (y_true, y_prob, rows per split) of the whole learning set (train + validation + test splits),
+        for the optimized holdout threshold.
+        """
+        y_parts, prob_parts, splits = [], [], {}
+        for split, (X, y) in getattr(self, "_learning_splits", {}).items():
+            y = np.asarray(y, dtype=float).reshape(-1)
+            splits[split] = int(len(y))
+            if len(y):
+                y_parts.append(y)
+                prob_parts.append(self._predict_probabilities(np.asarray(X, dtype=np.float32)))
+        if not y_parts:
+            return np.empty((0,)), np.empty((0,)), splits
+        return np.concatenate(y_parts), np.concatenate(prob_parts), splits
+
     def get_properties(self, config):
-        hostname = socket.gethostname()
+        hostname = client_name()
         os_type = platform.system()
 
         if self._initialized:
