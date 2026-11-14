@@ -263,6 +263,14 @@ class FlowerClient(fl.client.NumPyClient):
             X_train, y_train = X_trval, y_trval
             X_val, y_val = np.empty((0, X_all.shape[1])), np.empty((0,))
 
+        # the whole learning set, for the optimized holdout threshold. Kept as arrays: with DP, Opacus replaces
+        # the train loader by a Poisson-sampling one that does not go over every training row
+        self._learning_splits = {
+            "train": (X_train, y_train),
+            "validation": (X_val, y_val),
+            "test": (X_test, y_test),
+        }
+
         # ---------- build loaders
         batch_size = self.dp_config.batch_size if self.dp_config else 32
         self.train_loader = self._mk_loader(X_train, y_train, batch_size, shuffle=True)
@@ -611,7 +619,7 @@ class FlowerClient(fl.client.NumPyClient):
                     predict=self._predict_probabilities,
                     client_id=client_name(),
                     drop_missing_features=True,
-                    validation=self._validation_predictions,
+                    validation=self._learning_set_predictions,
                 )
             )
 
@@ -626,15 +634,21 @@ class FlowerClient(fl.client.NumPyClient):
             logits = self.model(torch.tensor(X, dtype=torch.float32))
             return torch.sigmoid(logits.reshape(-1)).cpu().numpy()
 
-    def _validation_predictions(self):
-        """(y_true, y_prob) of the validation split, for the optimized holdout threshold."""
-        if self.val_loader is None:
-            return np.empty((0,)), np.empty((0,))
-        y_parts, prob_parts = [], []
-        for X_batch, y_batch in self.val_loader:
-            y_parts.append(y_batch.cpu().numpy().reshape(-1))
-            prob_parts.append(self._predict_probabilities(X_batch.cpu().numpy()))
-        return np.concatenate(y_parts), np.concatenate(prob_parts)
+    def _learning_set_predictions(self):
+        """
+        (y_true, y_prob, rows per split) of the whole learning set (train + validation + test splits),
+        for the optimized holdout threshold.
+        """
+        y_parts, prob_parts, splits = [], [], {}
+        for split, (X, y) in getattr(self, "_learning_splits", {}).items():
+            y = np.asarray(y, dtype=float).reshape(-1)
+            splits[split] = int(len(y))
+            if len(y):
+                y_parts.append(y)
+                prob_parts.append(self._predict_probabilities(np.asarray(X, dtype=np.float32)))
+        if not y_parts:
+            return np.empty((0,)), np.empty((0,)), splits
+        return np.concatenate(y_parts), np.concatenate(prob_parts), splits
 
     def get_properties(self, config):
         hostname = client_name()
